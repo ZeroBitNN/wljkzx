@@ -1,0 +1,99 @@
+.icon-addUser{
+	background:url('icons/addUser.png') no-repeat;
+}
+.icon-editUser{
+	background:url('icons/editUser.png') no-repeat;
+}
+.icon-removeUser{
+	background:url('icons/removeUser.png') no-repeat;
+}
+.icon-user{
+	background:url('icons/user.png') no-repeat;
+}
+.icon-info{
+  background:url('icons/info.png') no-repeat;
+}
+.icon-menu{
+  background:url('icons/menu.png') no-repeat;
+}
+.icon-network{
+  background:url('icons/network.png') no-repeat;
+}
+.icon-myOrder{
+  background:url('icons/order.png') no-repeat;
+}
+.icon-addOrder{
+  background:url('icons/orderAdd.png') no-repeat;
+}
+.icon-orderList{
+  background:url('icons/orderList.png') no-repeat;
+}
+.icon-myLink{
+  background:url('icons/link.png') no-repeat;
+}
+.icon-archived{
+  background:url('icons/archived.png') no-repeat;
+}
+.icon-logout{
+  background:url('icons/logout.png') no-repeat;
+}
+.icon-mylock{
+  background:url('icons/lock.png') no-repeat;
+}
+.icon-controlpanel{
+  background:url('icons/controlpanel.png') no-repeat;
+}
+.icon-modifypwd{
+  background:url('icons/modifyPwd.png') no-repeat;
+}
+.icon-myPower{
+  background:url('icons/power.png') no-repeat;
+}
+.icon-myRole{
+  background:url('icons/role.png') no-repeat;
+}
+.icon-myTheme{
+  background:url('icons/theme.png') no-repeat;
+}
+.icon-mySystem{
+  background:url('icons/system.png') no-repeat;
+}
+.icon-myTransfer{
+  background:url('icons/transfer.png') no-repeat;
+}
+.icon-myContact{
+  background:url('icons/contact.png') no-repeat;
+}
+.icon-myLogin{
+  background:url('icons/login.png') no-repeat;
+}
+.icon-myLayout{
+  background:url('icons/layout.png') no-repeat;
+}
+.icon-myRecord{
+  background:url('icons/record.png') no-repeat;
+}
+.icon-mySum{
+  background:url('icons/sum.png') no-repeat;
+}
+.icon-myAdmin{
+  background:url('icons/administrator.png') no-repeat;
+}
+.icon-mySend{
+  background:url('icons/send.png') no-repeat;
+}
+.icon-attachment{
+  background:url('icons/attachment.png') no-repeat;
+}
+.icon-guarantee{
+  background:url('icons/guarantee.png') no-repeat;
+}
+.icon-myStop{
+  background:url('icons/stop.png') no-repeat;
+}
+.icon-myExcel{
+  background:url('icons/excel.png') no-repeat;
+}
+.icon-myCall{
+  background:url('icons/call.png') no-repeat;
+}

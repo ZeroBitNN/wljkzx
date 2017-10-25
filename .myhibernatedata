@@ -1,0 +1,17 @@
+#MyEclipse Hibernate Properties
+#Fri Jul 21 23:17:13 CST 2017
+genVersionTag=false
+sessionFactoryName=model.Taccount
+genAnnotations=false
+configFile=/wljkzx/src/main/resources/spring.xml
+reStrategyClass=
+sessionFactoryId=sessionFactory
+profile=
+detectM2M=false
+genBasicCompId=false
+keyGenerator=
+createConfigFile=true
+basePersistenceClass=
+detectO2O=false
+useJavaTypes=true
+reSettingsFile=
