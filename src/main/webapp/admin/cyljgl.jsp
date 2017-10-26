@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <script type="text/javascript">
-	var datagrid;
-	var editRow = undefined;
+	var editRowCylj = undefined;
 	$(function() {
-		datagrid = $('#admin_cyljgl_datagrid').datagrid({
+		$('#admin_cyljgl_datagrid').datagrid({
 			singleSelect : true,
 			url : '${pageContext.request.contextPath}/linksAction!datagrid.action',
 			fit : true,
@@ -22,54 +21,54 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function() {
-					add();
+					addCylj();
 				}
 			}, '-', {
 				text : '删除',
 				iconCls : 'icon-remove',
 				handler : function() {
-					del();
+					delCylj();
 				}
 			}, '-', {
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function() {
-					edit();
+					editCylj();
 				}
 			}, '-', {
 				text : '保存',
 				iconCls : 'icon-save',
 				handler : function() {
-					if (editRow != undefined) {
-						datagrid.datagrid('endEdit', editRow);
+					if (editRowCylj != undefined) {
+						$('#admin_cyljgl_datagrid').datagrid('endEdit', editRowCylj);
 					}
 				}
 			}, '-', {
 				text : '取消编辑',
 				iconCls : 'icon-undo',
 				handler : function() {
-					datagrid.datagrid('unselectAll');
-					datagrid.datagrid('rejectChanges');
-					editRow = undefined;
+					$('#admin_cyljgl_datagrid').datagrid('unselectAll');
+					$('#admin_cyljgl_datagrid').datagrid('rejectChanges');
+					editRowCylj = undefined;
 				}
 			} ],
 			onDblClickRow : function(rowIndex, rowData) {
-				if (editRow != undefined) {
-					datagrid.datagrid('endEdit', editRow);
+				if (editRowCylj != undefined) {
+					$('#admin_cyljgl_datagrid').datagrid('endEdit', editRowCylj);
 				}
 
-				if (editRow == undefined) {
-					datagrid.datagrid('beginEdit', rowIndex);
-					editRow = rowIndex;
-					datagrid.datagrid('unselectAll');
+				if (editRowCylj == undefined) {
+					$('#admin_cyljgl_datagrid').datagrid('beginEdit', rowIndex);
+					editRowCylj = rowIndex;
+					$('#admin_cyljgl_datagrid').datagrid('unselectAll');
 				}
 			},
 			onAfterEdit : function(rowIndex, rowData, changes) {
-				var inserted = datagrid.datagrid('getChanges', 'inserted');
-				var updated = datagrid.datagrid('getChanges', 'updated');
+				var inserted = $('#admin_cyljgl_datagrid').datagrid('getChanges', 'inserted');
+				var updated = $('#admin_cyljgl_datagrid').datagrid('getChanges', 'updated');
 				if (inserted.length < 1 && updated.length < 1) {
-					editRow = undefined;
-					datagrid.datagrid('unselectAll');
+					editRowCylj = undefined;
+					$('#admin_cyljgl_datagrid').datagrid('unselectAll');
 					return;
 				}
 				var url = '';
@@ -86,19 +85,19 @@
 					dataType : 'json',
 					success : function(r) {
 						if (r.success) {
-							datagrid.datagrid('acceptChanges');
+							$('#admin_cyljgl_datagrid').datagrid('acceptChanges');
 							$.messager.show({
 								msg : r.msg,
 								title : '成功'
 							});
-							editRow = undefined;
-							datagrid.datagrid('reload');
+							editRowCylj = undefined;
+							$('#admin_cyljgl_datagrid').datagrid('reload');
 						} else {
-							/*datagrid.datagrid('rejectChanges');*/
-							datagrid.datagrid('beginEdit', editRow);
+							/*$('#admin_cyljgl_datagrid').datagrid('rejectChanges');*/
+							$('#admin_cyljgl_datagrid').datagrid('beginEdit', editRowCylj);
 							$.messager.alert('错误', r.msg, 'error');
 						}
-						datagrid.datagrid('unselectAll');
+						$('#admin_cyljgl_datagrid').datagrid('unselectAll');
 					},
 					error : function(data) {
 						$.messager.alert('警告！', data.responseText, 'warning');
@@ -108,29 +107,29 @@
 		});
 	});
 
-	function add() {
-		if (editRow != undefined) {
-			datagrid.datagrid('endEdit', editRow);
+	function addCylj() {
+		if (editRowCylj != undefined) {
+			$('#admin_cyljgl_datagrid').datagrid('endEdit', editRowCylj);
 		}
 
-		if (editRow == undefined) {
-			datagrid.datagrid('unselectAll');
+		if (editRowCylj == undefined) {
+			$('#admin_cyljgl_datagrid').datagrid('unselectAll');
 			var row = {
 				id : getUUID()
 			};
-			datagrid.datagrid('appendRow', row);
-			editRow = datagrid.datagrid('getRows').length - 1;
-			datagrid.datagrid('selectRow', editRow);
-			datagrid.datagrid('beginEdit', editRow);
+			$('#admin_cyljgl_datagrid').datagrid('appendRow', row);
+			editRowCylj = $('#admin_cyljgl_datagrid').datagrid('getRows').length - 1;
+			$('#admin_cyljgl_datagrid').datagrid('selectRow', editRowCylj);
+			$('#admin_cyljgl_datagrid').datagrid('beginEdit', editRowCylj);
 		}
 	}
 
-	function del() {
-		if (editRow != undefined) {
-			datagrid.datagrid('endEdit', editRow);
+	function delCylj() {
+		if (editRowCylj != undefined) {
+			$('#admin_cyljgl_datagrid').datagrid('endEdit', editRowCylj);
 			return;
 		}
-		var rows = datagrid.datagrid('getSelections');
+		var rows = $('#admin_cyljgl_datagrid').datagrid('getSelections');
 		if (rows.length > 0) {
 			$.messager.confirm('请确认', '您要删除当前所选项目？', function(r) {
 				if (r) {
@@ -143,8 +142,8 @@
 						dataType : 'json',
 						success : function(r) {
 							if (r.success) {
-								datagrid.datagrid('load');
-								datagrid.datagrid('unselectAll');
+								$('#admin_cyljgl_datagrid').datagrid('load');
+								$('#admin_cyljgl_datagrid').datagrid('unselectAll');
 								$.messager.show({
 									title : '提示',
 									msg : '删除成功！'
@@ -162,17 +161,17 @@
 		}
 	}
 
-	function edit() {
-		var rows = datagrid.datagrid('getSelections');
+	function editCylj() {
+		var rows = $('#admin_cyljgl_datagrid').datagrid('getSelections');
 		if (rows.length == 1) {
-			if (editRow != undefined) {
-				datagrid.datagrid('endEdit', editRow);
+			if (editRowCylj != undefined) {
+				$('#admin_cyljgl_datagrid').datagrid('endEdit', editRowCylj);
 			}
 
-			if (editRow == undefined) {
-				editRow = datagrid.datagrid('getRowIndex', rows[0]);
-				datagrid.datagrid('beginEdit', editRow);
-				datagrid.datagrid('unselectAll');
+			if (editRowCylj == undefined) {
+				editRowCylj = $('#admin_cyljgl_datagrid').datagrid('getRowIndex', rows[0]);
+				$('#admin_cyljgl_datagrid').datagrid('beginEdit', editRowCylj);
+				$('#admin_cyljgl_datagrid').datagrid('unselectAll');
 			}
 		} else {
 			$.messager.alert('提示', '请选择一项进行修改！', 'error');

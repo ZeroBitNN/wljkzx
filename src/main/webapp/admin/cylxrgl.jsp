@@ -173,10 +173,10 @@
 <table id="admin_cylxrgl_Datagrid">
 	<thead>
 		<tr>
-			<th data-options="field:'id',width:80,checkbox:true">ID</th>
-			<th data-options="field:'name',width:80">联系人</th>
-			<th data-options="field:'phonenumber',width:100">联系号码</th>
-			<th data-options="field:'dept',width:80">所属部门</th>
+			<th data-options="field:'id',width:10,checkbox:true">ID</th>
+			<th data-options="field:'name',width:100">联系人</th>
+			<th data-options="field:'phonenumber',width:90">联系号码</th>
+			<th data-options="field:'dept',width:10">所属部门</th>
 		</tr>
 	</thead>
 </table>

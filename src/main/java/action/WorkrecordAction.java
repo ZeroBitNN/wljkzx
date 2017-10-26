@@ -1,5 +1,6 @@
 package action;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import service.WorkrecordServiceI;
 @Namespace("/")
 @Action(value = "workAction")
 public class WorkrecordAction extends BaseAction implements ModelDriven<Workrecord> {
+	private static final Logger logger = Logger.getLogger(WorkrecordAction.class);
+
 	private Workrecord workrecord = new Workrecord();
 
 	@Override
@@ -71,7 +74,10 @@ public class WorkrecordAction extends BaseAction implements ModelDriven<Workreco
 
 	public void delete() {
 		Json j = new Json();
-		if (sessionInfo != null && sessionInfo.getUser().getUsername().equals(workrecord.getHandler())) {
+		logger.info("=================工作记录删除===========================");
+		logger.info("当前用户：" + sessionInfo.getUser().getUsername().trim());
+		logger.info("工作记录处理人：" + workrecord.getHandler().trim());
+		if (sessionInfo != null && sessionInfo.getUser().getUsername().trim().equals(workrecord.getHandler().trim())) {
 			try {
 				workrecordService.delete(workrecord.getId());
 				j.setSuccess(true);
