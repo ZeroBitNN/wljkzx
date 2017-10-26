@@ -191,7 +191,7 @@
 		$('#demand_demandList_datagrid').datagrid('load', serializeObject($('#demand_dmeandList_searchForm')));
 	}
 
-	function clearSearch() {
+	function clearSearchDemand() {
 		$('#demand_demandList_toolbar input[name=content]').val('');
 		$('#demand_demandList_datagrid').datagrid('load', {});
 	}
@@ -240,6 +240,6 @@
 		&nbsp;&nbsp;内容：<input name="content" /> <a href="javascript:void(0)" class="easyui-linkbutton"
 			data-options="iconCls:'icon-search',plain:true" onclick="searchContent();">查询</a> <a
 			href="javascript:void(0)" class="easyui-linkbutton"
-			data-options="iconCls:'icon-reload',plain:true" onclick="clearSearch();">重置</a>
+			data-options="iconCls:'icon-reload',plain:true" onclick="clearSearchDemand();">重置</a>
 	</form>
 </div>

@@ -9,7 +9,7 @@
 			rownumbers : true,
 			singleSelect : true,
 			fitColumns : true,
-			columns : [ [
+			columns : [[
 				{
 					field : 'id',
 					title : '编号',
@@ -37,7 +37,7 @@
 					title : '密码',
 					width : 150
 				}
-			] ],
+			]],
 			onLoadError : function() {
 				$.messager.alert('警告！', "您没有访问此功能的权限！请联系管理员给你赋予相应权限。", 'warning');
 			},
@@ -45,13 +45,13 @@
 		});
 	});
 
-	function add() {
+	function addWgmm() {
 		var d = $('<div/>').dialog({
 			title : '添加',
 			width : 500,
 			href : '${pageContext.request.contextPath}/netManage/wgmmAdd.jsp',
 			modal : true,
-			buttons : [ {
+			buttons : [{
 				text : '添加',
 				handler : function() {
 					$('#netManage_wgmm_addForm').form('submit', {
@@ -77,14 +77,14 @@
 						}
 					});
 				}
-			} ],
+			}],
 			onClose : function() {
 				$(this).dialog('destroy');
 			}
 		});
 	}
 
-	function edit() {
+	function editWgmm() {
 		var rows = $('#netmanage_wgmm_datagrid').datagrid('getChecked');
 		if (rows.length == 1) {
 			var d = $('<div/>').dialog({
@@ -92,7 +92,7 @@
 				width : 500,
 				href : '${pageContext.request.contextPath}/netManage/wgmmEdit.jsp',
 				modal : true,
-				buttons : [ {
+				buttons : [{
 					text : '修改',
 					handler : function() {
 						$('#netManage_wgmm_editForm').form('submit', {
@@ -117,7 +117,7 @@
 							}
 						});
 					}
-				} ],
+				}],
 				onClose : function() {
 					$(this).dialog('destroy');
 				},
@@ -130,7 +130,7 @@
 		}
 	}
 
-	function del() {
+	function delWgmm() {
 		var rows = $('#netmanage_wgmm_datagrid').datagrid('getChecked');
 		/*console.info(rows);*/
 		if (rows.length > 0) {
@@ -161,11 +161,11 @@
 		}
 	}
 
-	function searchRec() {
+	function searchWgmm() {
 		$('#netmanage_wgmm_datagrid').datagrid('load', serializeObject($('#netmanage_wgmm_searchForm')));
 	}
 
-	function clearSearch() {
+	function clearSearchWgmm() {
 		$('#netmanage_wgmm_toolbar input[name=name]').val('');
 		$('#netmanage_wgmm_datagrid').datagrid('load', {});
 	}
@@ -174,17 +174,19 @@
 <table id="netmanage_wgmm_datagrid"></table>
 
 <div id="netmanage_wgmm_toolbar">
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" style="float:left;" onclick="add();">添加</a>
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+		style="float:left;" onclick="addWgmm();">添加</a>
 	<div class="datagrid-btn-separator"></div>
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" style="float:left;"
-		onclick="edit();">修改</a>
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+		style="float:left;" onclick="editWgmm();">修改</a>
 	<div class="datagrid-btn-separator"></div>
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" style="float:left;"
-		onclick="del();">删除</a>
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+		style="float:left;" onclick="delWgmm();">删除</a>
 	<div class="datagrid-btn-separator"></div>
 	<form id="netmanage_wgmm_searchForm">
 		&nbsp;&nbsp;按系统名称查询：<input name="name" /> <a href="#" class="easyui-linkbutton"
-			data-options="iconCls:'icon-search',plain:true" onclick="searchRec();">查询</a> <a href="#" class="easyui-linkbutton"
-			data-options="iconCls:'icon-reload',plain:true" onclick="clearSearch();">重置</a>
+			data-options="iconCls:'icon-search',plain:true" onclick="searchWgmm();">查询</a> <a href="#"
+			class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true"
+			onclick="clearSearchWgmm();">重置</a>
 	</form>
 </div>

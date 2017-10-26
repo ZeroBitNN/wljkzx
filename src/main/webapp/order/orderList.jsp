@@ -212,7 +212,7 @@
 		});
 	}
 
-	function clearSearch() {
+	function clearSearchOrder() {
 		$('#order_orderList_searchTable input[name=ordernum]').val('');
 		$('#order_orderList_searchTable input[name=title]').val('');
 		$('#order_orderList_archivedCombo').combobox('clear');
@@ -221,7 +221,7 @@
 		$('#order_orderlist_datagrid').datagrid('load', {});
 	}
 
-	function unselect() {
+	function unselectOrder() {
 		$('#order_orderlist_datagrid').datagrid('unselectAll');
 	}
 </script>
@@ -241,7 +241,7 @@
 				<td align="right"><a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
 					onclick="searchRec();">查询</a></td>
 				<td align="left"><a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true"
-					onclick="clearSearch();">重置列表</a></td>
+					onclick="clearSearchOrder();">重置列表</a></td>
 			</tr>
 		</table>
 	</div>
@@ -255,7 +255,7 @@
 		onclick="archived();">工单归档</a>
 	<div class="datagrid-btn-separator"></div>
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" style="float:left;"
-		onclick="unselect();">取消所选</a>
+		onclick="unselectOrder();">取消所选</a>
 	<div class="datagrid-btn-separator"></div>
 	&nbsp;&nbsp;管控类型：<input value="请选择" id="order_orderList_typeCombo" class="easyui-combobox" name="orderType"
 		data-options="url : '${pageContext.request.contextPath}/orderAction!doNotNeedSecurity_getOrderType.action',
