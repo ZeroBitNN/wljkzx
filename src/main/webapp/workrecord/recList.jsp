@@ -390,6 +390,7 @@
 			$.messager.confirm('确认', '是否确认删除所选记录？', function(r) {
 				if (r) {
 					$.ajax({
+						type : "POST",
 						url : '${pageContext.request.contextPath}/workAction!delete.action',
 						data : {
 							id : rows[0].id,
@@ -454,8 +455,8 @@
 					<td><input name="modifytimeStart" class="easyui-datetimebox" editable="false"
 						style="width: 155px;" />至<input name="modifytimeEnd" class="easyui-datetimebox"
 						editable="false" style="width: 155px;" />&nbsp;&nbsp;<a href="javascript:void(0);"
-						class="easyui-linkbutton" onclick="searchWorkrecord();">查询</a>&nbsp;&nbsp;<a href="javascript:void(0);"
-						class="easyui-linkbutton" onclick="cleanSearchWorkrecord();">重置</a></td>
+						class="easyui-linkbutton" onclick="searchWorkrecord();">查询</a>&nbsp;&nbsp;<a
+						href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearchWorkrecord();">重置</a></td>
 				</tr>
 			</table>
 		</form>
