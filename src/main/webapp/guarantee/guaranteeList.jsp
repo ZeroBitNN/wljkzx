@@ -160,19 +160,19 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function() {
-					add();
+					addGuarantee();
 				}
 			}, '-', {
 				text : '结束保障',
 				iconCls : 'icon-myStop',
 				handler : function() {
-					_stop();
+					stopGuarantee();
 				}
 			}, '-', {
 				text : '删除',
 				iconCls : 'icon-remove',
 				handler : function() {
-					del();
+					delGuarantee();
 				}
 			}]
 		});
@@ -184,16 +184,16 @@
 		});
 	});
 
-	function _search() {
+	function searchGuarantee() {
 		$('#guarantee_guaranteeList_datagrid').datagrid('load', serializeObject($('#guarantee_guaranteeList_searchForm')));
 	}
 
-	function cleanSearch() {
+	function cleanSearchGuarantee() {
 		$('#guarantee_guaranteeList_searchForm').form('reset');
 		$('#guarantee_guaranteeList_datagrid').datagrid('load', {});
 	}
 
-	function add() {
+	function addGuarantee() {
 		var gid = getUUID();
 		guaranteeAddDialog = $('<div/>').dialog({
 			title : '添加',
@@ -265,7 +265,7 @@
 		});
 	}
 
-	function del() {
+	function delGuarantee() {
 		var rows = $('#guarantee_guaranteeList_datagrid').datagrid('getChecked');
 		if (rows.length > 0) {
 			$.messager.confirm('确认', '是否确认删除 <b>' + rows[0].title + '</b> ？', function(r) {
@@ -295,7 +295,7 @@
 		}
 	}
 
-	function _stop() {
+	function stopGuarantee() {
 		var rows = $('#guarantee_guaranteeList_datagrid').datagrid('getChecked');
 		if (rows.length > 0) {
 			$.messager.confirm('确认', '是否确认结束 <b>' + rows[0].title + '</b> ？', function(r) {
@@ -353,8 +353,8 @@
 					<td><input name="timestart" class="easyui-datebox" editable="false" style="width: 155px;" />&nbsp;结束时间&nbsp;<input
 						name="timeend" class="easyui-datebox" editable="false" style="width: 155px;" /></td>
 					<th></th>
-					<td><a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a>&nbsp;&nbsp;<a
-						href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a></td>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton" onclick="searchGuarantee();">查询</a>&nbsp;&nbsp;<a
+						href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearchGuarantee();">重置</a></td>
 				</tr>
 			</table>
 		</form>

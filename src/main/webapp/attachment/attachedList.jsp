@@ -78,7 +78,7 @@
 				text : '删除',
 				iconCls : 'icon-remove',
 				handler : function() {
-					del();
+					delAttached();
 				}
 			}, '-', {
 				text : '取消选择',
@@ -97,16 +97,16 @@
 
 	});
 
-	function _search() {
+	function searchAttached() {
 		attachDg.datagrid('load', serializeObject($('#attachment_attachedList_searchForm')));
 	}
 
-	function cleanSearch() {
+	function cleanSearchAttached() {
 		$('#attachment_attachedList_searchForm').form('reset');
 		attachDg.datagrid('load', {});
 	}
 
-	function del() {
+	function delAttached() {
 		var titles = [];
 		var ids = "";
 		var rows = attachDg.datagrid('getSelections');
@@ -166,9 +166,9 @@
 					<td><input name="uploadtimeStart" class="easyui-datetimebox"
 						editable="false" style="width: 155px;" />至<input name="uploadtimeEnd"
 						class="easyui-datetimebox" editable="false" style="width: 155px;" />&nbsp;&nbsp;<a
-						href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a>&nbsp;&nbsp;<a
+						href="javascript:void(0);" class="easyui-linkbutton" onclick="searchAttached();">查询</a>&nbsp;&nbsp;<a
 						href="javascript:void(0);" class="easyui-linkbutton"
-						onclick="cleanSearch();">重置</a></td>
+						onclick="cleanSearchAttached();">重置</a></td>
 				</tr>
 			</table>
 		</form>

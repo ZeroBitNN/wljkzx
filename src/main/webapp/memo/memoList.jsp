@@ -10,22 +10,21 @@
 
 <script type="text/javascript" charset="utf-8">
 	var searchTypeVal;
-	var dg;
 	var editRow = undefined;
 	$(function() {
 		searchTypeVal = "<%=searchType%>";
 		var url;
 		//console.info(searchTypeVal);
 		switch (searchTypeVal) {
-		case 'All':
-			url = '${pageContext.request.contextPath}/memoAction!doNotNeedSecurity_getAllDatagrid.action';
-			break;
-		case 'ldjb':
-			url = '${pageContext.request.contextPath}/memoAction!doNotNeedSecurity_getLdjbDatagrid.action';
-			break;
-		case 'ptjb':
-			url = '${pageContext.request.contextPath}/memoAction!doNotNeedSecurity_getPtjbDatagrid.action';
-			break;
+			case 'All' :
+				url = '${pageContext.request.contextPath}/memoAction!doNotNeedSecurity_getAllDatagrid.action';
+				break;
+			case 'ldjb' :
+				url = '${pageContext.request.contextPath}/memoAction!doNotNeedSecurity_getLdjbDatagrid.action';
+				break;
+			case 'ptjb' :
+				url = '${pageContext.request.contextPath}/memoAction!doNotNeedSecurity_getPtjbDatagrid.action';
+				break;
 		}
 		//console.info(url);
 		$('#memo_memoList_MemofromCombo').combobox({
@@ -39,7 +38,7 @@
 			textField : 'username'
 		});
 
-		dg = $('#memo_memoList_datagrid').datagrid({
+		$('#memo_memoList_datagrid').datagrid({
 			url : url,
 			fit : true,
 			border : false,
@@ -49,7 +48,7 @@
 			singleSelect : true,
 			sortName : 'status',
 			sortOrder : 'asc',
-			columns : [ [
+			columns : [[
 				{
 					field : 'id',
 					title : '编号',
@@ -98,13 +97,13 @@
 						options : {
 							valueField : 'label',
 							textField : 'value',
-							data : [ {
+							data : [{
 								label : '普通交班',
 								value : '普通交班'
 							}, {
 								label : '领导交办',
 								value : '领导交办'
-							} ],
+							}],
 							required : true
 						}
 					},
@@ -120,7 +119,7 @@
 						options : {
 							valueField : 'label',
 							textField : 'value',
-							data : [ {
+							data : [{
 								label : '早班',
 								value : '早班'
 							}, {
@@ -129,7 +128,7 @@
 							}, {
 								label : '晚班',
 								value : '晚班'
-							} ],
+							}],
 							required : true
 						}
 					},
@@ -215,7 +214,7 @@
 					},
 					sortable : true
 				}
-			] ],
+			]],
 			rowStyler : function(index, row) {
 				if (row.status == '未完成') {
 					if (row.memotype == '领导交办') {
@@ -227,53 +226,53 @@
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 				if (editRow != undefined) {
-					dg.datagrid('endEdit', editRow);
+					$('#memo_memoList_datagrid').datagrid('endEdit', editRow);
 				}
 
 				if (editRow == undefined) {
-					dg.datagrid('beginEdit', rowIndex);
+					$('#memo_memoList_datagrid').datagrid('beginEdit', rowIndex);
 					editRow = rowIndex;
-					dg.datagrid('unselectAll');
+					$('#memo_memoList_datagrid').datagrid('unselectAll');
 				}
 			},
 			onLoadError : function() {
 				$.messager.alert('警告！', "您没有访问此功能的权限！请联系管理员给你赋予相应权限。", 'warning');
 			},
-			toolbar : [ {
+			toolbar : [{
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function() {
-					add();
+					addMemo();
 				}
 			}, '-', {
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function() {
-					edit();
+					editMemo();
 				}
 			}, '-', {
 				text : '保存',
 				iconCls : 'icon-save',
 				handler : function() {
 					if (editRow != undefined) {
-						dg.datagrid('endEdit', editRow);
+						$('#memo_memoList_datagrid').datagrid('endEdit', editRow);
 					}
 				}
 			}, '-', {
 				text : '取消编辑',
 				iconCls : 'icon-undo',
 				handler : function() {
-					dg.datagrid('unselectAll');
-					dg.datagrid('rejectChanges');
+					$('#memo_memoList_datagrid').datagrid('unselectAll');
+					$('#memo_memoList_datagrid').datagrid('rejectChanges');
 					editRow = undefined;
 				}
-			} ],
+			}],
 			onAfterEdit : function(rowIndex, rowData, changes) {
-				var inserted = dg.datagrid('getChanges', 'inserted');
-				var updated = dg.datagrid('getChanges', 'updated');
+				var inserted = $('#memo_memoList_datagrid').datagrid('getChanges', 'inserted');
+				var updated = $('#memo_memoList_datagrid').datagrid('getChanges', 'updated');
 				if (inserted.length < 1 && updated.length < 1) {
 					editRow = undefined;
-					dg.datagrid('unselectAll');
+					$('#memo_memoList_datagrid').datagrid('unselectAll');
 					return;
 				}
 				var url = '';
@@ -290,19 +289,19 @@
 					dataType : 'json',
 					success : function(r) {
 						if (r.success) {
-							dg.datagrid('acceptChanges');
+							$('#memo_memoList_datagrid').datagrid('acceptChanges');
 							$.messager.show({
 								msg : r.msg,
 								title : '成功'
 							});
 							editRow = undefined;
-							dg.datagrid('reload');
+							$('#memo_memoList_datagrid').datagrid('reload');
 						} else {
 							/*datagrid.datagrid('rejectChanges');*/
-							dg.datagrid('beginEdit', editRow);
+							$('#memo_memoList_datagrid').datagrid('beginEdit', editRow);
 							$.messager.alert('错误', r.msg, 'error');
 						}
-						dg.datagrid('unselectAll');
+						$('#memo_memoList_datagrid').datagrid('unselectAll');
 					},
 					error : function(data) {
 						$.messager.alert('警告！', data.responseText, 'warning');
@@ -312,45 +311,45 @@
 		});
 
 	/*
-	dg.datagrid('enableCellEditing').datagrid('gotoCell', {
+	$('#memo_memoList_datagrid').datagrid('enableCellEditing').datagrid('gotoCell', {
 		index : 0,
 		field : 'id'
 	});
 	*/
 	});
 
-	function _search() {
-		dg.datagrid('load', serializeObject($('#memo_memoList_searchForm')));
+	function searchMemo() {
+		$('#memo_memoList_datagrid').datagrid('load', serializeObject($('#memo_memoList_searchForm')));
 	}
 
-	function cleanSearch() {
+	function cleanSearchMemo() {
 		$('#memo_memoList_searchForm').form('reset');
-		dg.datagrid('load', {});
+		$('#memo_memoList_datagrid').datagrid('load', {});
 	}
 
-	function add() {
+	function addMemo() {
 		if (editRow != undefined) {
-			dg.datagrid('endEdit', editRow);
+			$('#memo_memoList_datagrid').datagrid('endEdit', editRow);
 		}
 
 		if (editRow == undefined) {
-			dg.datagrid('unselectAll');
+			$('#memo_memoList_datagrid').datagrid('unselectAll');
 			var row = {
 				id : getUUID()
 			};
-			dg.datagrid('appendRow', row);
-			editRow = dg.datagrid('getRows').length - 1;
-			dg.datagrid('selectRow', editRow);
-			dg.datagrid('beginEdit', editRow);
+			$('#memo_memoList_datagrid').datagrid('appendRow', row);
+			editRow = $('#memo_memoList_datagrid').datagrid('getRows').length - 1;
+			$('#memo_memoList_datagrid').datagrid('selectRow', editRow);
+			$('#memo_memoList_datagrid').datagrid('beginEdit', editRow);
 		}
 	}
 
-	function del() {
+	function delMemo() {
 		if (editRow != undefined) {
-			dg.datagrid('endEdit', editRow);
+			$('#memo_memoList_datagrid').datagrid('endEdit', editRow);
 			return;
 		}
-		var rows = dg.datagrid('getSelections');
+		var rows = $('#memo_memoList_datagrid').datagrid('getSelections');
 		if (rows.length > 0) {
 			$.messager.confirm('请确认', '您要删除当前所选项目？', function(r) {
 				if (r) {
@@ -363,8 +362,8 @@
 						dataType : 'json',
 						success : function(r) {
 							if (r.success) {
-								dg.datagrid('load');
-								dg.datagrid('unselectAll');
+								$('#memo_memoList_datagrid').datagrid('load');
+								$('#memo_memoList_datagrid').datagrid('unselectAll');
 								$.messager.show({
 									title : '提示',
 									msg : '删除成功！'
@@ -382,8 +381,8 @@
 		}
 	}
 
-	function edit() {
-		var rows = dg.datagrid('getSelections');
+	function editMemo() {
+		var rows = $('#memo_memoList_datagrid').datagrid('getSelections');
 		if (rows.length == 1) {
 			var memoDialog = $('<div/>').dialog({
 				title : '交接班日志',
@@ -395,7 +394,7 @@
 				left : 300,
 				top : 20,
 				maximizable : true,
-				buttons : [ {
+				buttons : [{
 					text : '修改日志',
 					handler : function() {
 						$('#memo_memoEdit_editForm').form('submit', {
@@ -405,7 +404,7 @@
 									var result = jQuery.parseJSON(data);
 									if (result.success) {
 										memoDialog.dialog('close');
-										dg.datagrid('load', {});
+										$('#memo_memoList_datagrid').datagrid('load', {});
 									}
 									$.messager.show({
 										title : '提示：',
@@ -425,7 +424,7 @@
 					handler : function() {
 						memoDialog.dialog('close');
 					}
-				} ],
+				}],
 				onClose : function() {
 					$(this).dialog('destroy');
 				},
@@ -440,7 +439,8 @@
 </script>
 
 <div class="easyui-layout" data-options="fit:true,border:false">
-	<div region="north" border="false" title="查询条件" style="height: 122px;overflow: hidden;" align="left">
+	<div region="north" border="false" title="查询条件" style="height: 122px;overflow: hidden;"
+		align="left">
 		<form id="memo_memoList_searchForm">
 			<table class="tableForm datagrid-toolbar" style="width: 100%;height: 100%;">
 				<tr>
@@ -452,19 +452,20 @@
 							if (searchType.equals("ldjb")) {
 						%> <input class="easyui-textbox" name="memotype" value="领导交办"
 						data-options="editable:false,disabled:true" /> <%
-						 	}
-						 	if (searchType.equals("ptjb")) {
-						 %><input class="easyui-textbox" name="memotype" value="普通交班"
-												data-options="editable:false,disabled:true" /> <%
-						 	}
-						 	if (searchType.equals("All")) {
-						 %> <select class="easyui-combobox" name="memotype" data-options="required:true,editable:false">
-													<option value="">---请选择---</option>
-													<option value="普通交班">普通交班</option>
-													<option value="领导交办">领导交办</option>
-											</select> <%
-						 	}
-						 %>
+ 	}
+ 	if (searchType.equals("ptjb")) {
+ %><input class="easyui-textbox" name="memotype" value="普通交班"
+						data-options="editable:false,disabled:true" /> <%
+ 	}
+ 	if (searchType.equals("All")) {
+ %> <select class="easyui-combobox" name="memotype"
+						data-options="required:true,editable:false">
+							<option value="">---请选择---</option>
+							<option value="普通交班">普通交班</option>
+							<option value="领导交办">领导交办</option>
+					</select> <%
+ 	}
+ %>
 					</td>
 				</tr>
 				<tr>
@@ -482,8 +483,8 @@
 						editable="false" style="width: 155px;" /></td>
 					<th>接班人</th>
 					<td><input id="memo_memoList_MemotoCombo" class="easyui-combobox" name="Memoto">
-						&nbsp;&nbsp;<a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a>&nbsp;&nbsp;<a
-						href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a></td>
+						&nbsp;&nbsp;<a href="javascript:void(0);" class="easyui-linkbutton" onclick="searchMemo();">查询</a>&nbsp;&nbsp;<a
+						href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearchMemo();">重置</a></td>
 				</tr>
 			</table>
 		</form>
