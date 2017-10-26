@@ -49,7 +49,7 @@ public class NetManageServiceImpl implements NetManageServiceI {
 		String hql = "from TNetmanage t";
 		// 判断是否按系统名称查询
 		if (netManage.getName() != null && !netManage.getName().trim().equals("")) {
-			hql += " where t.name like '%" + netManage.getName() + "%'";
+			hql += " where upper(t.name) like '%" + netManage.getName().trim().toUpperCase() + "%'";
 		}
 		// 判断是否按系统名称排序
 		if (netManage.getSort()!=null){

@@ -33,7 +33,7 @@ public class LinksServiceImpl implements LinksServiceI {
 		List<LinksDataList> list = new ArrayList<LinksDataList>();
 		String hql = "from TLinks t where 1=1";
 		if (links.getText() != null && !links.getText().trim().equals("")) {
-			hql += " and t.text like '%" + links.getText() + "%'";
+			hql += " and upper(t.text) like '%" + links.getText().trim().toUpperCase() + "%'";
 		}
 		List<TLinks> tLinksList = linksDao.find(hql);
 		if (tLinksList != null && tLinksList.size() > 0) {
