@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  * TAccount entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_ACCOUNT", schema = "", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME") )
+@Table(name = "T_ACCOUNT", schema = "WLJKZX", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME") )
 
 public class TAccount implements java.io.Serializable {
 
@@ -31,12 +31,14 @@ public class TAccount implements java.io.Serializable {
 	private String username;
 	private Set<TMemo> TMemosForMemoto = new HashSet<TMemo>(0);
 	private Set<TOrderNotice> TOrderNotices = new HashSet<TOrderNotice>(0);
+	private Set<TDailyworkDetails> TDailyworkDetailses = new HashSet<TDailyworkDetails>(0);
 	private Set<TOrder> TOrdersForModifyid = new HashSet<TOrder>(0);
 	private Set<TDemand> TDemands = new HashSet<TDemand>(0);
 	private Set<TMemo> TMemosForMemofrom = new HashSet<TMemo>(0);
 	private Set<TOrder> TOrdersForAuthorid = new HashSet<TOrder>(0);
 	private Set<TWorkrecord> TWorkrecordsForInputer = new HashSet<TWorkrecord>(0);
 	private Set<TWorkrecord> TWorkrecordsForHandler = new HashSet<TWorkrecord>(0);
+	private Set<TDailywork> TDailyworks = new HashSet<TDailywork>(0);
 
 	// Constructors
 
@@ -53,9 +55,10 @@ public class TAccount implements java.io.Serializable {
 
 	/** full constructor */
 	public TAccount(String id, TRoles TRoles, String createtime, String modifytime, String pwd, String username,
-			Set<TMemo> TMemosForMemoto, Set<TOrderNotice> TOrderNotices, Set<TOrder> TOrdersForModifyid,
-			Set<TDemand> TDemands, Set<TMemo> TMemosForMemofrom, Set<TOrder> TOrdersForAuthorid,
-			Set<TWorkrecord> TWorkrecordsForInputer, Set<TWorkrecord> TWorkrecordsForHandler) {
+			Set<TMemo> TMemosForMemoto, Set<TOrderNotice> TOrderNotices, Set<TDailyworkDetails> TDailyworkDetailses,
+			Set<TOrder> TOrdersForModifyid, Set<TDemand> TDemands, Set<TMemo> TMemosForMemofrom,
+			Set<TOrder> TOrdersForAuthorid, Set<TWorkrecord> TWorkrecordsForInputer,
+			Set<TWorkrecord> TWorkrecordsForHandler, Set<TDailywork> TDailyworks) {
 		this.id = id;
 		this.TRoles = TRoles;
 		this.createtime = createtime;
@@ -64,18 +67,20 @@ public class TAccount implements java.io.Serializable {
 		this.username = username;
 		this.TMemosForMemoto = TMemosForMemoto;
 		this.TOrderNotices = TOrderNotices;
+		this.TDailyworkDetailses = TDailyworkDetailses;
 		this.TOrdersForModifyid = TOrdersForModifyid;
 		this.TDemands = TDemands;
 		this.TMemosForMemofrom = TMemosForMemofrom;
 		this.TOrdersForAuthorid = TOrdersForAuthorid;
 		this.TWorkrecordsForInputer = TWorkrecordsForInputer;
 		this.TWorkrecordsForHandler = TWorkrecordsForHandler;
+		this.TDailyworks = TDailyworks;
 	}
 
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", nullable = false, length = 36)
+	@Column(name = "ID", unique = true, nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -156,6 +161,16 @@ public class TAccount implements java.io.Serializable {
 		this.TOrderNotices = TOrderNotices;
 	}
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccount")
+
+	public Set<TDailyworkDetails> getTDailyworkDetailses() {
+		return this.TDailyworkDetailses;
+	}
+
+	public void setTDailyworkDetailses(Set<TDailyworkDetails> TDailyworkDetailses) {
+		this.TDailyworkDetailses = TDailyworkDetailses;
+	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccountByModifyid")
 
 	public Set<TOrder> getTOrdersForModifyid() {
@@ -214,6 +229,16 @@ public class TAccount implements java.io.Serializable {
 
 	public void setTWorkrecordsForHandler(Set<TWorkrecord> TWorkrecordsForHandler) {
 		this.TWorkrecordsForHandler = TWorkrecordsForHandler;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccount")
+
+	public Set<TDailywork> getTDailyworks() {
+		return this.TDailyworks;
+	}
+
+	public void setTDailyworks(Set<TDailywork> TDailyworks) {
+		this.TDailyworks = TDailyworks;
 	}
 
 }

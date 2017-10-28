@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
  * TMemo entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_MEMO", schema = "")
+@Table(name = "T_MEMO", schema = "WLJKZX")
 
 public class TMemo implements java.io.Serializable {
 
@@ -25,12 +25,12 @@ public class TMemo implements java.io.Serializable {
 	private TAccount TAccountByMemoto;
 	private TAccount TAccountByMemofrom;
 	private String classes;
-	private Date createtime;
-	private Date modifytime;
 	private String content;
-	private String othercontent;
+	private Date createtime;
 	private String leaveover;
 	private String memotype;
+	private Date modifytime;
+	private String othercontent;
 	private String status;
 
 	// Constructors
@@ -45,25 +45,25 @@ public class TMemo implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public TMemo(String id, TAccount TAccountByMemoto, TAccount TAccountByMemofrom, String classes, Date createtime,
-			Date modifytime, String content, String othercontent, String leaveover, String memotype, String status) {
+	public TMemo(String id, TAccount TAccountByMemoto, TAccount TAccountByMemofrom, String classes, String content,
+			Date createtime, String leaveover, String memotype, Date modifytime, String othercontent, String status) {
 		this.id = id;
 		this.TAccountByMemoto = TAccountByMemoto;
 		this.TAccountByMemofrom = TAccountByMemofrom;
 		this.classes = classes;
-		this.createtime = createtime;
-		this.modifytime = modifytime;
 		this.content = content;
-		this.othercontent = othercontent;
+		this.createtime = createtime;
 		this.leaveover = leaveover;
 		this.memotype = memotype;
+		this.modifytime = modifytime;
+		this.othercontent = othercontent;
 		this.status = status;
 	}
 
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", nullable = false, length = 36)
+	@Column(name = "ID", unique = true, nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -105,28 +105,6 @@ public class TMemo implements java.io.Serializable {
 		this.classes = classes;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATETIME", length = 7)
-
-	public Date getCreatetime() {
-		return this.createtime;
-	}
-
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFYTIME", length = 7)
-
-	public Date getModifytime() {
-		return this.modifytime;
-	}
-
-	public void setModifytime(Date modifytime) {
-		this.modifytime = modifytime;
-	}
-
 	@Column(name = "CONTENT", length = 1000)
 
 	public String getContent() {
@@ -137,14 +115,15 @@ public class TMemo implements java.io.Serializable {
 		this.content = content;
 	}
 
-	@Column(name = "OTHERCONTENT", length = 1000)
+	@Temporal(TemporalType.DATE)
+	@Column(name = "CREATETIME", length = 7)
 
-	public String getOthercontent() {
-		return this.othercontent;
+	public Date getCreatetime() {
+		return this.createtime;
 	}
 
-	public void setOthercontent(String othercontent) {
-		this.othercontent = othercontent;
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
 	}
 
 	@Column(name = "LEAVEOVER", length = 1000)
@@ -165,6 +144,27 @@ public class TMemo implements java.io.Serializable {
 
 	public void setMemotype(String memotype) {
 		this.memotype = memotype;
+	}
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "MODIFYTIME", length = 7)
+
+	public Date getModifytime() {
+		return this.modifytime;
+	}
+
+	public void setModifytime(Date modifytime) {
+		this.modifytime = modifytime;
+	}
+
+	@Column(name = "OTHERCONTENT", length = 1000)
+
+	public String getOthercontent() {
+		return this.othercontent;
+	}
+
+	public void setOthercontent(String othercontent) {
+		this.othercontent = othercontent;
 	}
 
 	@Column(name = "STATUS", length = 10)

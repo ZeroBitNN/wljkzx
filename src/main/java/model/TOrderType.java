@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * TOrderType entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_ORDER_TYPE", schema = "")
+@Table(name = "T_ORDER_TYPE", schema = "WLJKZX")
 
 public class TOrderType implements java.io.Serializable {
 
@@ -45,7 +45,7 @@ public class TOrderType implements java.io.Serializable {
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", nullable = false, length = 36)
+	@Column(name = "ID", unique = true, nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
