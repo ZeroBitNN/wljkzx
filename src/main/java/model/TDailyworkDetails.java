@@ -12,6 +12,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
+ * 日管控工作详单
  * TDailyworkDetails entity. @author MyEclipse Persistence Tools
  */
 @Entity
@@ -22,12 +23,12 @@ public class TDailyworkDetails implements java.io.Serializable {
 	// Fields
 
 	private String id;
-	private TDailywork TDailywork;
-	private TAccount TAccount;
-	private Date dailydate;
-	private String status;
-	private Date recodtime;
-	private String remark;
+	private TDailywork TDailywork;	//关联日管控列表ID
+	private TAccount TAccount;	//记录人ID
+	private Date dailydate;		//日期
+	private String status;		//状态(未处理-默认、正常、异常、已发通报、已审核、已完成、有遗留)
+	private Date recodtime;		//记录时间
+	private String remark;		//备注
 
 	// Constructors
 
