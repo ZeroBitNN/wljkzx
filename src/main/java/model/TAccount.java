@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  * TAccount entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_ACCOUNT", schema = "WLJKZX", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME") )
+@Table(name = "T_ACCOUNT", schema = "", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME") )
 
 public class TAccount implements java.io.Serializable {
 
@@ -80,7 +80,7 @@ public class TAccount implements java.io.Serializable {
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
+	@Column(name = "ID", nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;

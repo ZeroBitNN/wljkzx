@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
  * TOrderNotice entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_ORDER_NOTICE", schema = "WLJKZX")
+@Table(name = "T_ORDER_NOTICE", schema = "")
 
 public class TOrderNotice implements java.io.Serializable {
 
@@ -50,7 +50,7 @@ public class TOrderNotice implements java.io.Serializable {
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
+	@Column(name = "ID", nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -92,7 +92,7 @@ public class TOrderNotice implements java.io.Serializable {
 		this.content = content;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "TIME", length = 7)
 
 	public Date getTime() {

@@ -70,6 +70,18 @@
 					$('#p5').panel('refresh');
 				}
 			} ]
+		}, {
+			id : 'p6',
+			title : '今日管控工作',
+			height : 240,
+			collapsible : true,
+			href : 'layout/portal/dailyworkDetails.jsp',
+			tools : [ {
+				iconCls : 'icon-reload',
+				handler : function() {
+					$('#p6').panel('refresh');
+				}
+			} ]
 		} ];
 
 		portal = $('#layout_portal_portal').portal({
@@ -83,7 +95,7 @@
 		});
 		var state = $.cookie('portal-state');
 		if (!state) {
-			state = 'p1,p2,p3:p5,p4'; /*冒号代表列，逗号代表行*/
+			state = 'p1,p2,p3:p6,p5,p4'; /*冒号代表列，逗号代表行*/
 		}
 		addPanels(state);
 		portal.portal('resize');

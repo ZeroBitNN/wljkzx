@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
  * TDailyworkDetails entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_DAILYWORK_DETAILS", schema = "WLJKZX")
+@Table(name = "T_DAILYWORK_DETAILS", schema = "")
 
 public class TDailyworkDetails implements java.io.Serializable {
 
@@ -27,7 +27,7 @@ public class TDailyworkDetails implements java.io.Serializable {
 	private TAccount TAccount;	//记录人ID
 	private Date dailydate;		//日期
 	private String status;		//状态(未处理-默认、正常、异常、已发通报、已审核、已完成、有遗留)
-	private Date recodtime;		//记录时间
+	private Date recordtime;		//记录时间
 	private String remark;		//备注
 
 	// Constructors
@@ -43,20 +43,20 @@ public class TDailyworkDetails implements java.io.Serializable {
 
 	/** full constructor */
 	public TDailyworkDetails(String id, TDailywork TDailywork, TAccount TAccount, Date dailydate, String status,
-			Date recodtime, String remark) {
+			Date recordtime, String remark) {
 		this.id = id;
 		this.TDailywork = TDailywork;
 		this.TAccount = TAccount;
 		this.dailydate = dailydate;
 		this.status = status;
-		this.recodtime = recodtime;
+		this.recordtime = recordtime;
 		this.remark = remark;
 	}
 
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
+	@Column(name = "ID", nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -78,7 +78,7 @@ public class TDailyworkDetails implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "RECODER")
+	@JoinColumn(name = "RECORDER")
 
 	public TAccount getTAccount() {
 		return this.TAccount;
@@ -109,15 +109,15 @@ public class TDailyworkDetails implements java.io.Serializable {
 		this.status = status;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "RECODTIME", length = 7)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "RECORDTIME", length = 7)
 
-	public Date getRecodtime() {
-		return this.recodtime;
+	public Date getRecordtime() {
+		return this.recordtime;
 	}
 
-	public void setRecodtime(Date recodtime) {
-		this.recodtime = recodtime;
+	public void setRecordtime(Date recordtime) {
+		this.recordtime = recordtime;
 	}
 
 	@Column(name = "REMARK", length = 1000)

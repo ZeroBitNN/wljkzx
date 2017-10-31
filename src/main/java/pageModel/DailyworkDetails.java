@@ -3,15 +3,42 @@ package pageModel;
 import java.util.Date;
 
 public class DailyworkDetails {
+	private String dateStr;
+	
+	public String getDateStr() {
+		return dateStr;
+	}
+
+	public void setDateStr(String dateStr) {
+		this.dateStr = dateStr;
+	}
+
+	private String timepoint; // 时间
+	private String content; // 工作内容
+
+	public String getTimepoint() {
+		return timepoint;
+	}
+
+	public void setTimepoint(String timepoint) {
+		this.timepoint = timepoint;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 
 	// Fields
-
 	private String id;
 	private String rId; // 关联日管控列表ID
-	private String recoder; // 记录人ID
+	private String recorder; // 记录人ID
 	private Date dailydate; // 日期
-	private String status; // 状态(未处理-默认、正常、异常、已发通报)
-	private Date recodtime; // 记录时间
+	private String status; // 状态(未处理-默认、正常、异常、已发通报、已审核、已完成、有遗留)
+	private Date recordtime; // 记录时间
 	private String remark; // 备注
 	/**
 	 * 用于搜索
@@ -37,12 +64,12 @@ public class DailyworkDetails {
 		this.rId = rId;
 	}
 
-	public String getRecoder() {
-		return recoder;
+	public String getRecorder() {
+		return recorder;
 	}
 
-	public void setRecoder(String recoder) {
-		this.recoder = recoder;
+	public void setRecorder(String recoder) {
+		this.recorder = recoder;
 	}
 
 	public Date getDailydate() {
@@ -61,12 +88,12 @@ public class DailyworkDetails {
 		this.status = status;
 	}
 
-	public Date getRecodtime() {
-		return recodtime;
+	public Date getRecordtime() {
+		return recordtime;
 	}
 
-	public void setRecodtime(Date recodtime) {
-		this.recodtime = recodtime;
+	public void setRecordtime(Date recodtime) {
+		this.recordtime = recodtime;
 	}
 
 	public String getRemark() {

@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
  * TWorkrecord entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_WORKRECORD", schema = "WLJKZX")
+@Table(name = "T_WORKRECORD", schema = "")
 
 public class TWorkrecord implements java.io.Serializable {
 
@@ -61,7 +61,7 @@ public class TWorkrecord implements java.io.Serializable {
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
+	@Column(name = "ID", nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -93,7 +93,7 @@ public class TWorkrecord implements java.io.Serializable {
 		this.TAccountByHandler = TAccountByHandler;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATETIME", length = 7)
 
 	public Date getCreatetime() {
@@ -124,7 +124,7 @@ public class TWorkrecord implements java.io.Serializable {
 		this.faultnumber = faultnumber;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODIFYTIME", length = 7)
 
 	public Date getModifytime() {

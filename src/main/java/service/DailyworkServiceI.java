@@ -1,6 +1,8 @@
 package service;
 
+import model.SessionInfo;
 import pageModel.Dailywork;
+import pageModel.DailyworkDetails;
 import pageModel.DataGrid;
 
 public interface DailyworkServiceI {
@@ -12,5 +14,9 @@ public interface DailyworkServiceI {
 	void delete(String ids);
 
 	void edit(Dailywork dailywork);
+
+	DataGrid<DailyworkDetails> getDetailsDg(DailyworkDetails dailyworkDetails);
+
+	void editDetails(DailyworkDetails dailyworkDetails, SessionInfo sessionInfo);
 
 }

@@ -16,11 +16,13 @@ import dao.DailyworkDaoI;
 import dao.DailyworkDetailsDaoI;
 import dao.OrderCategoryDaoI;
 import dao.UserDaoI;
+import model.SessionInfo;
 import model.TAccount;
 import model.TDailywork;
 import model.TDailyworkDetails;
 import model.TOrderCategory;
 import pageModel.Dailywork;
+import pageModel.DailyworkDetails;
 import pageModel.DataGrid;
 import service.DailyworkServiceI;
 
@@ -70,6 +72,70 @@ public class DailyworkServiceImpl implements DailyworkServiceI {
 	@Autowired
 	public void setOrderCategoryDao(OrderCategoryDaoI orderCategoryDao) {
 		this.orderCategoryDao = orderCategoryDao;
+	}
+
+	@Override
+	public DataGrid<DailyworkDetails> getDetailsDg(DailyworkDetails dailyworkDetails) {
+		DataGrid<DailyworkDetails> dg = new DataGrid<DailyworkDetails>();
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		String hql = "from TDailyworkDetails t where t.dailydate=:dailydate";
+		if (dailyworkDetails.getDailydate() != null) {
+			params.put("dailydate", dailyworkDetails.getDailydate());
+		} else {
+			params.put("dailydate", new Date());
+		}
+
+		// 查询记录总数
+		String totalHql = "select count(*) " + hql;
+		dg.setTotal(dailyworkDetailsDao.count(totalHql, params));
+
+		List<TDailyworkDetails> tList = dailyworkDetailsDao.find(hql, params, dailyworkDetails.getPage(),
+				dailyworkDetails.getRows());
+		List<DailyworkDetails> dList = new ArrayList<DailyworkDetails>();
+		if (tList != null && tList.size() > 0) {
+			for (TDailyworkDetails t : tList) {
+				DailyworkDetails d = new DailyworkDetails();
+				BeanUtils.copyProperties(t, d);
+				d.setTimepoint(t.getTDailywork().getTimepoint());
+				d.setContent(t.getTDailywork().getContent());
+				if (t.getTAccount() != null && t.getTAccount().getUsername() != null) {
+					d.setRecorder(t.getTAccount().getUsername());
+				}
+				dList.add(d);
+			}
+		} else {
+			// 如果没有当日记录则自动生成
+			Date currentDate = new Date();
+			int result = 0;
+			if (dailyworkDetails.getDailydate() != null) {
+				result = currentDate.compareTo(dailyworkDetails.getDailydate());
+				currentDate = dailyworkDetails.getDailydate();
+			}
+			// log.info(result);
+			if (result >= 0) { // 如果小于或等于今日
+				String newSql = "from TDailywork t where 1=1";
+				List<TDailywork> tdList = dailyworkDao.find(newSql);
+				if (tdList != null && tdList.size() > 0) {
+					for (TDailywork t : tdList) {
+						TDailyworkDetails tDetails = new TDailyworkDetails();
+						tDetails.setId(UUID.randomUUID().toString());
+						tDetails.setTDailywork(t);
+						tDetails.setDailydate(currentDate);
+						tDetails.setStatus("未处理");
+						dailyworkDetailsDao.save(tDetails);
+						DailyworkDetails d = new DailyworkDetails();
+						BeanUtils.copyProperties(tDetails, d);
+						d.setTimepoint(t.getTimepoint());
+						d.setContent(t.getContent());
+						dList.add(d);
+					}
+				}
+			}
+		}
+		dg.setRows(dList);
+
+		return dg;
 	}
 
 	@Override
@@ -174,6 +240,17 @@ public class DailyworkServiceImpl implements DailyworkServiceI {
 			t.setReleasetime(new Date());
 		}
 
+	}
+
+	@Override
+	public void editDetails(DailyworkDetails dailyworkDetails, SessionInfo sessionInfo) {
+		TDailyworkDetails t = dailyworkDetailsDao.getForId(TDailyworkDetails.class, dailyworkDetails.getId());
+		t.setStatus(dailyworkDetails.getStatus());
+		t.setRecordtime(new Date());
+		if (dailyworkDetails.getRemark() != null && !dailyworkDetails.getRemark().trim().equals("")) {
+			t.setRemark(dailyworkDetails.getRemark());
+		}
+		t.setTAccount(userDao.getForId(TAccount.class, sessionInfo.getUser().getId()));
 	}
 
 }

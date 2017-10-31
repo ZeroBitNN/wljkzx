@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
  * TOrder entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_ORDER", schema = "WLJKZX")
+@Table(name = "T_ORDER", schema = "")
 
 public class TOrder implements java.io.Serializable {
 
@@ -75,7 +75,7 @@ public class TOrder implements java.io.Serializable {
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
+	@Column(name = "ID", nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -129,7 +129,7 @@ public class TOrder implements java.io.Serializable {
 		this.TAccountByModifyid = TAccountByModifyid;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ARCHIVEDTIME", length = 7)
 
 	public Date getArchivedtime() {
@@ -150,7 +150,7 @@ public class TOrder implements java.io.Serializable {
 		this.content = content;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATETIME", length = 7)
 
 	public Date getCreatetime() {
@@ -171,7 +171,7 @@ public class TOrder implements java.io.Serializable {
 		this.isArchived = isArchived;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODIFYTIME", length = 7)
 
 	public Date getModifytime() {
