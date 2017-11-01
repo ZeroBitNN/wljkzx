@@ -118,7 +118,7 @@ public class RepairServiceImpl implements RepairServiceI {
 			initMenu(document);
 			initCategory(document);
 			initOrderType(document);
-			repairUser(document);
+			//repairUser(document);
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
@@ -161,7 +161,11 @@ public class RepairServiceImpl implements RepairServiceI {
 				t.setId(node.valueOf("@id"));
 				t.setName(node.valueOf("@name"));
 				t.setResourcesIds(node.valueOf("@resources_ids"));
-				rolesDao.saveOrUpdate(t);
+				try {
+					rolesDao.saveOrUpdate(t);
+				} catch (Exception e) {
+					logger.info(e.getMessage());
+				}
 			}
 		}
 	}

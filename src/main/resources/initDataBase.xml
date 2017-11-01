@@ -73,6 +73,11 @@
 		<resource id="tjzbyq" name="添加值班要求" url="/demandAction!add" description="添加值班要求" pid="zbyqgl" />
 		<resource id="bjzbyq" name="修改值班要求" url="/demandAction!edit" description="修改值班要求" pid="zbyqgl" />
 		<resource id="sczbyq" name="删除值班要求" url="/demandAction!delete" description="删除值班要求" pid="zbyqgl" />
+		
+		<resource id="rgkgl" name="日管控工作管理权限" url="" description="日管控工作管理权限组" pid="" />
+		<resource id="tjrgk" name="添加日管控" url="/dailyworkAction!add" description="添加日管控工作" pid="rgkgl" />
+		<resource id="bjrgk" name="编辑日管控" url="/dailyworkAction!edit" description="编辑日管控工作" pid="rgkgl" />
+		<resource id="scrgk" name="删除日管控" url="/dailyworkAction!del" description="删除日管控工作" pid="rgkgl" />
 	</resources>
 
 	<roles name="角色">
@@ -101,6 +106,7 @@
 		<menu id="fjgl" text="附件管理" url="/attachment/attachedList.jsp" iconcls="icon-attachment" pid="xtgl" />
 		<menu id="txbzgl" text="通讯保障管理" url="/guarantee/guaranteeList.jsp" iconcls="icon-guarantee" pid="xtgl" />
 		<menu id="zbyqgl" text="值班要求管理" url="/demand/demandList.jsp" iconcls="icon-myCall" pid="xtgl" />
+		<menu id="rgkgl" text="日管控工作管理" url="/dailywork/dailyworkList.jsp" iconcls="icon-myRecord" pid="xtgl" />
 
 		<menu id="jjbrz" text="交接班日志" url="" iconcls="icon-myTransfer" pid="0" />
 		<menu id="syjl" text="所有记录" url="/memo/memoList.jsp?searchType=All" iconcls="" pid="jjbrz" />
@@ -109,6 +115,8 @@
 		
 		<menu id="gzjl" text="日常工作记录" url="/workrecord/recList.jsp" iconcls="icon-myRecord" pid="0" />
 		<menu id="gzjltj" text="工作记录统计" url="/workrecord/recReport.jsp" iconcls="icon-mySum" pid="gzjl" />
+		
+		<menu id="rgkjl" text="日管控工作记录" url="/dailywork/detailsList.jsp" iconcls="icon-myRecord" pid="0" />
 	</menus>
 
 	<categorys name="专业类别">

@@ -24,12 +24,12 @@ public class TWorkrecord implements java.io.Serializable {
 	private String id;
 	private TAccount TAccountByInputer;
 	private TAccount TAccountByHandler;
-	private String proposer;
-	private String faultnumber;
-	private String describe;
-	private String situation;
 	private Date createtime;
+	private String describe;
+	private String faultnumber;
 	private Date modifytime;
+	private String proposer;
+	private String situation;
 	private String status;
 
 	// Constructors
@@ -44,17 +44,17 @@ public class TWorkrecord implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public TWorkrecord(String id, TAccount TAccountByInputer, TAccount TAccountByHandler, String proposer,
-			String faultnumber, String describe, String situation, Date createtime, Date modifytime, String status) {
+	public TWorkrecord(String id, TAccount TAccountByInputer, TAccount TAccountByHandler, Date createtime,
+			String describe, String faultnumber, Date modifytime, String proposer, String situation, String status) {
 		this.id = id;
 		this.TAccountByInputer = TAccountByInputer;
 		this.TAccountByHandler = TAccountByHandler;
-		this.proposer = proposer;
-		this.faultnumber = faultnumber;
-		this.describe = describe;
-		this.situation = situation;
 		this.createtime = createtime;
+		this.describe = describe;
+		this.faultnumber = faultnumber;
 		this.modifytime = modifytime;
+		this.proposer = proposer;
+		this.situation = situation;
 		this.status = status;
 	}
 
@@ -93,24 +93,15 @@ public class TWorkrecord implements java.io.Serializable {
 		this.TAccountByHandler = TAccountByHandler;
 	}
 
-	@Column(name = "PROPOSER", length = 50)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATETIME", length = 7)
 
-	public String getProposer() {
-		return this.proposer;
+	public Date getCreatetime() {
+		return this.createtime;
 	}
 
-	public void setProposer(String proposer) {
-		this.proposer = proposer;
-	}
-
-	@Column(name = "FAULTNUMBER", length = 200)
-
-	public String getFaultnumber() {
-		return this.faultnumber;
-	}
-
-	public void setFaultnumber(String faultnumber) {
-		this.faultnumber = faultnumber;
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
 	}
 
 	@Column(name = "DESCRIBE", length = 1000)
@@ -123,25 +114,14 @@ public class TWorkrecord implements java.io.Serializable {
 		this.describe = describe;
 	}
 
-	@Column(name = "SITUATION", length = 1000)
+	@Column(name = "FAULTNUMBER", length = 200)
 
-	public String getSituation() {
-		return this.situation;
+	public String getFaultnumber() {
+		return this.faultnumber;
 	}
 
-	public void setSituation(String situation) {
-		this.situation = situation;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATETIME", length = 7)
-
-	public Date getCreatetime() {
-		return this.createtime;
-	}
-
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+	public void setFaultnumber(String faultnumber) {
+		this.faultnumber = faultnumber;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -153,6 +133,26 @@ public class TWorkrecord implements java.io.Serializable {
 
 	public void setModifytime(Date modifytime) {
 		this.modifytime = modifytime;
+	}
+
+	@Column(name = "PROPOSER", length = 50)
+
+	public String getProposer() {
+		return this.proposer;
+	}
+
+	public void setProposer(String proposer) {
+		this.proposer = proposer;
+	}
+
+	@Column(name = "SITUATION", length = 1000)
+
+	public String getSituation() {
+		return this.situation;
+	}
+
+	public void setSituation(String situation) {
+		this.situation = situation;
 	}
 
 	@Column(name = "STATUS", length = 10)
