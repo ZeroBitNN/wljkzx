@@ -7,19 +7,22 @@
 				style="width:100%;height:52px" readonly="readonly">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-combobox" label="交班人:" name="memofrom" labelPosition="top" style="width:100%;height:52px"
+			<input class="easyui-combobox" label="交班人:" name="memofrom" labelPosition="top"
+				style="width:100%;height:52px"
 				data-options="editable:false,
 				url:'${pageContext.request.contextPath}/userAction!doNotNeedSecurity_getAllUser.action',
 				valueField:'username',textField:'username'">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-combobox" label="接班人:" name="memoto" labelPosition="top" style="width:100%;height:52px"
+			<input class="easyui-combobox" label="接班人:" name="memoto" labelPosition="top"
+				style="width:100%;height:52px"
 				data-options="editable:false,
         url:'${pageContext.request.contextPath}/userAction!doNotNeedSecurity_getAllUser.action',
         valueField:'username',textField:'username'">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-combobox" label="日志类型:" name="memotype" labelPosition="top" style="width:100%;height:52px"
+			<input class="easyui-combobox" label="日志类型:" name="memotype" labelPosition="top"
+				style="width:100%;height:52px"
 				data-options="editable:false,valueField : 'label',
               textField : 'value',
               data : [ {
@@ -31,7 +34,8 @@
               } ]">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-combobox" label="班次:" name="classes" labelPosition="top" style="width:100%;height:52px"
+			<input class="easyui-combobox" label="班次:" name="classes" labelPosition="top"
+				style="width:100%;height:52px"
 				data-options="editable:false,valueField : 'label',
               textField : 'value',
               data : [ {
@@ -46,27 +50,28 @@
               } ]">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-datetimebox" label="记录时间:" name="createtime" labelPosition="top" style="width:100%;height:52px"
-				data-options="editable:false">
+			<input class="easyui-datetimebox" label="记录时间:" name="createtime" labelPosition="top"
+				style="width:100%;height:52px" data-options="editable:false">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class=easyui-textbox label="值班记事:" labelPosition="top" data-options="multiline:true" name="content"
-				labelPosition="top" style="width:100%;height:150px">
+			<input class=easyui-textbox label="值班记事:" labelPosition="top" data-options="multiline:true"
+				name="content" labelPosition="top" style="width:100%;height:150px">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-textbox" label="其他记事:" name="othercontent" labelPosition="top" data-options="multiline:true"
-				style="width:100%;height:150px">
+			<input class="easyui-textbox" label="其他记事:" name="othercontent" labelPosition="top"
+				data-options="multiline:true" style="width:100%;height:150px">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-textbox" label="遗留问题:" name="leaveover" labelPosition="top" data-options="multiline:true"
-				style="width:100%;height:150px">
+			<input class="easyui-textbox" label="遗留问题:" name="leaveover" labelPosition="top"
+				data-options="multiline:true" style="width:100%;height:150px">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-datetimebox" label="修改时间:" name="modifytime" labelPosition="top" style="width:100%;height:52px"
-				data-options="editable:false">
+			<input class="easyui-datetimebox" label="修改时间:" name="modifytime" labelPosition="top"
+				style="width:100%;height:52px" data-options="editable:false">
 		</div>
 		<div style="margin-bottom:20px">
-			<input class="easyui-combobox" label="状态:" name="status" labelPosition="top" style="width:100%;height:52px"
+			<input class="easyui-combobox" label="状态:" name="status" labelPosition="top"
+				style="width:100%;height:52px"
 				data-options="editable:false,valueField : 'label',
               textField : 'value',
               data : [ {
@@ -77,6 +82,5 @@
                 value : '未完成'
               } ]">
 		</div>
-	</div>
 	</div>
 </form>

@@ -4,7 +4,37 @@
 	SessionInfo sessionInfo = (SessionInfo) session.getAttribute("sessionInfo");
 %>
 <script type="text/javascript">
+	var websocket = null;
 	$(function() {
+		//判断当前浏览器是否支持WebSocket
+		if ('WebSocket' in window) {
+			websocket = new WebSocket("ws://localhost:"+<%=request.getServerPort()%>+"/wljkzx/websocket");
+		} else {
+			$.messager.alert('警告！', '当前浏览器 不支持WebSocket,将不会收到弹窗提示。如需要使用弹窗提示功能，请更换浏览器！', 'warning');
+		}
+		
+		//连接发生错误的回调方法
+		websocket.onerror = function() {
+			$.messager.alert('警告！','WebSocket连接发生错误','warning');
+		};
+		
+		//连接成功建立的回调方法
+		//websocket.onopen = function() {
+			//$.messager.alert('提示','WebSocket连接成功');
+		//}
+		
+		//接收到消息的回调方法
+		websocket.onmessage = function(event) {
+			//setMessageInnerHTML(event.data);
+			$.messager.alert('提示',event.data);
+		}
+		
+		window.onbeforeunload = function(){
+			if (websocket){
+				websocket.close();
+			}
+		}
+				
 		$('#layout_north_loginForm').form({
 			url : '${pageContext.request.contextPath}/userAction!doNotNeedSecurity_login.action',
 			success : function(data) {
@@ -42,6 +72,9 @@
 	});
 
 	var logoutFun = function() {
+		if (websocket){
+			websocket.close();
+		}
 		$.ajax({
 			type : "POST",
 			url : "${pageContext.request.contextPath}/userAction!doNotNeedSecurity_logout.action",
@@ -67,9 +100,10 @@
 	};
 </script>
 
-<div style="font-size:x-large;color:#FF9900;font-weight:bold; position: absolute; left: 20px; top: 10px;">
-	网&nbsp;&nbsp;络&nbsp;&nbsp;综&nbsp;&nbsp;合&nbsp;&nbsp;支&nbsp;&nbsp;撑&nbsp;&nbsp;班 <span class="panel-title"
-		style="font-size:small;font-weight: bole;">综&nbsp;合&nbsp;办&nbsp;公&nbsp;系&nbsp;统</span>
+<div
+	style="font-size:x-large;color:#FF9900;font-weight:bold; position: absolute; left: 20px; top: 10px;">
+	网&nbsp;&nbsp;络&nbsp;&nbsp;综&nbsp;&nbsp;合&nbsp;&nbsp;支&nbsp;&nbsp;撑&nbsp;&nbsp;班 <span
+		class="panel-title" style="font-size:small;font-weight: bole;">综&nbsp;合&nbsp;办&nbsp;公&nbsp;系&nbsp;统</span>
 </div>
 <div id="sessionInfoDiv" style="position: absolute; right: 10px; top: 5px;">
 	<%
@@ -81,8 +115,9 @@
 </div>
 <div style="position: absolute; right: 0px; bottom: 0px;">
 	<a href="javascript:void(0);" class="easyui-menubutton"
-		data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-controlpanel'">控制面板</a> <a href="javascript:void(0);"
-		class="easyui-menubutton" data-options="menu:'#layout_north_zxMenu',iconCls:'icon-logout'">注销</a>
+		data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-controlpanel'">控制面板</a> <a
+		href="javascript:void(0);" class="easyui-menubutton"
+		data-options="menu:'#layout_north_zxMenu',iconCls:'icon-logout'">注销</a>
 </div>
 
 <div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
@@ -129,12 +164,13 @@
 		<table>
 			<tr>
 				<th>用户名</th>
-				<td><%=sessionInfo.getUser().getUsername()%><input name="username" readonly="readonly" type="hidden"
-					value="<%=sessionInfo.getUser().getUsername()%>" /></td>
+				<td><%=sessionInfo.getUser().getUsername()%><input name="username" readonly="readonly"
+					type="hidden" value="<%=sessionInfo.getUser().getUsername()%>" /></td>
 			</tr>
 			<tr>
 				<th>密码</th>
-				<td><input name="pwd" type="password" class="easyui-validatebox" data-options="required:true" /></td>
+				<td><input name="pwd" type="password" class="easyui-validatebox"
+					data-options="required:true" /></td>
 			</tr>
 		</table>
 	</form>
@@ -153,7 +189,8 @@
 		<table>
 			<tr>
 				<th>新密码</th>
-				<td><input name="pwd" type="password" class="easyui-validatebox" data-options="required:true" /></td>
+				<td><input name="pwd" type="password" class="easyui-validatebox"
+					data-options="required:true" /></td>
 			</tr>
 			<tr>
 				<th>重复密码</th>
@@ -161,8 +198,10 @@
 					data-options="required:true,validType:'eqPwd[\'#layout_north_pwdForm input[name=pwd]\']'" /></td>
 			</tr>
 			<tr>
-				<td><input name="username" readonly="readonly" type="hidden" value="<%=sessionInfo.getUser().getUsername()%>" /></td>
-				<td><input name="id" readonly="readonly" type="hidden" value="<%=sessionInfo.getUser().getId()%>" /></td>
+				<td><input name="username" readonly="readonly" type="hidden"
+					value="<%=sessionInfo.getUser().getUsername()%>" /></td>
+				<td><input name="id" readonly="readonly" type="hidden"
+					value="<%=sessionInfo.getUser().getId()%>" /></td>
 			</tr>
 		</table>
 	</form>

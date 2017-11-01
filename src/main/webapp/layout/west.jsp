@@ -55,6 +55,15 @@
 			}
 		});
 	}
+
+	function WSTest() {
+		var url = '${pageContext.request.contextPath}/wstest.jsp';
+		addTab({
+			title : 'WebSocket测试',
+			href : url,
+			closable : true
+		});
+	}
 </script>
 
 <div class="easyui-panel" data-options="title:'功能导航',border:false,fit:true">
@@ -88,6 +97,7 @@
 				<li><a href="javascript:void(0);" onclick="repairAdmin();">修复管理员账号</a></li>
 				<li><a href="javascript:void(0);" onclick="repairMenu();">更新菜单</a></li>
 				<li><a href="javascript:void(0);" onclick="repairResources();">更新权限</a></li>
+				<li><a href="javascript:void(0);" onclick="WSTest();">WebSocket测试</a></li>
 			</ul>
 		</div>
 	</div>
