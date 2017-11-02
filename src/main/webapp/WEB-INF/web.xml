@@ -30,9 +30,13 @@
     <filter-name>struts2</filter-name>
     <url-pattern>*.action</url-pattern>
   </filter-mapping>
-  <!-- spring监听器 -->
+  <!-- spring监听器 --> 
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!-- Quartz监听器 -->
+  <listener>
+	<listener-class>listener.QuartzSchedulerListener</listener-class>
   </listener>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

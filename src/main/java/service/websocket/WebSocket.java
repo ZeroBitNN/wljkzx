@@ -1,6 +1,8 @@
 package service.websocket;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.websocket.OnClose;
@@ -11,16 +13,20 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 import org.apache.log4j.Logger;
-
-import action.BaseAction;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import service.DailyworkServiceI;
+import service.impl.DailyworkServiceImpl;
 
 /**
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
  *                 注解的值将被用于监听用户连接的终端访问URL地址,客户端可以通过这个URL来连接到WebSocket服务器端
  */
 @ServerEndpoint("/websocket")
-public class WebSocket extends BaseAction {
+public class WebSocket implements Job {
 	private static final Logger log = Logger.getLogger(WebSocket.class);
+	private DailyworkServiceI dialyworkService = new DailyworkServiceImpl();
 
 	// 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
 	private static int onlineCount = 0;
@@ -70,7 +76,7 @@ public class WebSocket extends BaseAction {
 			try {
 				item.sendMessage(message);
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 				continue;
 			}
 		}
@@ -110,4 +116,23 @@ public class WebSocket extends BaseAction {
 	public static synchronized void subOnlineCount() {
 		WebSocket.onlineCount--;
 	}
+
+	@Override
+	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		log.info(sdf.format(new Date()));
+		for (WebSocket item : webSocketSet) {
+			try {
+				String message = dialyworkService.getUntreated();
+				if (message != null) {
+					item.sendMessage(message);
+				}
+			} catch (IOException e) {
+				log.info(e.getMessage());
+				continue;
+			}
+		}
+
+	}
+
 }
