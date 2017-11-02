@@ -8,7 +8,7 @@
 	$(function() {
 		//判断当前浏览器是否支持WebSocket
 		if ('WebSocket' in window) {
-			websocket = new WebSocket("ws://localhost:"+<%=request.getServerPort()%>+"/wljkzx/websocket");
+			websocket = new WebSocket("ws://localhost:"+<%=request.getServerPort()%>+"/wljkzx/dailyworkSocket");
 		} else {
 			$.messager.alert('警告！', '当前浏览器 不支持WebSocket,将不会收到弹窗提示。如需要使用弹窗提示功能，请更换浏览器！', 'warning');
 		}

@@ -34,10 +34,11 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  <!-- Quartz监听器 -->
+  <!-- Quartz监听器 此方法无法获取SessionFactory操作数据库
   <listener>
 	<listener-class>listener.QuartzSchedulerListener</listener-class>
   </listener>
+   -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

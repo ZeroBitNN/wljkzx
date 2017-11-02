@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
 http://www.springframework.org/schema/beans 
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
 http://www.springframework.org/schema/tx 
@@ -9,14 +12,12 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 ">
 
 	<!-- JNDI方式配置数据源 -->
-	<!-- 
-	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
-	<property name="jndiName" value="${jndiName}">
-	</property> </bean>
-	 -->
+	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
+		<property name="jndiName" value="${jndiName}"> </property> </bean> -->
 
 	<!-- 配置数据源 -->
-	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
 		<property name="url" value="${jdbc_url}" />
 		<property name="username" value="${jdbc_username}" />
 		<property name="password" value="${jdbc_password}" />
@@ -32,7 +33,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<!-- 获取连接最大等待时间 -->
 		<property name="maxWait" value="60000" />
 
-		<!-- <property name="poolPreparedStatements" value="true" /> <property name="maxPoolPreparedStatementPerConnectionSize" value="33" /> -->
+		<!-- <property name="poolPreparedStatements" value="true" /> <property 
+			name="maxPoolPreparedStatementPerConnectionSize" value="33" /> -->
 
 		<property name="validationQuery" value="${validationQuery}" />
 		<property name="testOnBorrow" value="false" />
@@ -57,7 +59,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	</bean>
 
 	<!-- 配置hibernate session工厂 -->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="hibernateProperties">
 			<props>
@@ -76,18 +79,44 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		</property>
 
 		<!-- 自动扫描hbm方式配置的hibernate文件和.hbm文件 -->
-		<!-- 
-		<property name="mappingDirectoryLocations">
-			<list>
-				<value>classpath:hbm</value>
-			</list>
-		</property>
-		 -->
+		<!-- <property name="mappingDirectoryLocations"> <list> <value>classpath:hbm</value> 
+			</list> </property> -->
 	</bean>
 
 	<!-- 配置事务管理器 -->
-	<bean name="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<bean name="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- 配置Quartz定时任务 -->
+	<!-- 调度器 -->
+	<bean id="doJob"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="durability" value="true"></property>
+		<property name="jobClass" value="service.websocket.DailyworkSocket" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="sessionFactory" value-ref="sessionFactory"></entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- 触发器 -->
+	<bean id="cronTriggerPunch"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="doJob" />
+		<property name="cronExpression" value="0 0 * * * ?" />
+	</bean>
+
+	<!-- 配置调度工厂 -->
+	<bean id="startQuertz" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTriggerPunch" />
+			</list>
+		</property>
 	</bean>
 
 	<!-- 注解方式配置事物 -->
@@ -117,7 +146,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	</tx:advice>
 	<aop:config>
 		<aop:pointcut id="transactionPointcut" expression="execution(* service..*Impl.*(..))" />
-		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
+		<aop:advisor pointcut-ref="transactionPointcut"
+			advice-ref="transactionAdvice" />
 	</aop:config>
 
 

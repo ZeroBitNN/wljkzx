@@ -16,7 +16,7 @@ import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
-import service.websocket.WebSocket;
+import service.websocket.DailyworkSocket;
 
 public class QuartzSchedulerListener implements ServletContextListener {
 	private static final Logger log = Logger.getLogger(QuartzSchedulerListener.class);
@@ -32,7 +32,7 @@ public class QuartzSchedulerListener implements ServletContextListener {
 		SchedulerFactory sf = new StdSchedulerFactory();
 		try {
 			Scheduler sched = sf.getScheduler();
-			JobDetail job = JobBuilder.newJob(WebSocket.class).withIdentity("job1", "group1").build();
+			JobDetail job = JobBuilder.newJob(DailyworkSocket.class).withIdentity("job1", "group1").build();
 			CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1")
 					.withSchedule(CronScheduleBuilder.cronSchedule("0 * * * * ?")).build();
 			Date ft = sched.scheduleJob(job, trigger);
