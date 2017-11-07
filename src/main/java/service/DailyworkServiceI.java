@@ -19,4 +19,6 @@ public interface DailyworkServiceI {
 
 	void editDetails(DailyworkDetails dailyworkDetails, SessionInfo sessionInfo);
 
+	String getUntreated();
+
 }

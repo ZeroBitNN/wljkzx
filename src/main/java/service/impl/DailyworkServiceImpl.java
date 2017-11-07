@@ -253,4 +253,9 @@ public class DailyworkServiceImpl implements DailyworkServiceI {
 		t.setTAccount(userDao.getForId(TAccount.class, sessionInfo.getUser().getId()));
 	}
 
+	@Override
+	public String getUntreated() {
+		return "Test......";
+	}
+
 }

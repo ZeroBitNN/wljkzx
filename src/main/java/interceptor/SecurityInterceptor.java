@@ -59,13 +59,22 @@ public class SecurityInterceptor extends MethodFilterInterceptor {
 				.getAttribute("sessionInfo");
 		String servletPath = ServletActionContext.getRequest().getServletPath();
 
-		servletPath = StringUtils.substringBeforeLast(servletPath, ".");// 去掉后面的后缀 *.action之类的
+		servletPath = StringUtils.substringBeforeLast(servletPath, ".");// 去掉后面的后缀
+																		// *.action之类的
 
-		//logger.info("进入权限拦截器->访问的资源为：[" + servletPath + "]");
+		// logger.info("进入权限拦截器->访问的资源为：[" + servletPath + "]");
 		// [action.UserAction]进入权限拦截器->访问的资源为：[/userAction!doTest]
 
 		// 1.获取当前用户的角色ID(TRoles.id)
-		TAccount tA = userDao.getForId(TAccount.class, sessionInfo.getUser().getId());
+		TAccount tA;
+		if (sessionInfo != null && sessionInfo.getUser() != null) {
+			tA = userDao.getForId(TAccount.class, sessionInfo.getUser().getId());
+		} else {
+			// throw new Exception("未登录或登录异常，请重新登录！");
+			String errMsg = "未登录或登录异常，请重新登录！";
+			ServletActionContext.getRequest().setAttribute("msg", errMsg);
+			return "noSecurity";
+		}
 		TRoles tR = rolesDao.getForId(TRoles.class, tA.getTRoles().getId());
 		// 2.根据角色ID查询角色权限ID(resourcesIds)
 		String[] resIds = tR.getResourcesIds().split(",");
@@ -84,7 +93,7 @@ public class SecurityInterceptor extends MethodFilterInterceptor {
 
 		// 5.否则不允许通过
 		String errMsg = "您没有访问此功能的权限！功能资源路径为[" + servletPath + "]请联系管理员给你赋予相应权限。";
-		//logger.info(errMsg);
+		// logger.info(errMsg);
 		ServletActionContext.getRequest().setAttribute("msg", errMsg);
 		return "noSecurity";
 	}
