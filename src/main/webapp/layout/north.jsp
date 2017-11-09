@@ -15,7 +15,7 @@
 		
 		//连接发生错误的回调方法
 		websocket.onerror = function() {
-			$.messager.alert('警告！','WebSocket连接发生错误','warning');
+			$.messager.alert('警告！','WebSocket连接发生错误，请重新登陆！','warning');
 		};
 		
 		//连接成功建立的回调方法
