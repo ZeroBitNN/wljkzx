@@ -31,14 +31,14 @@ public class TOrder implements java.io.Serializable {
 	private TAccount TAccountByAuthorid;
 	private TOrderCategory TOrderCategory;
 	private TAccount TAccountByModifyid;
-	private String title;
-	private String ordernum;
+	private Date archivedtime;
 	private String content;
 	private Date createtime;
+	private String isArchived;
 	private Date modifytime;
 	private BigDecimal noticetime;
-	private String isArchived;
-	private Date archivedtime;
+	private String ordernum;
+	private String title;
 	private Set<TOrderNotice> TOrderNotices = new HashSet<TOrderNotice>(0);
 
 	// Constructors
@@ -54,22 +54,21 @@ public class TOrder implements java.io.Serializable {
 
 	/** full constructor */
 	public TOrder(String id, TOrderType TOrderType, TAccount TAccountByAuthorid, TOrderCategory TOrderCategory,
-			TAccount TAccountByModifyid, String title, String ordernum, String content, Date createtime,
-			Date modifytime, BigDecimal noticetime, String isArchived, Date archivedtime,
-			Set<TOrderNotice> TOrderNotices) {
+			TAccount TAccountByModifyid, Date archivedtime, String content, Date createtime, String isArchived,
+			Date modifytime, BigDecimal noticetime, String ordernum, String title, Set<TOrderNotice> TOrderNotices) {
 		this.id = id;
 		this.TOrderType = TOrderType;
 		this.TAccountByAuthorid = TAccountByAuthorid;
 		this.TOrderCategory = TOrderCategory;
 		this.TAccountByModifyid = TAccountByModifyid;
-		this.title = title;
-		this.ordernum = ordernum;
+		this.archivedtime = archivedtime;
 		this.content = content;
 		this.createtime = createtime;
+		this.isArchived = isArchived;
 		this.modifytime = modifytime;
 		this.noticetime = noticetime;
-		this.isArchived = isArchived;
-		this.archivedtime = archivedtime;
+		this.ordernum = ordernum;
+		this.title = title;
 		this.TOrderNotices = TOrderNotices;
 	}
 
@@ -130,24 +129,15 @@ public class TOrder implements java.io.Serializable {
 		this.TAccountByModifyid = TAccountByModifyid;
 	}
 
-	@Column(name = "TITLE", length = 100)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ARCHIVEDTIME", length = 7)
 
-	public String getTitle() {
-		return this.title;
+	public Date getArchivedtime() {
+		return this.archivedtime;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@Column(name = "ORDERNUM", length = 50)
-
-	public String getOrdernum() {
-		return this.ordernum;
-	}
-
-	public void setOrdernum(String ordernum) {
-		this.ordernum = ordernum;
+	public void setArchivedtime(Date archivedtime) {
+		this.archivedtime = archivedtime;
 	}
 
 	@Column(name = "CONTENT", length = 1000)
@@ -171,6 +161,16 @@ public class TOrder implements java.io.Serializable {
 		this.createtime = createtime;
 	}
 
+	@Column(name = "IS_ARCHIVED", length = 10)
+
+	public String getIsArchived() {
+		return this.isArchived;
+	}
+
+	public void setIsArchived(String isArchived) {
+		this.isArchived = isArchived;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODIFYTIME", length = 7)
 
@@ -192,25 +192,24 @@ public class TOrder implements java.io.Serializable {
 		this.noticetime = noticetime;
 	}
 
-	@Column(name = "IS_ARCHIVED", length = 10)
+	@Column(name = "ORDERNUM", length = 50)
 
-	public String getIsArchived() {
-		return this.isArchived;
+	public String getOrdernum() {
+		return this.ordernum;
 	}
 
-	public void setIsArchived(String isArchived) {
-		this.isArchived = isArchived;
+	public void setOrdernum(String ordernum) {
+		this.ordernum = ordernum;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "ARCHIVEDTIME", length = 7)
+	@Column(name = "TITLE", length = 100)
 
-	public Date getArchivedtime() {
-		return this.archivedtime;
+	public String getTitle() {
+		return this.title;
 	}
 
-	public void setArchivedtime(Date archivedtime) {
-		this.archivedtime = archivedtime;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TOrder")

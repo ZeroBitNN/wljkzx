@@ -170,7 +170,7 @@
 	</div>
 </div>
 
-<div id="order_orderEdit_addNoticeDialog" class="easyui-dialog" align="center" style="width:500px"
+<div id="order_orderEdit_addNoticeDialog" class="easyui-dialog" align="center" style="width:800px;height:500px"
 	data-options="title:'新发通报',closed:true,modal:true,buttons:[{
     text:'确定',
     handler:function(){
@@ -211,7 +211,7 @@
 			</tr>
 			<tr>
 				<td><input id="order_orderEdit_contentTb" name="content" class="easyui-textbox"
-					data-options="multiline:true,required:true" label="通报内容：" labelPosition="top" style="width:90%;height:100px;" /></td>
+					data-options="multiline:true,required:true" label="通报内容：" labelPosition="top" style="width:90%;height:300px;" /></td>
 			</tr>
 			<tr>
 				<td><br></td>

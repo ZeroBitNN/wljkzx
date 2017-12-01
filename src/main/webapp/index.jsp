@@ -37,14 +37,14 @@
 <script type="text/javascript" charset="utf-8" src="jslib/umeditor1.2.3/umeditor.min.js"></script>
 <script type="text/javascript" src="jslib/umeditor1.2.3/lang/zh-cn/zh-cn.js"></script>
 
-<link id="easyuiTheme" rel="stylesheet" href="jslib/jquery-easyui-1.5.2/themes/<%=easyuiTheme%>/easyui.css"
-	type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet"
+	href="jslib/jquery-easyui-1.5.2/themes/<%=easyuiTheme%>/easyui.css" type="text/css"></link>
 <link rel="stylesheet" href="jslib/jquery-easyui-1.5.2/themes/icon.css" type="text/css"></link>
 <link rel="stylesheet" href="myThemes/myIcon.css" type="text/css"></link>
 <link rel="stylesheet" href="css/myCss.css" type="text/css"></link>
 <!-- UMEditor -->
 <link href="jslib/umeditor1.2.3/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
-
+<script type="text/javascript" src="jslib/sockjs-0.3.min.js"></script>
 <script type="text/javascript" src="jslib/utils.js"></script>
 <script type="text/javascript">
 	$(function() {

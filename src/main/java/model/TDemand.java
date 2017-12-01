@@ -12,10 +12,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * TDemand entity. 
- * @author MyEclipse Persistence Tools
+ * TDemand entity. @author MyEclipse Persistence Tools
  */
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "T_DEMAND", schema = "")
 

@@ -22,6 +22,7 @@ public class TOrderCategory implements java.io.Serializable {
 
 	private String id;
 	private String name;
+	private Set<TDailywork> TDailyworks = new HashSet<TDailywork>(0);
 	private Set<TOrder> TOrders = new HashSet<TOrder>(0);
 
 	// Constructors
@@ -36,9 +37,10 @@ public class TOrderCategory implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public TOrderCategory(String id, String name, Set<TOrder> TOrders) {
+	public TOrderCategory(String id, String name, Set<TDailywork> TDailyworks, Set<TOrder> TOrders) {
 		this.id = id;
 		this.name = name;
+		this.TDailyworks = TDailyworks;
 		this.TOrders = TOrders;
 	}
 
@@ -63,6 +65,16 @@ public class TOrderCategory implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TOrderCategory")
+
+	public Set<TDailywork> getTDailyworks() {
+		return this.TDailyworks;
+	}
+
+	public void setTDailyworks(Set<TDailywork> TDailyworks) {
+		this.TDailyworks = TDailyworks;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TOrderCategory")

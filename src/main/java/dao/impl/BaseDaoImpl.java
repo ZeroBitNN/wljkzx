@@ -14,6 +14,15 @@ import dao.BaseDaoI;
 
 @Repository("baseDao")
 public class BaseDaoImpl<T> implements BaseDaoI<T> {
+	
+	public BaseDaoImpl(){
+		
+	}
+
+	public BaseDaoImpl(org.hibernate.SessionFactory sessionFactory) {
+		super();
+		SessionFactory = sessionFactory;
+	}
 
 	private SessionFactory SessionFactory;
 
