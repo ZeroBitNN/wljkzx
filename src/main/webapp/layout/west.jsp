@@ -64,6 +64,7 @@
 			closable : true
 		});
 	}
+
 </script>
 
 <div class="easyui-panel" data-options="title:'功能导航',border:false,fit:true">
@@ -98,6 +99,9 @@
 				<li><a href="javascript:void(0);" onclick="repairMenu();">更新菜单</a></li>
 				<li><a href="javascript:void(0);" onclick="repairResources();">更新权限</a></li>
 				<li><a href="javascript:void(0);" onclick="WSTest();">WebSocket测试</a></li>
+				<!-- 
+				<li><a href="${pageContext.request.contextPath}/knowledge/knowledge.jsp" target="_blank">知识库</a></li>
+				 -->
 			</ul>
 		</div>
 	</div>
