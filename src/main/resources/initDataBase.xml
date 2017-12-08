@@ -117,6 +117,8 @@
 		<menu id="gzjltj" text="工作记录统计" url="/workrecord/recReport.jsp" iconcls="icon-mySum" pid="gzjl" />
 		
 		<menu id="rgkjl" text="日管控工作记录" url="/dailywork/detailsList.jsp" iconcls="icon-myRecord" pid="0" />
+		
+		<menu id="bmtxl" text="部门通讯录" url="/deptTxl/txlList.jsp" iconcls="icon-myContact" pid="0" />
 	</menus>
 
 	<categorys name="专业类别">
