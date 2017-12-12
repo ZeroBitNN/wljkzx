@@ -97,3 +97,9 @@
 .icon-myCall{
   background:url('icons/call.png') no-repeat;
 }
+.icon-myAdminTools{
+  background:url('icons/administrative_tools.png') no-repeat;
+}
+.icon-myAdminDocs{
+  background:url('icons/administrative_docs.png') no-repeat;
+}
