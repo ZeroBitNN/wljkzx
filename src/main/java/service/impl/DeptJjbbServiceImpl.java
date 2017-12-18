@@ -3,10 +3,10 @@ package service.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class DeptJjbbServiceImpl implements DeptJjbbServiceI {
 	public DataGrid<DeptJjbb> getDatagrid(DeptJjbb deptJjbb) {
 		DataGrid<DeptJjbb> dg = new DataGrid<DeptJjbb>();
 		String totalSql = "SELECT COUNT(*) from jjbb where 1=1";
-		Long total = (long) getTotal(totalSql);
+		Long total = (long) DBCPUtils.getTotal(totalSql);
 		List<DeptJjbb> dList = new ArrayList<DeptJjbb>();
 
 		String sql = "";
@@ -38,14 +38,14 @@ public class DeptJjbbServiceImpl implements DeptJjbbServiceI {
 		if (deptJjbb.getTitle() != null && !deptJjbb.getTitle().equals("")) {
 			String title = deptJjbb.getTitle();
 			totalSql += " and title like '%" + title + "%'";
-			total = (long) getTotal(totalSql);
+			total = (long) DBCPUtils.getTotal(totalSql);
 			sql += " and title like '%" + title + "%'";
 		}
 		// 是否按内容(content)搜索
 		if (deptJjbb.getContent() != null && !deptJjbb.getContent().equals("")) {
 			String content = deptJjbb.getContent();
 			totalSql += " and content like '%" + content + "%'";
-			total = (long) getTotal(totalSql);
+			total = (long) DBCPUtils.getTotal(totalSql);
 			sql += " and content like '%" + content + "%'";
 		}
 		// 排序
@@ -53,7 +53,7 @@ public class DeptJjbbServiceImpl implements DeptJjbbServiceI {
 			sql += " order by " + deptJjbb.getSort() + " " + deptJjbb.getOrder();
 		}
 		
-		log.info(sql);
+		//log.info(sql);
 		Connection conn = null;
 		PreparedStatement state = null;
 		ResultSet rs = null;
@@ -70,6 +70,13 @@ public class DeptJjbbServiceImpl implements DeptJjbbServiceI {
 				dJjbb.setNotifier(rs.getString("发起通知人"));
 				dJjbb.setType(rs.getString("类型"));
 				dJjbb.setDomain(rs.getString("专业"));
+				dJjbb.setSource(rs.getString("通知来源"));
+				dJjbb.setComeFrom(rs.getString("交办人"));
+				dJjbb.setContent(rs.getString("内容"));
+				String attached=rs.getString("附件");
+				//StringUtils.replace("sshhhs","ss","p");//全部替换--->结果是：phhhs
+				attached=StringUtils.replace(attached, "file", "http://134.201.4.89:8080/wj/file");
+				dJjbb.setAttachment(attached);
 				dList.add(dJjbb);
 			}
 		} catch (Exception e) {
@@ -81,26 +88,6 @@ public class DeptJjbbServiceImpl implements DeptJjbbServiceI {
 		dg.setTotal(total);
 		dg.setRows(dList);
 		return dg;
-	}
-
-	private int getTotal(String sql) {
-		int rowCount = 0;
-		Connection conn = null;
-		Statement state = null;
-		ResultSet rs = null;
-		try {
-			conn = DBCPUtils.getConnectionPool();
-			state = conn.createStatement();
-			rs = state.executeQuery(sql);
-			while (rs.next()) {
-				rowCount = rs.getInt(1);
-			}
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		} finally {
-			DBCPUtils.release(rs, state, conn);
-		}
-		return rowCount;
 	}
 
 }

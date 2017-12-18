@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.dbcp.BasicDataSourceFactory;
+import org.apache.log4j.Logger;
 
 /**
  * 使用连接池及事务处理功能的数据库连接
@@ -23,6 +24,8 @@ import org.apache.commons.dbcp.BasicDataSourceFactory;
  *
  */
 public class DBCPUtils {
+	private static final Logger log = Logger.getLogger(DBCPUtils.class);
+
 	// 数据库事务处理
 	// 开始事务
 	public static void beginTx(Connection conn) {
@@ -30,7 +33,7 @@ public class DBCPUtils {
 			try {
 				conn.setAutoCommit(false); // 取消数据库自动提交功能
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 	}
@@ -41,7 +44,7 @@ public class DBCPUtils {
 			try {
 				conn.commit();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 	}
@@ -52,9 +55,36 @@ public class DBCPUtils {
 			try {
 				conn.rollback();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
+	}
+
+	/**
+	 * 获取记录数
+	 * 
+	 * @param sql
+	 *            SQL语句
+	 * @return 根据SQL语句返回查询到的记录数
+	 */
+	public static int getTotal(String sql) {
+		int rowCount = 0;
+		Connection conn = null;
+		PreparedStatement state = null;
+		ResultSet rs = null;
+		try {
+			conn = DBCPUtils.getConnectionPool();
+			state = conn.prepareStatement(sql);
+			rs = state.executeQuery();
+			while (rs.next()) {
+				rowCount = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		} finally {
+			DBCPUtils.release(rs, state, conn);
+		}
+		return rowCount;
 	}
 
 	/**
@@ -109,14 +139,15 @@ public class DBCPUtils {
 					String propertyName = entry.getKey();
 					Object value = entry.getValue();
 					// 使用反射为类的属性赋值
-					// ReflectionUtils.setFieldValue(entity, propertyName,value);
+					// ReflectionUtils.setFieldValue(entity,
+					// propertyName,value);
 					// 使用BeanUtils工具包为类的属性赋值
 					BeanUtils.setProperty(entity, propertyName, value);
 				}
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		} finally {
 			DBCPUtils.release(resultSet, preparedStatement, conn);
 		}
@@ -138,7 +169,7 @@ public class DBCPUtils {
 
 		try {
 			conn = DBCPUtils.getConnectionPool();
-			//打开事务
+			// 打开事务
 			DBCPUtils.beginTx(conn);
 			// 创建PreparedStatement对象
 			preparedStatement = conn.prepareStatement(sql);
@@ -150,14 +181,14 @@ public class DBCPUtils {
 
 			// 执行SQL语句
 			preparedStatement.executeUpdate();
-			//提交事务
+			// 提交事务
 			DBCPUtils.commit(conn);
 		} catch (Exception e) {
-			//事务回滚
-			if (conn!=null){
+			// 事务回滚
+			if (conn != null) {
 				DBCPUtils.rollback(conn);
 			}
-			e.printStackTrace();
+			log.info(e.getMessage());
 		} finally {
 			DBCPUtils.release(preparedStatement, conn);
 		}
@@ -176,14 +207,14 @@ public class DBCPUtils {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 		if (connection != null) {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 	}
@@ -203,21 +234,21 @@ public class DBCPUtils {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 		if (statement != null) {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 		if (connection != null) {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}
 	}
@@ -226,6 +257,7 @@ public class DBCPUtils {
 	 * 初始化数据库连接池
 	 */
 	private static DataSource dataSource = null;
+
 	static {
 		Properties properties = new Properties();
 		InputStream inStream = DBCPUtils.class.getClassLoader().getResourceAsStream("dbcp.properties");
@@ -234,7 +266,7 @@ public class DBCPUtils {
 			properties.load(inStream);
 			dataSource = BasicDataSourceFactory.createDataSource(properties); // 使用DBCP数据源连接数据库
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 	}
 

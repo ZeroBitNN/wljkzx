@@ -69,18 +69,39 @@
 					field : 'domain',
 					title : '专业',
 					width : 80
+				},
+				{
+					field : 'source',
+					title : '通知来源',
+					width : 0,
+					hidden : true
+				},
+				{
+					field : 'comeFrom',
+					title : '交办人',
+					width : 0,
+					hidden : true
+				},
+				{
+					field : 'content',
+					title : '内容',
+					width : 0,
+					hidden : true
+				},
+				{
+					field : 'attachment',
+					title : '附件',
+					width : 0,
+					hidden : true
 				}
 			]],
 			onDblClickRow : function(rowIndex, rowData) {
 				var jjbbDetailsDialog;
 				jjbbDetailsDialog = $('<div/>').dialog({
 					title : '交接班详情',
-					width : 700,
-					queryParams : {
-						id : rowData.id
-					},
+					width : 900,
 					height : 680,
-					left : 400,
+					left : 300,
 					top : 50,
 					href : '${pageContext.request.contextPath}/adminClass/jjbbDetails.jsp',
 					modal : false,
@@ -95,6 +116,9 @@
 					}],
 					onClose : function() {
 						jjbbDetailsDialog.dialog('destroy');
+					},
+					onLoad : function() {
+						$('#adminClass_jjbbDetails_Form').form('load', rowData);
 					}
 				});
 			},

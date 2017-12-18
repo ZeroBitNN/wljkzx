@@ -185,4 +185,14 @@ public class DeptJjbb {
 		this.updatetime = updatetime;
 	}
 
+	@Override
+	public String toString() {
+		return "DeptJjbb [page=" + page + ", rows=" + rows + ", sort=" + sort + ", order=" + order + ", id=" + id
+				+ ", datetime=" + datetime + ", notifier=" + notifier + ", type=" + type + ", domain=" + domain
+				+ ", source=" + source + ", serialNum=" + serialNum + ", comeFrom=" + comeFrom + ", title=" + title
+				+ ", content=" + content + ", attachment=" + attachment + ", createuser=" + createuser
+				+ ", createdatetime=" + createdatetime + ", updateuser=" + updateuser + ", updatetime=" + updatetime
+				+ "]";
+	}
+
 }

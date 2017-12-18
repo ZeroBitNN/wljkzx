@@ -35,4 +35,5 @@ public class DeptJjbbAction extends BaseAction implements ModelDriven<DeptJjbb> 
 		DataGrid<DeptJjbb> dg = deptJjbbService.getDatagrid(deptJjbb);
 		super.writeJson(dg);
 	}
+	
 }
