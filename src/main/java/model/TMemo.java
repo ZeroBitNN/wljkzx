@@ -105,7 +105,7 @@ public class TMemo implements java.io.Serializable {
 		this.classes = classes;
 	}
 
-	@Column(name = "CONTENT", length = 1000)
+	@Column(name = "CONTENT", length = 4000)
 
 	public String getContent() {
 		return this.content;
@@ -157,7 +157,7 @@ public class TMemo implements java.io.Serializable {
 		this.modifytime = modifytime;
 	}
 
-	@Column(name = "OTHERCONTENT", length = 1000)
+	@Column(name = "OTHERCONTENT", length = 4000)
 
 	public String getOthercontent() {
 		return this.othercontent;
