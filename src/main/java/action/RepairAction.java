@@ -39,4 +39,8 @@ public class RepairAction extends BaseAction {
 	public void doNotNeedSecurity_initAdmin(){
 		repairService.repairAdmin();
 	}
+	
+	public void initPerfParam(){
+		repairService.initPerfParam();
+	}
 }

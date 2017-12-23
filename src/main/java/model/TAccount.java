@@ -34,8 +34,10 @@ public class TAccount implements java.io.Serializable {
 	private Set<TDailyworkDetails> TDailyworkDetailses = new HashSet<TDailyworkDetails>(0);
 	private Set<TOrder> TOrdersForModifyid = new HashSet<TOrder>(0);
 	private Set<TDemand> TDemands = new HashSet<TDemand>(0);
+	private Set<TPerfNum> TPerfNums = new HashSet<TPerfNum>(0);
 	private Set<TMemo> TMemosForMemofrom = new HashSet<TMemo>(0);
 	private Set<TOrder> TOrdersForAuthorid = new HashSet<TOrder>(0);
+	private Set<TPerf> TPerfs = new HashSet<TPerf>(0);
 	private Set<TWorkrecord> TWorkrecordsForInputer = new HashSet<TWorkrecord>(0);
 	private Set<TWorkrecord> TWorkrecordsForHandler = new HashSet<TWorkrecord>(0);
 	private Set<TDailywork> TDailyworks = new HashSet<TDailywork>(0);
@@ -56,9 +58,10 @@ public class TAccount implements java.io.Serializable {
 	/** full constructor */
 	public TAccount(String id, TRoles TRoles, String createtime, String modifytime, String pwd, String username,
 			Set<TMemo> TMemosForMemoto, Set<TOrderNotice> TOrderNotices, Set<TDailyworkDetails> TDailyworkDetailses,
-			Set<TOrder> TOrdersForModifyid, Set<TDemand> TDemands, Set<TMemo> TMemosForMemofrom,
-			Set<TOrder> TOrdersForAuthorid, Set<TWorkrecord> TWorkrecordsForInputer,
-			Set<TWorkrecord> TWorkrecordsForHandler, Set<TDailywork> TDailyworks) {
+			Set<TOrder> TOrdersForModifyid, Set<TDemand> TDemands, Set<TPerfNum> TPerfNums,
+			Set<TMemo> TMemosForMemofrom, Set<TOrder> TOrdersForAuthorid, Set<TPerf> TPerfs,
+			Set<TWorkrecord> TWorkrecordsForInputer, Set<TWorkrecord> TWorkrecordsForHandler,
+			Set<TDailywork> TDailyworks) {
 		this.id = id;
 		this.TRoles = TRoles;
 		this.createtime = createtime;
@@ -70,8 +73,10 @@ public class TAccount implements java.io.Serializable {
 		this.TDailyworkDetailses = TDailyworkDetailses;
 		this.TOrdersForModifyid = TOrdersForModifyid;
 		this.TDemands = TDemands;
+		this.TPerfNums = TPerfNums;
 		this.TMemosForMemofrom = TMemosForMemofrom;
 		this.TOrdersForAuthorid = TOrdersForAuthorid;
+		this.TPerfs = TPerfs;
 		this.TWorkrecordsForInputer = TWorkrecordsForInputer;
 		this.TWorkrecordsForHandler = TWorkrecordsForHandler;
 		this.TDailyworks = TDailyworks;
@@ -191,6 +196,16 @@ public class TAccount implements java.io.Serializable {
 		this.TDemands = TDemands;
 	}
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccount")
+
+	public Set<TPerfNum> getTPerfNums() {
+		return this.TPerfNums;
+	}
+
+	public void setTPerfNums(Set<TPerfNum> TPerfNums) {
+		this.TPerfNums = TPerfNums;
+	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccountByMemofrom")
 
 	public Set<TMemo> getTMemosForMemofrom() {
@@ -209,6 +224,16 @@ public class TAccount implements java.io.Serializable {
 
 	public void setTOrdersForAuthorid(Set<TOrder> TOrdersForAuthorid) {
 		this.TOrdersForAuthorid = TOrdersForAuthorid;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccount")
+
+	public Set<TPerf> getTPerfs() {
+		return this.TPerfs;
+	}
+
+	public void setTPerfs(Set<TPerf> TPerfs) {
+		this.TPerfs = TPerfs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TAccountByInputer")

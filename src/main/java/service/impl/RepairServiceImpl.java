@@ -1,5 +1,6 @@
 package service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,12 +20,14 @@ import dao.MenuDaoI;
 import dao.OrderCategoryDaoI;
 import dao.OrderDaoI;
 import dao.OrderTypeDaoI;
+import dao.PerfParamDaoI;
 import dao.ResourcesDaoI;
 import dao.RolesDaoI;
 import dao.UserDaoI;
 import model.TAccount;
 import model.TOrderCategory;
 import model.TOrderType;
+import model.TPerfParam;
 import model.TResources;
 import model.TRoles;
 import model.Tmenu;
@@ -43,6 +46,16 @@ public class RepairServiceImpl implements RepairServiceI {
 	private OrderTypeDaoI orderTypeDao;
 	private RolesDaoI rolesDao;
 	private ResourcesDaoI resourcesDao;
+	private PerfParamDaoI perfParamDao;
+
+	public PerfParamDaoI getPerfParamDao() {
+		return perfParamDao;
+	}
+
+	@Autowired
+	public void setPerfParamDao(PerfParamDaoI perfParamDao) {
+		this.perfParamDao = perfParamDao;
+	}
 
 	public ResourcesDaoI getResourcesDao() {
 		return resourcesDao;
@@ -281,6 +294,28 @@ public class RepairServiceImpl implements RepairServiceI {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void initPerfParam() {
+		try {
+			Document document = new SAXReader().read(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILEPATH));
+			logger.info("初始化绩效参数......");
+			List<Node> childNodes = document.selectNodes("//perfParams/perfParam");
+			if (childNodes.size() > 0) {
+				for (Node node : childNodes) {
+					TPerfParam t = new TPerfParam();
+					t.setId(node.valueOf("@id"));
+					t.setName(node.valueOf("@itemname"));
+					t.setPercent(new BigDecimal(node.valueOf("@percent")));
+					t.setType(node.valueOf("@type"));
+					perfParamDao.saveOrUpdate(t);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
