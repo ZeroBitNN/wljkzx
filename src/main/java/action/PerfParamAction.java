@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.ModelDriven;
 
 import pageModel.DataGrid;
 import pageModel.Json;
+import pageModel.PerfLevel;
 import pageModel.PerfParam;
 import service.PerfParamServiceI;
 
@@ -31,33 +32,39 @@ public class PerfParamAction extends BaseAction implements ModelDriven<PerfParam
 	public void setPerfParamService(PerfParamServiceI perfParamService) {
 		this.perfParamService = perfParamService;
 	}
-	
-	public void getParamTg(){
+
+	public void getParamTg() {
 		DataGrid<PerfParam> tg = perfParamService.getParams();
 		super.writeJson(tg);
 	}
-	
-	public void doNotNeedSecurity_save(){
+
+	public void doNotNeedSecurity_save() {
 		Json j = new Json();
 		try {
 			perfParamService.addOrUpdate(perfParam);
 			j.setSuccess(true);
 			j.setMsg("保存成功！");
 		} catch (Exception e) {
-			j.setMsg("保存失败！"+e.getMessage());
+			j.setMsg("保存失败！" + e.getMessage());
 		}
 		super.writeJson(j);
 	}
-	
-	public void doNotNeedSecurity_delete(){
+
+	public void doNotNeedSecurity_delete() {
 		Json j = new Json();
 		try {
 			perfParamService.delete(perfParam);
 			j.setSuccess(true);
 			j.setMsg("删除成功！");
 		} catch (Exception e) {
-			j.setMsg("删除失败！"+e.getMessage());
+			j.setMsg("删除失败！" + e.getMessage());
 		}
 		super.writeJson(j);
 	}
+
+	public void getLevel() {
+		PerfLevel p = perfParamService.getLevel();
+		super.writeJson(p);
+	}
+
 }

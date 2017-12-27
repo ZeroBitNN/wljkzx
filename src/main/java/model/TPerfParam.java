@@ -12,13 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * TPerfParam entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_PERF_PARAM", schema = "", uniqueConstraints = @UniqueConstraint(columnNames = "NAME") )
+@Table(name = "T_PERF_PARAM", schema = "")
 
 public class TPerfParam implements java.io.Serializable {
 
@@ -83,7 +82,7 @@ public class TPerfParam implements java.io.Serializable {
 		this.TPerfParam = TPerfParam;
 	}
 
-	@Column(name = "NAME", unique = true, length = 100)
+	@Column(name = "NAME", length = 100)
 
 	public String getName() {
 		return this.name;

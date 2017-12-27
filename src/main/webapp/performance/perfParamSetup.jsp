@@ -8,6 +8,7 @@
 <script type="text/javascript">
 	var addRow;
 	var editingId;
+	var editingRow;
 	var perfparam_tg_tb = [{
 		text : '保存',
 		iconCls : 'icon-save',
@@ -16,7 +17,7 @@
 				$('#performance_perfParamSetup_tg').treegrid('endEdit', editingId);
 			}
 		}
-	}, '-', {
+	}, {
 		text : '取消',
 		iconCls : 'icon-cancel',
 		handler : function() {
@@ -28,6 +29,18 @@
 				$('#performance_perfParamSetup_tg').treegrid('remove', addRow.id);
 				addRow = undefined;
 			}
+		}
+	}, '-', {
+		text : '展开所有',
+		iconCls : 'icon-expand',
+		handler : function() {
+			$('#performance_perfParamSetup_tg').treegrid('expandAll');
+		}
+	}, {
+		text : '收起所有',
+		iconCls : 'icon-collapse',
+		handler : function() {
+			$('#performance_perfParamSetup_tg').treegrid('collapseAll');
 		}
 	}];
 
@@ -112,6 +125,130 @@
 			}
 		});
 
+		$('#performance_perfParamSetup_levelForm').form('load',
+			'${pageContext.request.contextPath}/perfParamAction!getLevel.action');
+
+		$('#performance_perfParamSetup_dg').datagrid({
+			singleSelect : true,
+			fitColumns : true,
+			title : '个人工作量',
+			striped : true,
+			url : '${pageContext.request.contextPath}/perfNumAction!getPerfNumDg.action',
+			fit : true,
+			onLoadError : function() {
+				$.messager.alert('警告！', '您没有修改工作量数据的权限！请联系管理员给你赋予相应权限。', 'warning');
+			},
+			view : groupview,
+			groupField : 'name',
+			groupFormatter : function(value, rows) {
+				return value + ' - ' + rows.length + ' Item(s)';
+			},
+			onLoadSuccess : function(data) {
+				var dataRows = data.rows;
+				var mergeCell;
+				var mergesIndex = 0;
+				var mergesRowspan = 1;
+				var merges = new Array();
+				var mergesCount = 0;
+				for (var i = 0; i < dataRows.length; i++) {
+					if (i != dataRows.length - 1) {
+						if (dataRows[i].itemgroup == dataRows[i + 1].itemgroup) {
+							mergesRowspan++;
+						} else {
+							mergeCell = {
+								index : mergesIndex,
+								rowspan : mergesRowspan
+							};
+							merges[mergesCount] = mergeCell;
+							mergesCount++;
+							mergesRowspan = 1;
+							mergesIndex = i + 1;
+						}
+					} else {
+						mergeCell = {
+							index : mergesIndex,
+							rowspan : mergesRowspan
+						};
+						merges[mergesCount] = mergeCell;
+					}
+				}
+				console.info(merges);
+				for (var i = 0; i < merges.length; i++) {
+					$(this).datagrid('mergeCells', {
+						index : merges[i].index,
+						field : 'itemgroup',
+						rowspan : merges[i].rowspan
+					});
+				}
+			},
+			toolbar : [{
+				text : '保存',
+				iconCls : 'icon-save',
+				handler : function() {
+					if (editingRow != undefined) {
+						$('#performance_perfParamSetup_dg').datagrid('endEdit', editingRow);
+						editingRow = undefined;
+					}
+					var rows = $('#performance_perfParamSetup_dg').datagrid('getChanges');
+					var rowData = JSON.stringify(rows);
+					$.ajax({
+						url : '${pageContext.request.contextPath}/perfNumAction!doNotNeedSecurity_save.action',
+						type : "POST",
+						data : {
+							changeRows : rowData
+						},
+						dataType : 'json',
+						success : function(result) {
+							if (result.success) {
+								$.messager.show({
+									msg : result.msg,
+									title : '保存成功'
+								});
+							} else {
+								$.messager.alert('错误', result.msg, 'error');
+							}
+						},
+						error : function(data) {
+							$.messager.alert('警告！', data.responseText, 'warning');
+						}
+					});
+				}
+			}, {
+				text : '取消',
+				iconCls : 'icon-cancel',
+				handler : function() {
+					$('#performance_perfParamSetup_dg').datagrid('rejectChanges');
+					if (editingRow != undefined) {
+						editingRow = undefined;
+					}
+				}
+			}, '-', {
+				text : '展开所有',
+				iconCls : 'icon-expand',
+				handler : function() {
+					$('#performance_perfParamSetup_dg').datagrid('expandGroup');
+				}
+			}, {
+				text : '收起所有',
+				iconCls : 'icon-collapse',
+				handler : function() {
+					$('#performance_perfParamSetup_dg').datagrid('collapseGroup');
+				}
+			}],
+			onAfterEdit : function(rowIndex, rowData, changes) {
+				if (editingRow != undefined) {
+					editingRow = undefined;
+				}
+			},
+			onClickCell : function(index, field, value) {
+				editingRow = index;
+			}
+		});
+
+		$('#performance_perfParamSetup_dg').datagrid('enableCellEditing').datagrid('gotoCell', {
+			index : 0,
+			field : 'id'
+		});
 	});
 
 	function onContextMenu(e, row) {
@@ -205,38 +342,86 @@
 			$('#performance_perfParamSetup_tg').treegrid('expand', node.id);
 		}
 	}
+
+	function submitLevelForm() {
+		$('#performance_perfParamSetup_levelForm').form('submit', {
+			url : '${pageContext.request.contextPath}/perfLevelAction!doNotNeedSecurity_saveLevel.action',
+			success : function(data) {
+				var saveResult = jQuery.parseJSON(data);
+				if (saveResult.success) {
+					$.messager.show({
+						msg : saveResult.msg,
+						title : '成功'
+					});
+				}
+			}
+		});
+	}
+	function clearLevelForm() {
+		$('#performance_perfParamSetup_levelForm').form('load',
+			'${pageContext.request.contextPath}/perfParamAction!getLevel.action');
+	}
 </script>
 
 <div class="easyui-accordion" style="width:500px;height:300px;" data-options="fit:true,border:false">
-	<div title="计件工作项类目设置" data-options="selected:true,iconCls:'icon-ok'"
+	<div title="计件工作项类目设置" data-options="selected:true,iconCls:'icon-item'"
 		style="padding:10px;overflow: hidden;">
 		<table id="performance_perfParamSetup_tg"></table>
 	</div>
-	<div title="Help" data-options="iconCls:'icon-help'" style="padding:10px;">
-		<p>The accordion allows you to provide multiple panels and display one ore more at a time.
-			Each panel has built-in support for expanding and collapsing. Clicking on a panel header to
-			expand or collapse that panel body. The panel content can be loaded via ajax by specifying a
-			'href' property. Users can define a panel to be selected. If it is not specified, then the first
-			panel is taken by default.</p>
+	<div title="计件档次占比设置" data-options="iconCls:'icon-levels'" style="padding:10px;" align="center">
+		<div class="easyui-panel" style="width:50%;padding:30px 60px;" align="center">
+			<form id="performance_perfParamSetup_levelForm" method="post"
+				data-options="onLoadError:function(){
+				$('#submitLevelButton').linkbutton('disable');
+				$('#clearLevelButton').linkbutton('disable');
+			}">
+				<div style="margin-bottom:20px">
+					<input class="easyui-numberspinner" name="level1"
+						data-options="label:'计件一档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+						style="width:80%;">
+				</div>
+				<div style="margin-bottom:20px">
+					<input class="easyui-numberspinner" name="level2"
+						data-options="label:'计件二档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+						style="width:80%;">
+				</div>
+				<div style="margin-bottom:20px">
+					<input class="easyui-numberspinner" name="level3"
+						data-options="label:'计件三档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+						style="width:80%;">
+				</div>
+				<div style="margin-bottom:20px">
+					<input class="easyui-numberspinner" name="level4"
+						data-options="label:'计件四档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+						style="width:80%;">
+				</div>
+				<div style="margin-bottom:20px">
+					<a href="javascript:void(0)" id="submitLevelButton" class="easyui-linkbutton"
+						onclick="submitLevelForm()" style="width:80px" data-options="iconCls:'icon-save'">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0)" id="clearLevelButton" class="easyui-linkbutton"
+						onclick="clearLevelForm()" style="width:80px" data-options="iconCls:'icon-cancel'">取消</a>
+				</div>
+			</form>
+		</div>
 	</div>
-	<div title="DataGrid" style="padding:10px"
+	<div title="计件工作量录入" style="padding:10px;overflow: hidden;"
 		data-options="
+				iconCls:'icon-input',
                 tools:[{
                     iconCls:'icon-reload',
                     handler:function(){
-                        $('#dg').datagrid('reload');
+                        $('#performance_perfParamSetup_dg').datagrid('reload');
                     }
                 }]">
-		<table id="dg" class="easyui-datagrid"
-			data-options="url:'',method:'get',fit:true,fitColumns:true,singleSelect:true">
+		<table id="performance_perfParamSetup_dg" class="easyui-datagrid">
 			<thead>
 				<tr>
-					<th data-options="field:'itemid',width:80">Item ID</th>
-					<th data-options="field:'productid',width:100">Product ID</th>
-					<th data-options="field:'listprice',width:80,align:'right'">List Price</th>
-					<th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>
-					<th data-options="field:'attr1',width:150">Attribute</th>
-					<th data-options="field:'status',width:50,align:'center'">Status</th>
+					<th data-options="field:'id',width:80,hidden:true">ID</th>
+					<th data-options="field:'name',align:'center',width:200,hidden:true">姓名</th>
+					<th data-options="field:'itemgroup',width:150">工单类目</th>
+					<th data-options="field:'item',width:300">工作项</th>
+					<th data-options="field:'value',width:500,editor:'numberbox'">工作量</th>
+					<th data-options="field:'perfdate',width:50,hidden:true">绩效日期</th>
 				</tr>
 			</thead>
 		</table>

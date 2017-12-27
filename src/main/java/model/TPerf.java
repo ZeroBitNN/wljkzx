@@ -1,7 +1,6 @@
 package model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * TPerf entity. @author MyEclipse Persistence Tools
@@ -35,7 +32,7 @@ public class TPerf implements java.io.Serializable {
 	private Double grjx;
 	private Double jjjx;
 	private Double kf;
-	private Date perfdate;
+	private String perfdate;
 
 	// Constructors
 
@@ -50,7 +47,7 @@ public class TPerf implements java.io.Serializable {
 
 	/** full constructor */
 	public TPerf(String id, TAccount TAccount, Double item1, Double item2, Double item3, Double item4, BigDecimal gdfz,
-			Double otheritem, BigDecimal zzhz, String ranking, Double grjx, Double jjjx, Double kf, Date perfdate) {
+			Double otheritem, BigDecimal zzhz, String ranking, Double grjx, Double jjjx, Double kf, String perfdate) {
 		this.id = id;
 		this.TAccount = TAccount;
 		this.item1 = item1;
@@ -201,14 +198,13 @@ public class TPerf implements java.io.Serializable {
 		this.kf = kf;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "PERFDATE", length = 7)
+	@Column(name = "PERFDATE", length = 50)
 
-	public Date getPerfdate() {
+	public String getPerfdate() {
 		return this.perfdate;
 	}
 
-	public void setPerfdate(Date perfdate) {
+	public void setPerfdate(String perfdate) {
 		this.perfdate = perfdate;
 	}
 

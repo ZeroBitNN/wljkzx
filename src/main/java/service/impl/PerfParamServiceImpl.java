@@ -1,5 +1,6 @@
 package service.impl;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import dao.PerfParamDaoI;
 import model.TPerfParam;
 import pageModel.DataGrid;
+import pageModel.PerfLevel;
 import pageModel.PerfParam;
 import service.PerfParamServiceI;
 
@@ -112,6 +114,51 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 			}
 		} catch (Exception e) {
 			logger.info(e.getMessage());
+		}
+	}
+
+	@Override
+	public PerfLevel getLevel() {
+		/**
+		 * Class cls = e.getClass(); Field[] fields = cls.getDeclaredFields();
+		 * for(int i=0; i<fields.length; i++){ Field f = fields[i];
+		 * f.setAccessible(true); System.out.println("属性名:" + f.getName() +
+		 * " 属性值:" + f.get(e)); }
+		 */
+		PerfLevel p = new PerfLevel();
+		Field[] fields = p.getClass().getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			Field f = fields[i];
+			String hql = "from TPerfParam t where id='" + f.getName() + "'";
+			f.setAccessible(true);
+			TPerfParam t = perfParamDao.get(hql);
+			if (t != null) {
+				try {
+					if (t.getPercent() != null) {
+						f.set(p, t.getPercent().toString());
+					} else {
+						f.set(p, 0);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return p;
+	}
+
+	@Override
+	public void saveLevel(PerfLevel perfLevel) throws IllegalArgumentException, IllegalAccessException {
+		Field[] fields = perfLevel.getClass().getDeclaredFields();
+		for (Field f : fields) {
+			f.setAccessible(true);
+			String hql = "from TPerfParam t where id='" + f.getName() + "'";
+			TPerfParam t = perfParamDao.get(hql);
+			if (t != null) {
+				t.setPercent(new BigDecimal(f.get(perfLevel).toString()));
+			}
+			perfParamDao.save(t);
 		}
 	}
 

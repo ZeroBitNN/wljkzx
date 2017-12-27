@@ -1,7 +1,6 @@
 package model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * TPerfNum entity. @author MyEclipse Persistence Tools
@@ -27,7 +24,8 @@ public class TPerfNum implements java.io.Serializable {
 	private TPerfParam TPerfParam;
 	private BigDecimal percent;
 	private Double value;
-	private Date perfdate;
+	private String perfdate;
+	private String itemgroup;
 
 	// Constructors
 
@@ -42,19 +40,20 @@ public class TPerfNum implements java.io.Serializable {
 
 	/** full constructor */
 	public TPerfNum(String id, TAccount TAccount, TPerfParam TPerfParam, BigDecimal percent, Double value,
-			Date perfdate) {
+			String perfdate, String itemgroup) {
 		this.id = id;
 		this.TAccount = TAccount;
 		this.TPerfParam = TPerfParam;
 		this.percent = percent;
 		this.value = value;
 		this.perfdate = perfdate;
+		this.itemgroup = itemgroup;
 	}
 
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", nullable = false, length = 36)
+	@Column(name = "ID", unique = true, nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -106,15 +105,24 @@ public class TPerfNum implements java.io.Serializable {
 		this.value = value;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "PERFDATE", length = 7)
+	@Column(name = "PERFDATE", length = 50)
 
-	public Date getPerfdate() {
+	public String getPerfdate() {
 		return this.perfdate;
 	}
 
-	public void setPerfdate(Date perfdate) {
+	public void setPerfdate(String perfdate) {
 		this.perfdate = perfdate;
+	}
+
+	@Column(name = "ITEMGROUP", length = 50)
+
+	public String getItemgroup() {
+		return this.itemgroup;
+	}
+
+	public void setItemgroup(String itemgroup) {
+		this.itemgroup = itemgroup;
 	}
 
 }
