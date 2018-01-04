@@ -3,19 +3,26 @@ package service.impl;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dao.PerfNumDaoI;
 import dao.PerfParamDaoI;
+import dao.UserDaoI;
+import model.TAccount;
+import model.TPerfNum;
 import model.TPerfParam;
 import pageModel.DataGrid;
 import pageModel.PerfLevel;
 import pageModel.PerfParam;
 import service.PerfParamServiceI;
+import util.StringUtil;
 
 @Service(value = "perfParamService")
 public class PerfParamServiceImpl implements PerfParamServiceI {
@@ -32,14 +39,36 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 		this.perfParamDao = perfParamDao;
 	}
 
+	private UserDaoI userDao;
+
+	public UserDaoI getUserDao() {
+		return userDao;
+	}
+
+	@Autowired
+	public void setUserDao(UserDaoI userDao) {
+		this.userDao = userDao;
+	}
+
+	private PerfNumDaoI perfNumDao;
+
+	public PerfNumDaoI getPerfNumDao() {
+		return perfNumDao;
+	}
+
+	@Autowired
+	public void setPerfNumDao(PerfNumDaoI perfNumDao) {
+		this.perfNumDao = perfNumDao;
+	}
+
 	@Override
 	public DataGrid<PerfParam> getParams() {
 		double sumValue = 0.0;
-		int sumPercent = 0;
+		double sumPercent = 0;
 		List<PerfParam> footer = new ArrayList<PerfParam>();
 
 		DataGrid<PerfParam> dg = new DataGrid<PerfParam>();
-		String hql = "from TPerfParam t where type='类目'";
+		String hql = "from TPerfParam t where type='类目' order by name";
 
 		String totalHql = "select count(*) " + hql;
 		dg.setTotal(perfParamDao.count(totalHql));
@@ -52,7 +81,7 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 					sumValue += t.getValue();
 				}
 				if (t.getPercent() != null) {
-					sumPercent += t.getPercent().intValue();
+					sumPercent += t.getPercent().doubleValue();
 				}
 				PerfParam p = new PerfParam();
 				BeanUtils.copyProperties(t, p);
@@ -68,8 +97,9 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 
 		PerfParam sumP = new PerfParam();
 		sumP.setName("合计");
-		sumP.setValue(sumValue);
+		sumP.setValue(sumValue / 2);
 		sumP.setPercent(new BigDecimal(sumPercent));
+		sumP.setPid("footer");
 		footer.add(sumP);
 		dg.setFooter(footer);
 
@@ -90,6 +120,20 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 			t.setTPerfParam(perfParamDao.getForId(TPerfParam.class, perfParam.getPid()));
 			t.setType("类目");
 			perfParamDao.save(t);
+			// 为每个人员新增类目
+			String userHql = "from TAccount t where t.username<>'admin'";
+			List<TAccount> userList = userDao.find(userHql);
+			if (userList != null && userList.size() > 0) {
+				for (TAccount user : userList) {
+					TPerfNum tp = new TPerfNum();
+					tp.setId(UUID.randomUUID().toString());
+					tp.setTAccount(user);
+					tp.setTPerfParam(t);
+					tp.setPerfdate(StringUtil.dateToYMString(new Date()));
+					tp.setItemgroup(t.getTPerfParam().getName());
+					perfNumDao.save(tp);
+				}
+			}
 		} else {
 			logger.info("修改类目");
 			BeanUtils.copyProperties(perfParam, t, new String[] { "id", "type" });

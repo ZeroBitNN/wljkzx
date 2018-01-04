@@ -6,6 +6,15 @@ public class PerfLevel {
 	private String level2;
 	private String level3;
 	private String level4;
+	private String levelSum;
+
+	public String getLevelSum() {
+		return levelSum;
+	}
+
+	public void setLevelSum(String levelSum) {
+		this.levelSum = levelSum;
+	}
 
 	public String getLevel1() {
 		return level1;

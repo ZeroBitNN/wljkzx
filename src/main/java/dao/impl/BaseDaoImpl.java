@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ import dao.BaseDaoI;
 
 @Repository("baseDao")
 public class BaseDaoImpl<T> implements BaseDaoI<T> {
-	
-	public BaseDaoImpl(){
-		
+
+	public BaseDaoImpl() {
+
 	}
 
 	public BaseDaoImpl(org.hibernate.SessionFactory sessionFactory) {
@@ -71,9 +72,9 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 			return null;
 		}
 	}
-	
+
 	@Override
-	public T getForId(Class<T> c,Serializable id) {
+	public T getForId(Class<T> c, Serializable id) {
 		return (T) this.getCurrentSession().get(c, id);
 	}
 
@@ -147,6 +148,15 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	public int executeHql(String hql) {
 		Query q = this.getCurrentSession().createQuery(hql);
 		return q.executeUpdate();
+	}
+
+	@Override
+	public int excuteSql(String sql) {
+		this.getCurrentSession().beginTransaction().commit();
+		int r;
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		r = query.executeUpdate();
+		return r;
 	}
 
 }

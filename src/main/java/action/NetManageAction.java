@@ -10,7 +10,6 @@ import com.opensymphony.xwork2.ModelDriven;
 import pageModel.DataGrid;
 import pageModel.Json;
 import pageModel.NetManage;
-import pageModel.User;
 import service.NetManageServiceI;
 
 @Namespace("/")

@@ -9,10 +9,15 @@
 	var addRow;
 	var editingId;
 	var editingRow;
+	var perfPersonRow;
+	var authority = 1;
 	var perfparam_tg_tb = [{
 		text : '保存',
 		iconCls : 'icon-save',
 		handler : function() {
+			if (authority != 1) {
+				return;
+			}
 			if (editingId != undefined) {
 				$('#performance_perfParamSetup_tg').treegrid('endEdit', editingId);
 			}
@@ -62,11 +67,17 @@
 					editor : 'text'
 				},
 				{
-					title : '数值',
+					title : '当前工单量',
 					field : 'value',
 					width : '15%',
 					align : 'center',
-					editor : 'numberbox'
+					formatter : function(value, row, index) {
+						if (!row.pid) {
+							return "<b>大类合计：" + value + "</b>";
+						} else {
+							return value;
+						}
+					}
 				},
 				{
 					title : '百分比值',
@@ -74,7 +85,12 @@
 					width : '15%',
 					align : 'center',
 					formatter : formatProgress,
-					editor : 'numberbox'
+					editor : {
+						type : 'numberbox',
+						options : {
+							precision : 1
+						}
+					}
 				},
 				{
 					title : '描述',
@@ -94,6 +110,7 @@
 				}
 			},
 			onLoadError : function() {
+				authority = undefined;
 				$.messager.alert('警告！', "您没有访问此功能的权限！请联系管理员给你赋予相应权限。", 'warning');
 			},
 			onAfterEdit : function(row, changes) {
@@ -113,6 +130,7 @@
 							});
 							editingId = undefined;
 							$('#performance_perfParamSetup_tg').treegrid('reload');
+							$('#performance_perfParamSetup_dg').datagrid('reload');
 						} else {
 							$('#memo_memoList_datagrid').datagrid('beginEdit', editingId);
 							$.messager.alert('错误', r.msg, 'error');
@@ -131,11 +149,12 @@
 		$('#performance_perfParamSetup_dg').datagrid({
 			singleSelect : true,
 			fitColumns : true,
-			title : '个人工作量',
 			striped : true,
+			sortName : 'itemgroup',
 			url : '${pageContext.request.contextPath}/perfNumAction!getPerfNumDg.action',
 			fit : true,
 			onLoadError : function() {
+				authority = undefined;
 				$.messager.alert('警告！', '您没有修改工作量数据的权限！请联系管理员给你赋予相应权限。', 'warning');
 			},
 			view : groupview,
@@ -143,48 +162,13 @@
 			groupFormatter : function(value, rows) {
 				return value + ' - ' + rows.length + ' Item(s)';
 			},
-			onLoadSuccess : function(data) {
-				var dataRows = data.rows;
-				var mergeCell;
-				var mergesIndex = 0;
-				var mergesRowspan = 1;
-				var merges = new Array();
-				var mergesCount = 0;
-				for (var i = 0; i < dataRows.length; i++) {
-					if (i != dataRows.length - 1) {
-						if (dataRows[i].itemgroup == dataRows[i + 1].itemgroup) {
-							mergesRowspan++;
-						} else {
-							mergeCell = {
-								index : mergesIndex,
-								rowspan : mergesRowspan
-							};
-							merges[mergesCount] = mergeCell;
-							mergesCount++;
-							mergesRowspan = 1;
-							mergesIndex = i + 1;
-						}
-					} else {
-						mergeCell = {
-							index : mergesIndex,
-							rowspan : mergesRowspan
-						};
-						merges[mergesCount] = mergeCell;
-					}
-				}
-				console.info(merges);
-				for (var i = 0; i < merges.length; i++) {
-					$(this).datagrid('mergeCells', {
-						index : merges[i].index,
-						field : 'itemgroup',
-						rowspan : merges[i].rowspan
-					});
-				}
-			},
 			toolbar : [{
 				text : '保存',
 				iconCls : 'icon-save',
 				handler : function() {
+					if (authority != 1) {
+						return;
+					}
 					if (editingRow != undefined) {
 						$('#performance_perfParamSetup_dg').datagrid('endEdit', editingRow);
 						editingRow = undefined;
@@ -204,6 +188,7 @@
 									msg : result.msg,
 									title : '保存成功'
 								});
+								$('#performance_perfParamSetup_tg').treegrid('reload');
 							} else {
 								$.messager.alert('错误', result.msg, 'error');
 							}
@@ -234,6 +219,18 @@
 				handler : function() {
 					$('#performance_perfParamSetup_dg').datagrid('collapseGroup');
 				}
+			}, '-', {
+				text : '导出数据模板',
+				iconCls : 'icon-expand',
+				handler : function() {
+					$('#performance_perfParamSetup_dg').datagrid('expandGroup');
+				}
+			}, {
+				text : '按模板导入数据',
+				iconCls : 'icon-collapse',
+				handler : function() {
+					$('#performance_perfParamSetup_dg').datagrid('collapseGroup');
+				}
 			}],
 			onAfterEdit : function(rowIndex, rowData, changes) {
 				if (editingRow != undefined) {
@@ -249,6 +246,94 @@
 			index : 0,
 			field : 'id'
 		});
+
+		$('#performance_perfPerson_dg').datagrid({
+			singleSelect : true,
+			fitColumns : true,
+			striped : true,
+			url : '${pageContext.request.contextPath}/perfAction!getGrjxDg.action',
+			fit : true,
+			onLoadError : function() {
+				authority = undefined;
+				$.messager.alert('警告！', '您没有修改数据的权限！请联系管理员给你赋予相应权限。', 'warning');
+			},
+			toolbar : [{
+				text : '保存',
+				iconCls : 'icon-save',
+				handler : function() {
+					if (authority != 1) {
+						return;
+					}
+					if (perfPersonRow != undefined) {
+						$('#performance_perfPerson_dg').datagrid('endEdit', perfPersonRow);
+						perfPersonRow = undefined;
+					}
+					var rows = $('#performance_perfPerson_dg').datagrid('getChanges');
+					var rowData = JSON.stringify(rows);
+					$.ajax({
+						url : '${pageContext.request.contextPath}/perfAction!doNotNeedSecurity_save.action',
+						type : "POST",
+						data : {
+							changeRows : rowData
+						},
+						dataType : 'json',
+						success : function(result) {
+							if (result.success) {
+								$.messager.show({
+									msg : result.msg,
+									title : '保存成功'
+								});
+							} else {
+								$.messager.alert('错误', result.msg, 'error');
+							}
+						},
+						error : function(data) {
+							$.messager.alert('警告！', data.responseText, 'warning');
+						}
+					});
+				}
+			}, {
+				text : '取消',
+				iconCls : 'icon-cancel',
+				handler : function() {
+					$('#performance_perfPerson_dg').datagrid('rejectChanges');
+					if (perfPersonRow != undefined) {
+						perfPersonRow = undefined;
+					}
+				}
+			}, '-', {
+				text : '导出数据模板',
+				iconCls : 'icon-cancel',
+				handler : function() {
+					$('#performance_perfPerson_dg').datagrid('rejectChanges');
+					if (perfPersonRow != undefined) {
+						perfPersonRow = undefined;
+					}
+				}
+			},  {
+				text : '按模板导入',
+				iconCls : 'icon-cancel',
+				handler : function() {
+					$('#performance_perfPerson_dg').datagrid('rejectChanges');
+					if (perfPersonRow != undefined) {
+						perfPersonRow = undefined;
+					}
+				}
+			}],
+			onAfterEdit : function(rowIndex, rowData, changes) {
+				if (perfPersonRow != undefined) {
+					perfPersonRow = undefined;
+				}
+			},
+			onClickCell : function(index, field, value) {
+				perfPersonRow = index;
+			}
+		});
+	});
+
+	$('#performance_perfPerson_dg').datagrid('enableCellEditing').datagrid('gotoCell', {
+		index : 0,
+		field : 'id'
 	});
 
 	function onContextMenu(e, row) {
@@ -316,6 +401,7 @@
 										title : '成功'
 									});
 									$('#performance_perfParamSetup_tg').treegrid('reload');
+									$('#performance_perfParamSetup_dg').datagrid('reload');
 								} else {
 									$.messager.alert('错误', r.msg, 'error');
 								}
@@ -368,42 +454,6 @@
 		style="padding:10px;overflow: hidden;">
 		<table id="performance_perfParamSetup_tg"></table>
 	</div>
-	<div title="计件档次占比设置" data-options="iconCls:'icon-levels'" style="padding:10px;" align="center">
-		<div class="easyui-panel" style="width:50%;padding:30px 60px;" align="center">
-			<form id="performance_perfParamSetup_levelForm" method="post"
-				data-options="onLoadError:function(){
-				$('#submitLevelButton').linkbutton('disable');
-				$('#clearLevelButton').linkbutton('disable');
-			}">
-				<div style="margin-bottom:20px">
-					<input class="easyui-numberspinner" name="level1"
-						data-options="label:'计件一档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
-						style="width:80%;">
-				</div>
-				<div style="margin-bottom:20px">
-					<input class="easyui-numberspinner" name="level2"
-						data-options="label:'计件二档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
-						style="width:80%;">
-				</div>
-				<div style="margin-bottom:20px">
-					<input class="easyui-numberspinner" name="level3"
-						data-options="label:'计件三档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
-						style="width:80%;">
-				</div>
-				<div style="margin-bottom:20px">
-					<input class="easyui-numberspinner" name="level4"
-						data-options="label:'计件四档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
-						style="width:80%;">
-				</div>
-				<div style="margin-bottom:20px">
-					<a href="javascript:void(0)" id="submitLevelButton" class="easyui-linkbutton"
-						onclick="submitLevelForm()" style="width:80px" data-options="iconCls:'icon-save'">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="javascript:void(0)" id="clearLevelButton" class="easyui-linkbutton"
-						onclick="clearLevelForm()" style="width:80px" data-options="iconCls:'icon-cancel'">取消</a>
-				</div>
-			</form>
-		</div>
-	</div>
 	<div title="计件工作量录入" style="padding:10px;overflow: hidden;"
 		data-options="
 				iconCls:'icon-input',
@@ -418,13 +468,75 @@
 				<tr>
 					<th data-options="field:'id',width:80,hidden:true">ID</th>
 					<th data-options="field:'name',align:'center',width:200,hidden:true">姓名</th>
-					<th data-options="field:'itemgroup',width:150">工单类目</th>
-					<th data-options="field:'item',width:300">工作项</th>
+					<th data-options="field:'itemgroup',width:300">工单类目</th>
+					<th data-options="field:'item',width:100">工作项</th>
 					<th data-options="field:'value',width:500,editor:'numberbox'">工作量</th>
 					<th data-options="field:'perfdate',width:50,hidden:true">绩效日期</th>
 				</tr>
 			</thead>
 		</table>
+	</div>
+	<div title="计件档次占比设置及个人绩效录入" data-options="iconCls:'icon-levels'" style="padding:10px;"
+		align="center">
+		<div class="easyui-panel" title="计件档次占比" titleDirection="up" halign="left"
+			style="width:100%;height:43%;" align="center">
+			<div style="width:50%" align="center">
+				<div style="margin:10px 0 0 0;"></div>
+				<form id="performance_perfParamSetup_levelForm" method="post"
+					data-options="onLoadError:function(){
+						$('#submitLevelButton').linkbutton('disable');
+						$('#clearLevelButton').linkbutton('disable');
+					}">
+					<div style="margin-bottom:10px">
+						<input class="easyui-numberspinner" name="level1"
+							data-options="label:'计件一档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+							style="width:80%;">
+					</div>
+					<div style="margin-bottom:10px">
+						<input class="easyui-numberspinner" name="level2"
+							data-options="label:'计件二档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+							style="width:80%;">
+					</div>
+					<div style="margin-bottom:10px">
+						<input class="easyui-numberspinner" name="level3"
+							data-options="label:'计件三档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+							style="width:80%;">
+					</div>
+					<div style="margin-bottom:10px">
+						<input class="easyui-numberspinner" name="level4"
+							data-options="label:'计件四档：',labelPosition:'left',min: 0,max: 100,suffix:'%'"
+							style="width:80%;">
+					</div>
+					<div style="margin-bottom:10px">
+						<input class="easyui-numberspinner" name="levelSum"
+							data-options="label:'计件占总绩效百分比：',labelPosition:'top',min: 0,max: 100,suffix:'%'"
+							style="width:80%;">
+					</div>
+					<div style="margin-bottom:10px">
+						<a href="javascript:void(0)" id="submitLevelButton" class="easyui-linkbutton"
+							onclick="submitLevelForm()" style="width:80px" data-options="iconCls:'icon-save'">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="javascript:void(0)" id="clearLevelButton" class="easyui-linkbutton"
+							onclick="clearLevelForm()" style="width:80px" data-options="iconCls:'icon-cancel'">取消</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div style="margin-bottom:10px"></div>
+		<div class="easyui-panel" title="个人绩效录入" titleDirection="up" halign="left"
+			style="width:100%;height:55%;" align="center">
+			<table id="performance_perfPerson_dg" class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'id',width:80,hidden:true">ID</th>
+						<th data-options="field:'name',align:'right',width:300">姓名</th>
+						<th data-options="field:'grjx',width:300,editor:{type:'numberbox',options:{precision:2}}">个人绩效</th>
+						<th
+							data-options="field:'isperf',align:'center',width:100,
+							editor:{type:'checkbox',options:{on:'是',off:'否'}}">是否计件</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
 	</div>
 </div>
 

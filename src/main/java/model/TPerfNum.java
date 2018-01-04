@@ -53,7 +53,7 @@ public class TPerfNum implements java.io.Serializable {
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
+	@Column(name = "ID", nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;

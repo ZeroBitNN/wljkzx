@@ -33,6 +33,11 @@ public class TPerf implements java.io.Serializable {
 	private Double jjjx;
 	private Double kf;
 	private String perfdate;
+	private BigDecimal isperf;
+	private Integer item1sum;
+	private Integer item2sum;
+	private Integer item3sum;
+	private Integer item4sum;
 
 	// Constructors
 
@@ -47,7 +52,8 @@ public class TPerf implements java.io.Serializable {
 
 	/** full constructor */
 	public TPerf(String id, TAccount TAccount, Double item1, Double item2, Double item3, Double item4, BigDecimal gdfz,
-			Double otheritem, BigDecimal zzhz, String ranking, Double grjx, Double jjjx, Double kf, String perfdate) {
+			Double otheritem, BigDecimal zzhz, String ranking, Double grjx, Double jjjx, Double kf, String perfdate,
+			BigDecimal isperf, Integer item1sum, Integer item2sum, Integer item3sum, Integer item4sum) {
 		this.id = id;
 		this.TAccount = TAccount;
 		this.item1 = item1;
@@ -62,6 +68,11 @@ public class TPerf implements java.io.Serializable {
 		this.jjjx = jjjx;
 		this.kf = kf;
 		this.perfdate = perfdate;
+		this.isperf = isperf;
+		this.item1sum = item1sum;
+		this.item2sum = item2sum;
+		this.item3sum = item3sum;
+		this.item4sum = item4sum;
 	}
 
 	// Property accessors
@@ -88,7 +99,7 @@ public class TPerf implements java.io.Serializable {
 		this.TAccount = TAccount;
 	}
 
-	@Column(name = "ITEM1", precision = 8, scale = 1)
+	@Column(name = "ITEM1", precision = 9, scale = 2)
 
 	public Double getItem1() {
 		return this.item1;
@@ -98,7 +109,7 @@ public class TPerf implements java.io.Serializable {
 		this.item1 = item1;
 	}
 
-	@Column(name = "ITEM2", precision = 8, scale = 1)
+	@Column(name = "ITEM2", precision = 9, scale = 2)
 
 	public Double getItem2() {
 		return this.item2;
@@ -108,7 +119,7 @@ public class TPerf implements java.io.Serializable {
 		this.item2 = item2;
 	}
 
-	@Column(name = "ITEM3", precision = 8, scale = 1)
+	@Column(name = "ITEM3", precision = 9, scale = 2)
 
 	public Double getItem3() {
 		return this.item3;
@@ -118,7 +129,7 @@ public class TPerf implements java.io.Serializable {
 		this.item3 = item3;
 	}
 
-	@Column(name = "ITEM4", precision = 8, scale = 1)
+	@Column(name = "ITEM4", precision = 9, scale = 2)
 
 	public Double getItem4() {
 		return this.item4;
@@ -138,7 +149,7 @@ public class TPerf implements java.io.Serializable {
 		this.gdfz = gdfz;
 	}
 
-	@Column(name = "OTHERITEM", precision = 8, scale = 1)
+	@Column(name = "OTHERITEM", precision = 9, scale = 2)
 
 	public Double getOtheritem() {
 		return this.otheritem;
@@ -206,6 +217,56 @@ public class TPerf implements java.io.Serializable {
 
 	public void setPerfdate(String perfdate) {
 		this.perfdate = perfdate;
+	}
+
+	@Column(name = "ISPERF", precision = 22, scale = 0)
+
+	public BigDecimal getIsperf() {
+		return this.isperf;
+	}
+
+	public void setIsperf(BigDecimal isperf) {
+		this.isperf = isperf;
+	}
+
+	@Column(name = "ITEM1SUM", precision = 7, scale = 0)
+
+	public Integer getItem1sum() {
+		return this.item1sum;
+	}
+
+	public void setItem1sum(Integer item1sum) {
+		this.item1sum = item1sum;
+	}
+
+	@Column(name = "ITEM2SUM", precision = 7, scale = 0)
+
+	public Integer getItem2sum() {
+		return this.item2sum;
+	}
+
+	public void setItem2sum(Integer item2sum) {
+		this.item2sum = item2sum;
+	}
+
+	@Column(name = "ITEM3SUM", precision = 7, scale = 0)
+
+	public Integer getItem3sum() {
+		return this.item3sum;
+	}
+
+	public void setItem3sum(Integer item3sum) {
+		this.item3sum = item3sum;
+	}
+
+	@Column(name = "ITEM4SUM", precision = 7, scale = 0)
+
+	public Integer getItem4sum() {
+		return this.item4sum;
+	}
+
+	public void setItem4sum(Integer item4sum) {
+		this.item4sum = item4sum;
 	}
 
 }
