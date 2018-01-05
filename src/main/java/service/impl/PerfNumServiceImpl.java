@@ -1,18 +1,30 @@
 package service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-
 import dao.PerfDaoI;
 import dao.PerfNumDaoI;
 import dao.PerfParamDaoI;
@@ -22,8 +34,10 @@ import model.TPerf;
 import model.TPerfNum;
 import model.TPerfParam;
 import pageModel.DataGrid;
+import pageModel.Json;
 import pageModel.PerfNum;
 import service.PerfNumServiceI;
+import util.ResourceUtil;
 import util.StringUtil;
 
 @Service(value = "perfNumService")
@@ -112,7 +126,7 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 				for (TAccount t : userList) {
 					String tempHql = "from TPerfNum t where t.TAccount.id='" + t.getId() + "'";
 					List<TPerfNum> tempList = perfNumDao.find(tempHql);
-					if (tempList == null || tempList.size() == 0) {	//如果没找到该用户则新生成数据
+					if (tempList == null || tempList.size() == 0) { // 如果没找到该用户则新生成数据
 						String itemHql = "from TPerfParam t where type='类目' and pid is not null";
 						List<TPerfParam> itemList = perfParamDao.find(itemHql);
 						for (TPerfParam item : itemList) {
@@ -328,6 +342,156 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 				t.setValue(0.0);
 			}
 		}
+	}
+
+	@Override
+	public Json importExcel(HttpServletRequest request) {
+		Json j = new Json();
+		// 上传文件总大小
+		Long fileSize = Long.valueOf(request.getHeader("Content-Length"));
+		MultiPartRequestWrapper multiPartRequest = (MultiPartRequestWrapper) request;// 由于struts2上传文件时自动使用了request封装
+		File[] files = multiPartRequest.getFiles(ResourceUtil.getUploadFieldName());// 上传的文件集合
+		String[] fileNames = multiPartRequest.getFileNames(ResourceUtil.getUploadFieldName());// 上传文件名称集合
+
+		// 校验文件
+		if (files == null || files.length < 1) {
+			j.setMsg("您没有上传任何文件！");
+			return j;
+		}
+		if (fileSize > ResourceUtil.getUploadFileMaxSize()) {
+			j.setMsg("上传文件总大小超出限制！");
+			return j;
+		}
+
+		// 读取文件内容
+		for (int i = 0; i < files.length; i++) {
+			// 校验文件扩展名
+			String fileExt = fileNames[i].substring(fileNames[i].lastIndexOf(".") + 1).toLowerCase();
+			if (!fileExt.equals("xlsx") && !fileExt.equals("xls")) {
+				j.setMsg("只允许导入xlsx、xls格式文件！");
+				return j;
+			}
+			// 获取工作薄
+			Workbook workbook = null;
+			if (fileExt.equals("xlsx")) {
+				// 2007版本的excel，用.xlsx结尾
+				try {
+					workbook = new XSSFWorkbook(files[i]);
+				} catch (InvalidFormatException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				} catch (IOException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				}
+			} else if (fileExt.equals("xls")) {
+				// 2003版本的excel，用.xls结尾
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(files[i]);
+					workbook = new HSSFWorkbook(fis);
+				} catch (FileNotFoundException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				} catch (IOException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				} finally {
+					if (fis != null) {
+						try {
+							fis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			// 获取工作表
+			Sheet sheet = workbook.getSheetAt(0);
+			// 获取表头
+			Row rowHead = sheet.getRow(1);
+			// 校验表头是否正确
+			// logger.info(rowHead.getPhysicalNumberOfCells());// 3
+			String hql = "from TPerfParam t where t.type='类目' and t.TPerfParam.id is not null";
+			List<TPerfParam> itemList = perfParamDao.find(hql);
+			if (itemList != null && itemList.size() > 0) {
+				// 将工单类名存为列表
+				List<String> itemNameList = new ArrayList<String>();
+				for (TPerfParam t : itemList) {
+					itemNameList.add(t.getName());
+				}
+				// 校验表头数量
+				if (rowHead.getPhysicalNumberOfCells() != itemList.size() + 1) {
+					j.setMsg("表头数量不正确，请使用正确模板导入数据！");
+					return j;
+				}
+				// 校验表头字段
+				for (int k = 0; k < rowHead.getPhysicalNumberOfCells(); k++) {
+					Cell cell = rowHead.getCell(k);
+					if (k == 0) {
+						if (!cell.getStringCellValue().equals("姓名")) {
+							j.setMsg("表头字段不正确，请使用正确模板导入数据！");
+							return j;
+						}
+					} else {
+						if (!itemNameList.contains(cell.getStringCellValue())) {
+							j.setMsg("表头字段不正确，请使用正确模板导入数据！");
+							return j;
+						}
+					}
+				}
+			}
+			// 获得数据的总行数
+			int totalRowNum = sheet.getLastRowNum();
+			// 获得所有数据
+			TAccount user = null;
+			for (int k = 2; k <= totalRowNum; k++) { // 从第3行开始读取数据
+				TPerfParam item = null;
+				Row row = sheet.getRow(k);
+				for (int l = 0; l < row.getPhysicalNumberOfCells(); l++) {
+					Cell cell = row.getCell(l);
+					if (l == 0) {
+						// 获取用户
+						String userHql = "from TAccount t where t.username='" + cell.getStringCellValue() + "'";
+						user = userDao.get(userHql);
+						logger.info("===========导入" + user.getUsername() + "的数据============");
+					} else {
+						// 通过表头获取字段名
+						Cell headCell = rowHead.getCell(l);
+						// 获取该字段
+						String itemHql = "from TPerfParam t where t.name='" + headCell.getStringCellValue() + "'";
+						item = perfParamDao.get(itemHql);
+						// 通过用户和字段获取工单
+						if (user != null && item != null) {
+							String numHql = "from TPerfNum t where t.TAccount.id='" + user.getId()
+									+ "' and t.TPerfParam.id='" + item.getId() + "' and t.perfdate='"
+									+ StringUtil.dateToYMString(new Date()) + "'";
+							TPerfNum perfNum = perfNumDao.get(numHql);
+							// 将数据存入数据库
+							if (perfNum != null) {
+								try {
+									perfNum.setValue(cell.getNumericCellValue());
+								} catch (Exception e) {
+									try {
+										perfNum.setValue(Double.valueOf(cell.getStringCellValue()));
+									} catch (NumberFormatException e1) {
+										perfNum.setValue(0.0);
+									}
+								} finally {
+									perfNumDao.save(perfNum);
+								}
+							}
+						}
+					}
+				}
+				logger.info("===========" + user.getUsername() + "的数据导入完成============");
+			}
+			// 数据导入成功
+			j.setSuccess(true);
+			j.setMsg("数据导入成功！<b>请点击保存按钮保存数据！</b>");
+		}
+
+		return j;
 	}
 
 }

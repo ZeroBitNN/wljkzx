@@ -221,15 +221,16 @@
 				}
 			}, '-', {
 				text : '导出数据模板',
-				iconCls : 'icon-expand',
+				iconCls : 'icon-exportE',
 				handler : function() {
-					$('#performance_perfParamSetup_dg').datagrid('expandGroup');
+					exportNum();
 				}
 			}, {
 				text : '按模板导入数据',
-				iconCls : 'icon-collapse',
+				iconCls : 'icon-importE',
 				handler : function() {
-					$('#performance_perfParamSetup_dg').datagrid('collapseGroup');
+					$('#performance_perfParam_filebox').textbox('clear');
+					$('#performance_perfParam_importDialog').dialog('open');
 				}
 			}],
 			onAfterEdit : function(rowIndex, rowData, changes) {
@@ -303,22 +304,12 @@
 				}
 			}, '-', {
 				text : '导出数据模板',
-				iconCls : 'icon-cancel',
-				handler : function() {
-					$('#performance_perfPerson_dg').datagrid('rejectChanges');
-					if (perfPersonRow != undefined) {
-						perfPersonRow = undefined;
-					}
-				}
-			},  {
+				iconCls : 'icon-exportE',
+				handler : function() {}
+			}, {
 				text : '按模板导入',
-				iconCls : 'icon-cancel',
-				handler : function() {
-					$('#performance_perfPerson_dg').datagrid('rejectChanges');
-					if (perfPersonRow != undefined) {
-						perfPersonRow = undefined;
-					}
-				}
+				iconCls : 'icon-importE',
+				handler : function() {}
 			}],
 			onAfterEdit : function(rowIndex, rowData, changes) {
 				if (perfPersonRow != undefined) {
@@ -335,6 +326,11 @@
 		index : 0,
 		field : 'id'
 	});
+
+	function exportNum() {
+		var tempUrl = "${pageContext.request.contextPath}/perfNumAction!doNotNeedSecurity_exportExcel.action";
+		window.open(tempUrl, "_blank");
+	}
 
 	function onContextMenu(e, row) {
 		if (row) {
@@ -443,6 +439,7 @@
 			}
 		});
 	}
+	
 	function clearLevelForm() {
 		$('#performance_perfParamSetup_levelForm').form('load',
 			'${pageContext.request.contextPath}/perfParamAction!getLevel.action');
@@ -546,4 +543,68 @@
 	<div class="menu-sep"></div>
 	<div onclick="collapse()">收起</div>
 	<div onclick="expand()">展开</div>
+</div>
+
+<div id="performance_perfParam_importDialog" class="easyui-dialog" align="center"
+	style="width:500px"
+	data-options="title:'导入EXCEL文件',closed:true,modal:true,buttons:[{
+    text:'导入',
+    handler:function(){
+      $('#performance_perfParam_importForm').form('submit',{
+        url:'${pageContext.request.contextPath}/perfNumAction!doNotNeedSecurity_importExcel.action',
+        onSubmit: function(){
+			$('#progressDlg').dialog('open');
+			var proValue = $('#p').progressbar('getValue');
+			if (proValue < 100){
+				proValue += Math.floor(Math.random() * 10);
+				$('#p').progressbar('setValue', proValue);
+				timeId=setTimeout(arguments.callee, 500);
+			}
+			return true;
+    	},
+        success:function(data){
+        	clearTimeout(timeId);
+        	$('#p').progressbar('setValue', 0);
+        	$('#progressDlg').dialog('close');
+	        try{
+	         var result = jQuery.parseJSON(data);
+	         if (result.success) {
+	           $('#performance_perfParam_importDialog').dialog('close');
+	           $('#performance_perfParamSetup_dg').datagrid('load');
+	         }
+	         $.messager.alert({
+	           title : '提示：',
+	           msg : result.msg,
+	           width: 400,
+	           height: 200
+	         });                   
+	        } catch(e) {
+	          $.messager.alert('警告！', data, 'warning');
+	        }
+        }
+      });
+    }
+  }]">
+	<form id="performance_perfParam_importForm" method="post" enctype="multipart/form-data">
+		<table style="width:80%;text-align:'center';">
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+				<td><input id="performance_perfParam_filebox" class="easyui-filebox" name="filedata"
+					label="选择文件:" labelPosition="top" style="width:100%"
+					data-options="buttonText:'请选择...',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'"><br>
+					<span style="color: red;">(文件大小不得超过50M，文件类型为：xls,xlsx)</span></td>
+			</tr>
+			<tr>
+				<td><br></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<div id="progressDlg" class="easyui-dialog" title="导入进度" data-options="closed:true,modal:true">
+	<div style="padding: 10px 60px 20px 60px">
+		<div id="p" class="easyui-progressbar" style="width:400px;"></div>
+	</div>
 </div>

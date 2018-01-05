@@ -82,7 +82,7 @@
 		<resource id="jxgl" name="绩效管理权限" url="" description="绩效管理权限组" pid="" />
 		<resource id="jjlmgl" name="计件工作项类目管理" url="/perfParamAction!getParamTg" description="计件工作项类目管理" pid="jxgl" />
 		<resource id="jjdcsz" name="计件档次设置" url="/perfParamAction!getLevel" description="计件档次设置权限" pid="jxgl" />
-		<resource id="gzllr" name="计件工作量录入" url="/perfParamAction!getLevel" description="计件工作量录入权限" pid="jxgl" />
+		<resource id="gzllr" name="计件工作量录入" url="/perfNumAction!getPerfNumDg" description="计件工作量录入权限" pid="jxgl" />
 		<resource id="grjxlr" name="个人绩效录入" url="/perfAction!getGrjxDg" description="个人绩效录入权限" pid="jxgl" />
 		<resource id="grjjjxb" name="查看个人计件绩效表" url="/perfAction!getPerfDg" description="查看个人计件绩效表权限" pid="jxgl" />
 	</resources>

@@ -1,5 +1,8 @@
 package service;
 
+import java.util.List;
+
+import model.TPerfParam;
 import pageModel.DataGrid;
 import pageModel.PerfLevel;
 import pageModel.PerfParam;
@@ -15,5 +18,7 @@ public interface PerfParamServiceI {
 	PerfLevel getLevel();
 
 	void saveLevel(PerfLevel perfLevel) throws IllegalArgumentException, IllegalAccessException;
+
+	List<TPerfParam> getAllItems();
 
 }

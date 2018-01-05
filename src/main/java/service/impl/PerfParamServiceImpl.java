@@ -206,4 +206,10 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 		}
 	}
 
+	@Override
+	public List<TPerfParam> getAllItems() {
+		String hql = "from TPerfParam t where t.type='类目' and t.TPerfParam.id is not null";
+		return perfParamDao.find(hql);
+	}
+
 }

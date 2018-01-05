@@ -2,6 +2,7 @@ package action;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
@@ -24,7 +25,7 @@ public class BaseAction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 获得session
 	 * 
