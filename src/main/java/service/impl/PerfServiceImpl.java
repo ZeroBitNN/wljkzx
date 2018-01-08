@@ -1,5 +1,9 @@
 package service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +12,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +38,11 @@ import model.TPerf;
 import model.TPerfNum;
 import model.TPerfParam;
 import pageModel.DataGrid;
+import pageModel.Json;
 import pageModel.Perf;
 import pageModel.PerfNum;
 import service.PerfServiceI;
+import util.ResourceUtil;
 import util.StringUtil;
 
 @Service(value = "perfService")
@@ -458,6 +474,118 @@ public class PerfServiceImpl implements PerfServiceI {
 
 		t.setGdfz(new BigDecimal(gdfz));
 		return t;
+	}
+
+	@Override
+	public Json importGrjx(HttpServletRequest request) {
+		Json j = new Json();
+		// 上传文件总大小
+		Long fileSize = Long.valueOf(request.getHeader("Content-Length"));
+		MultiPartRequestWrapper multiPartRequest = (MultiPartRequestWrapper) request;// 由于struts2上传文件时自动使用了request封装
+		File[] files = multiPartRequest.getFiles(ResourceUtil.getUploadFieldName());// 上传的文件集合
+		String[] fileNames = multiPartRequest.getFileNames(ResourceUtil.getUploadFieldName());// 上传文件名称集合
+
+		// 校验文件
+		if (files == null || files.length < 1) {
+			j.setMsg("您没有上传任何文件！");
+			return j;
+		}
+		if (fileSize > ResourceUtil.getUploadFileMaxSize()) {
+			j.setMsg("上传文件总大小超出限制！");
+			return j;
+		}
+
+		// 读取文件内容
+		for (int i = 0; i < files.length; i++) {
+			// 校验文件扩展名
+			String fileExt = fileNames[i].substring(fileNames[i].lastIndexOf(".") + 1).toLowerCase();
+			if (!fileExt.equals("xlsx") && !fileExt.equals("xls")) {
+				j.setMsg("只允许导入xlsx、xls格式文件！");
+				return j;
+			}
+			// 获取工作薄
+			Workbook workbook = null;
+			if (fileExt.equals("xlsx")) {
+				// 2007版本的excel，用.xlsx结尾
+				try {
+					workbook = new XSSFWorkbook(files[i]);
+				} catch (InvalidFormatException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				} catch (IOException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				}
+			} else if (fileExt.equals("xls")) {
+				// 2003版本的excel，用.xls结尾
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(files[i]);
+					workbook = new HSSFWorkbook(fis);
+				} catch (FileNotFoundException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				} catch (IOException e) {
+					j.setMsg(e.getMessage());
+					return j;
+				} finally {
+					if (fis != null) {
+						try {
+							fis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			// 获取工作表
+			Sheet sheet = workbook.getSheetAt(0);
+			// 获取表头
+			Row rowHead = sheet.getRow(1);
+			// 校验表头是否正确
+			if (rowHead.getPhysicalNumberOfCells() != 2) {
+				j.setMsg("表头数量不正确，请使用正确模板导入数据！");
+				return j;
+			}
+			if (!rowHead.getCell(0).getStringCellValue().equals("姓名")
+					|| !rowHead.getCell(1).getStringCellValue().equals("个人绩效")) {
+				j.setMsg("表头字段不正确，请使用正确模板导入数据！");
+				return j;
+			}
+			// 获得数据的总行数
+			int totalRowNum = sheet.getLastRowNum();
+			// 获得所有数据
+			TAccount user = null;
+			for (int k = 2; k <= totalRowNum; k++) {
+				TPerf t = null;
+				Row row = sheet.getRow(k);
+				String userHql = "from TAccount t where t.username='" + row.getCell(0).getStringCellValue() + "'";
+				user = userDao.get(userHql);
+				if (user != null) {
+					String tHql = "from TPerf t where t.TAccount.id='" + user.getId() + "' and t.perfdate='"
+							+ StringUtil.dateToYMString(new Date()) + "'";
+					t = perfDao.get(tHql);
+					if (t!=null){
+						try {
+							t.setGrjx(row.getCell(1).getNumericCellValue());
+						} catch (Exception e) {
+							try {
+								t.setGrjx(Double.valueOf(row.getCell(1).getStringCellValue()));
+							} catch (NumberFormatException e1) {
+								t.setGrjx(0.0);
+							}
+						}finally {
+							perfDao.save(t);
+						}
+					}
+				}
+			}
+		}
+		// 数据导入成功
+		j.setSuccess(true);
+		j.setMsg("数据导入成功！<b>请点击保存按钮保存数据！</b>");
+
+		return j;
 	}
 
 }

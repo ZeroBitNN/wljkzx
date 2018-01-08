@@ -10,6 +10,7 @@
 	var editingId;
 	var editingRow;
 	var perfPersonRow;
+	var importUrl;
 	var authority = 1;
 	var perfparam_tg_tb = [{
 		text : '保存',
@@ -230,6 +231,7 @@
 				iconCls : 'icon-importE',
 				handler : function() {
 					$('#performance_perfParam_filebox').textbox('clear');
+					importUrl='${pageContext.request.contextPath}/perfNumAction!doNotNeedSecurity_importExcel.action';
 					$('#performance_perfParam_importDialog').dialog('open');
 				}
 			}],
@@ -305,11 +307,17 @@
 			}, '-', {
 				text : '导出数据模板',
 				iconCls : 'icon-exportE',
-				handler : function() {}
+				handler : function() {
+					exportGrjx();
+				}
 			}, {
 				text : '按模板导入',
 				iconCls : 'icon-importE',
-				handler : function() {}
+				handler : function() {
+					$('#performance_perfParam_filebox').textbox('clear');
+					importUrl='${pageContext.request.contextPath}/perfAction!doNotNeedSecurity_importGrjx.action';
+					$('#performance_perfParam_importDialog').dialog('open');
+				}
 			}],
 			onAfterEdit : function(rowIndex, rowData, changes) {
 				if (perfPersonRow != undefined) {
@@ -327,6 +335,11 @@
 		field : 'id'
 	});
 
+	function exportGrjx(){
+		var tempUrl = "${pageContext.request.contextPath}/perfAction!doNotNeedSecurity_exportGrjx.action";
+		window.open(tempUrl, "_blank");
+	}
+	
 	function exportNum() {
 		var tempUrl = "${pageContext.request.contextPath}/perfNumAction!doNotNeedSecurity_exportExcel.action";
 		window.open(tempUrl, "_blank");
@@ -551,7 +564,7 @@
     text:'导入',
     handler:function(){
       $('#performance_perfParam_importForm').form('submit',{
-        url:'${pageContext.request.contextPath}/perfNumAction!doNotNeedSecurity_importExcel.action',
+        url:importUrl,
         onSubmit: function(){
 			$('#progressDlg').dialog('open');
 			var proValue = $('#p').progressbar('getValue');
@@ -571,6 +584,7 @@
 	         if (result.success) {
 	           $('#performance_perfParam_importDialog').dialog('close');
 	           $('#performance_perfParamSetup_dg').datagrid('load');
+	           $('#performance_perfPerson_dg').datagrid('load');
 	         }
 	         $.messager.alert({
 	           title : '提示：',

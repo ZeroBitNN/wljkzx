@@ -486,10 +486,10 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 				}
 				logger.info("===========" + user.getUsername() + "的数据导入完成============");
 			}
-			// 数据导入成功
-			j.setSuccess(true);
-			j.setMsg("数据导入成功！<b>请点击保存按钮保存数据！</b>");
 		}
+		// 数据导入成功
+		j.setSuccess(true);
+		j.setMsg("数据导入成功！<b>请点击保存按钮保存数据！</b>");
 
 		return j;
 	}
