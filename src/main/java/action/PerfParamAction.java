@@ -1,5 +1,7 @@
 package action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,4 +69,20 @@ public class PerfParamAction extends BaseAction implements ModelDriven<PerfParam
 		super.writeJson(p);
 	}
 
+	public void doNotNeedSecurity_itemList() {
+		StringBuffer sb = new StringBuffer();
+		List<String> itemList = perfParamService.getItemList();
+		if (itemList != null && itemList.size() > 0) {
+			for (String s : itemList) {
+				sb.append("<li>").append(s).append("</li>");
+			}
+		}
+
+		super.writeString(sb.toString());
+	}
+
+	public void doNotNeedSecurity_levelIntro() {
+		StringBuffer sb = perfParamService.getLevelIntro();
+		super.writeString(sb.toString());
+	}
 }

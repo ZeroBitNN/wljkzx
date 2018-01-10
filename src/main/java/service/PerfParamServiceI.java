@@ -21,4 +21,10 @@ public interface PerfParamServiceI {
 
 	List<TPerfParam> getAllItems();
 
+	List<String> getItemList();
+
+	StringBuffer getLevelIntro();
+
+	TPerfParam getParam(String id);
+
 }

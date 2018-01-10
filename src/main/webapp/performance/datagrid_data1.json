@@ -1,1 +1,0 @@
-{"footer":[],"rows":[{"id":"item1","name":"类目1","percent":40,"type":"类目"},{"id":"item2","name":"类目2","percent":5,"type":"类目"},{"id":"item3","name":"类目3","percent":47,"type":"类目"},{"id":"item4","name":"类目4","percent":8,"type":"类目"},{"id":"otheritem","name":"其它类目","percent":0,"type":"类目"},{"id":"subitem1","name":"子类目1","_parentId":"item1","pid":"item1","type":"类目"}],"total":6}

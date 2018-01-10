@@ -35,4 +35,15 @@ public class BaseAction {
 		return ServletActionContext.getRequest().getSession();
 	}
 
+	public void writeString(String str) {
+		try {
+			ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+			ServletActionContext.getResponse().getWriter().write(str);
+			ServletActionContext.getResponse().getWriter().flush();
+			ServletActionContext.getResponse().getWriter().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -120,38 +120,35 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 				p.setItem(t.getTPerfParam().getName());
 				pList.add(p);
 			}
-			// 匹配用户数是否一致
-			if (tList.size() != userList.size()) {
-				// 匹配用户ID是否一致
-				for (TAccount t : userList) {
-					String tempHql = "from TPerfNum t where t.TAccount.id='" + t.getId() + "'";
-					List<TPerfNum> tempList = perfNumDao.find(tempHql);
-					if (tempList == null || tempList.size() == 0) { // 如果没找到该用户则新生成数据
-						String itemHql = "from TPerfParam t where type='类目' and pid is not null";
-						List<TPerfParam> itemList = perfParamDao.find(itemHql);
-						for (TPerfParam item : itemList) {
-							TPerfNum tp = new TPerfNum();
-							tp.setId(UUID.randomUUID().toString());
-							tp.setTAccount(t);
-							tp.setTPerfParam(item);
-							tp.setPerfdate(StringUtil.dateToYMString(new Date()));
-							tp.setItemgroup(item.getTPerfParam().getName());
-							perfNumDao.save(tp);
+			// 匹配用户ID是否一致
+			for (TAccount t : userList) {
+				String tempHql = "from TPerfNum t where t.TAccount.id='" + t.getId() + "'";
+				List<TPerfNum> tempList = perfNumDao.find(tempHql);
+				if (tempList == null || tempList.size() == 0) { // 如果没找到该用户则新生成数据
+					String itemHql = "from TPerfParam t where type='类目' and pid is not null";
+					List<TPerfParam> itemList = perfParamDao.find(itemHql);
+					for (TPerfParam item : itemList) {
+						TPerfNum tp = new TPerfNum();
+						tp.setId(UUID.randomUUID().toString());
+						tp.setTAccount(t);
+						tp.setTPerfParam(item);
+						tp.setPerfdate(StringUtil.dateToYMString(new Date()));
+						tp.setItemgroup(item.getTPerfParam().getName());
+						perfNumDao.save(tp);
 
-							PerfNum p = new PerfNum();
-							BeanUtils.copyProperties(tp, p);
-							p.setName(t.getUsername());
-							p.setItem(item.getName());
-							pList.add(p);
-							dg.setTotal(dg.getTotal() + 1);
-						}
+						PerfNum p = new PerfNum();
+						BeanUtils.copyProperties(tp, p);
+						p.setName(t.getUsername());
+						p.setItem(item.getName());
+						pList.add(p);
+						dg.setTotal(dg.getTotal() + 1);
 					}
 				}
-
-				// 清空工单数量
-				clearParamValue("from TPerfParam t where type='类目'");
-				clearParamValue("from TPerfParam t where id='levelSum'");
 			}
+
+			// 清空工单数量
+			// clearParamValue("from TPerfParam t where type='类目'");
+			// clearParamValue("from TPerfParam t where id='levelSum'");
 		} else if (tList.size() == 0) {
 			Long sumCreate = 0L;
 			// 如果没有数据则初始化当月数据
@@ -215,7 +212,7 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 		calcSubItem();
 		// 计算个人父类工单总量
 		calcPersonItemSum();
-		// 计算父类工单总量
+		// 计算所有人父类工单总量
 		calcParentItem();
 		// 计算所有工单总量
 		calcItemSum();
@@ -435,6 +432,7 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 						}
 					} else {
 						if (!itemNameList.contains(cell.getStringCellValue())) {
+							logger.info("=====" + cell.getStringCellValue() + "字段不正确=====");
 							j.setMsg("表头字段不正确，请使用正确模板导入数据！");
 							return j;
 						}
@@ -459,8 +457,11 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 						// 通过表头获取字段名
 						Cell headCell = rowHead.getCell(l);
 						// 获取该字段
-						String itemHql = "from TPerfParam t where t.name='" + headCell.getStringCellValue() + "'";
+						String itemHql = "from TPerfParam t where t.name='" + headCell.getStringCellValue()
+								+ "' and t.TPerfParam.id is not null";
 						item = perfParamDao.get(itemHql);
+						// logger.info("...导入" + headCell.getStringCellValue()
+						// +"类数据...");
 						// 通过用户和字段获取工单
 						if (user != null && item != null) {
 							String numHql = "from TPerfNum t where t.TAccount.id='" + user.getId()
@@ -492,6 +493,12 @@ public class PerfNumServiceImpl implements PerfNumServiceI {
 		j.setMsg("数据导入成功！<b>请点击保存按钮保存数据！</b>");
 
 		return j;
+	}
+
+	@Override
+	public List<TPerfNum> getPerfNum(String id, String perfdate) {
+		String hql = "from TPerfNum t where t.TAccount.id='" + id + "' and t.perfdate='" + perfdate + "' order by itemgroup";
+		return perfNumDao.find(hql);
 	}
 
 }

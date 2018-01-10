@@ -100,6 +100,12 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	}
 
 	@Override
+	public List<T> findForSql(String sql) {
+		Query q = this.getCurrentSession().createQuery(sql);
+		return q.setCacheable(true).list();
+	}
+
+	@Override
 	public List<T> find(String hql, Map<String, Object> params) {
 		Query q = this.getCurrentSession().createQuery(hql);
 		if (params != null && !params.isEmpty()) {

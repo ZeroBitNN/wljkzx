@@ -212,4 +212,55 @@ public class PerfParamServiceImpl implements PerfParamServiceI {
 		return perfParamDao.find(hql);
 	}
 
+	@Override
+	public List<String> getItemList() {
+		List<String> itemStr = new ArrayList<String>();
+		String hql = null;
+		for (int j = 1; j <= 4; j++) {
+			hql = "from TPerfParam t where t.type='类目' and t.TPerfParam.id='item" + j + "'";
+			List<TPerfParam> itemList = perfParamDao.find(hql);
+			if (itemList != null && itemList.size() > 0) {
+				StringBuffer s = new StringBuffer();
+				s.append("工单类目" + j + "所包含工单：");
+				for (int i = 0; i < itemList.size(); i++) {
+					if (i != itemList.size() - 1) {
+						s.append(itemList.get(i).getName()).append("、");
+					} else {
+						s.append(itemList.get(i).getName());
+					}
+				}
+				itemStr.add(s.toString());
+			}
+		}
+		return itemStr;
+	}
+
+	@Override
+	public StringBuffer getLevelIntro() {
+		StringBuffer sb = new StringBuffer();
+		TPerfParam perfSum = perfParamDao.getForId(TPerfParam.class, "perfSum");
+		TPerfParam perfAvg = perfParamDao.getForId(TPerfParam.class, "perfAvg");
+		TPerfParam level1 = perfParamDao.getForId(TPerfParam.class, "level1");
+		TPerfParam level2 = perfParamDao.getForId(TPerfParam.class, "level2");
+		TPerfParam level3 = perfParamDao.getForId(TPerfParam.class, "level3");
+		TPerfParam level4 = perfParamDao.getForId(TPerfParam.class, "level4");
+		sb.append("<li>计件绩效总额(元)：").append(perfSum.getValue()).append("</li>");
+		sb.append("<li></li>");
+		sb.append("<li>计件人均值(元)：").append(perfAvg.getValue()).append("</li>");
+		sb.append("<li>计件一档：均值的").append(level1.getPercent()).append("%&nbsp;&nbsp;").append(level1.getValue())
+				.append("</li>");
+		sb.append("<li>计件二档：均值的").append(level2.getPercent()).append("%&nbsp;&nbsp;").append(level2.getValue())
+				.append("</li>");
+		sb.append("<li>计件三档：均值的").append(level3.getPercent()).append("%&nbsp;&nbsp;").append(level3.getValue())
+				.append("</li>");
+		sb.append("<li>计件四档：均值的").append(level4.getPercent()).append("%&nbsp;&nbsp;").append(level4.getValue())
+				.append("</li>");
+		return sb;
+	}
+
+	@Override
+	public TPerfParam getParam(String id) {
+		return perfParamDao.getForId(TPerfParam.class, id);
+	}
+
 }
