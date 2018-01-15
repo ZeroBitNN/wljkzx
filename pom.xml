@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wljkzx</groupId>
 	<artifactId>wljkzx</artifactId>
-	<version>1.5.3</version>
+	<version>1.6.3</version>
 	<packaging>war</packaging>
 	<name>wljkzxOA</name>
 	<description />
@@ -294,6 +294,11 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.2</version>
 		</dependency>
 	</dependencies>
 	<build>

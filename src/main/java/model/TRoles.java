@@ -67,7 +67,7 @@ public class TRoles implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "RESOURCES_IDS", length = 2000)
+	@Column(name = "RESOURCES_IDS", length = 4000)
 
 	public String getResourcesIds() {
 		return this.resourcesIds;

@@ -1,8 +1,6 @@
 package action;
 
 import org.apache.struts2.convention.annotation.Action;
-import org.dom4j.Document;
-import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import service.RepairServiceI;
@@ -38,5 +36,9 @@ public class RepairAction extends BaseAction {
 
 	public void doNotNeedSecurity_initAdmin(){
 		repairService.repairAdmin();
+	}
+	
+	public void initPerfParam(){
+		repairService.initPerfParam();
 	}
 }

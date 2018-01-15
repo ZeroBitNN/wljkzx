@@ -1,5 +1,8 @@
 package util;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class StringUtil {
 	/**
 	 * 格式化字符串
@@ -16,4 +19,20 @@ public class StringUtil {
 		}
 		return str;
 	}
+
+	/**
+	 * 将日期(Date)类型转换为‘xxxx年xx月’格式字符串
+	 * 
+	 * @param date
+	 *            要转换的日期
+	 * @return 返回‘xxxx年xx月’格式字符串
+	 */
+	public static String dateToYMString(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		return year + "年" + month + "月";
+	}
+
 }

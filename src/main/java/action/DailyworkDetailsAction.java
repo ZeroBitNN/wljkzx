@@ -2,8 +2,6 @@ package action;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import model.SessionInfo;
-import pageModel.Dailywork;
 import pageModel.DailyworkDetails;
 import pageModel.DataGrid;
 import pageModel.Json;
