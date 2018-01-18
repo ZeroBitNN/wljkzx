@@ -46,4 +46,12 @@ public class ResourceUtil {
 	public static final String getUploadDirectory(){
 		return bundle.getString("uploadDirectory");
 	}
+	
+	/**
+	 * 获取得Lucene文档存入目录
+	 * @return
+	 */
+	public static final String getDocsDirectory(){
+		return bundle.getString("docFiles");
+	}
 }
