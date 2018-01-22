@@ -41,6 +41,9 @@ import pageModel.FileModel;
 
 public class CreateIndex {
 	private static final Logger logger = Logger.getLogger(CreateIndex.class);
+	private void CreateIndex() {
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * 列出文档存放目录下的所有文件

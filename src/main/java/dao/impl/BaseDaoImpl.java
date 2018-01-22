@@ -20,7 +20,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
 	}
 
-	public BaseDaoImpl(org.hibernate.SessionFactory sessionFactory) {
+	public BaseDaoImpl(SessionFactory sessionFactory) {
 		super();
 		SessionFactory = sessionFactory;
 	}
