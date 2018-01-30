@@ -46,4 +46,20 @@ public class ResourceUtil {
 	public static final String getUploadDirectory(){
 		return bundle.getString("uploadDirectory");
 	}
+	
+	/**
+	 * 获取远程文档存入目录
+	 * @return
+	 */
+	public static final String getDocsDirectory(){
+		return bundle.getString("docsDir");
+	}
+	
+	/**
+	 * 获取远程FTP服务器地址前缀
+	 * @return
+	 */
+	public static final String ftpUrlPrefix(){
+		return bundle.getString("ftpUrlPrefix");
+	}
 }

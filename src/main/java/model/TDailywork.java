@@ -16,7 +16,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * 日管控工作列表
  * TDailywork entity. @author MyEclipse Persistence Tools
  */
 @Entity
@@ -27,11 +26,11 @@ public class TDailywork implements java.io.Serializable {
 	// Fields
 
 	private String id;
-	private TAccount TAccount;	//发布人
-	private TOrderCategory TOrderCategory;	//专业类型
-	private String timepoint;	//时间点
-	private String content;		//工作内容
-	private Date releasetime;	//发布时间
+	private TAccount TAccount;
+	private TOrderCategory TOrderCategory;
+	private String timepoint;
+	private String content;
+	private Date releasetime;
 	private Set<TDailyworkDetails> TDailyworkDetailses = new HashSet<TDailyworkDetails>(0);
 
 	// Constructors

@@ -64,6 +64,20 @@
 			closable : true
 		});
 	}
+	
+	function initPerfParam() {
+		$.ajax({
+			url : '${pageContext.request.contextPath}/repairAction!initPerfParam.action',
+			success : function(r) {
+				//console.info(r);
+				if (r) {
+					$.messager.alert('提示！', r, 'info');
+				} else {
+					$.messager.alert('成功！', '初始化绩效参数成功！', 'info');
+				}
+			}
+		});
+	}
 
 </script>
 
@@ -99,6 +113,7 @@
 				<li><a href="javascript:void(0);" onclick="repairMenu();">更新菜单</a></li>
 				<li><a href="javascript:void(0);" onclick="repairResources();">更新权限</a></li>
 				<li><a href="javascript:void(0);" onclick="WSTest();">WebSocket测试</a></li>
+				<li><a href="javascript:void(0);" onclick="initPerfParam();">初始化绩效参数</a></li>
 				<!-- 
 				<li><a href="${pageContext.request.contextPath}/knowledge/knowledge.jsp" target="_blank">知识库</a></li>
 				 -->

@@ -41,7 +41,7 @@ public class ResourcesServiceImpl implements ResourcesServiceI {
 	@Override
 	public List<Resources> getAllRes() {
 		List<Resources> rList = new ArrayList<Resources>();
-		String hql = "from TResources t where t.TResources is not null";
+		String hql = "from TResources t where t.TResources is not null order by pid";
 		List<TResources> tList = resourcesDao.find(hql);
 		if (tList != null && tList.size() > 0) {
 			for (TResources t : tList) {
@@ -65,7 +65,7 @@ public class ResourcesServiceImpl implements ResourcesServiceI {
 		String[] roleRes = tRoles.getResourcesIds().split(",");
 
 		List<Resources> rList = new ArrayList<Resources>();
-		String hql = "from TResources t where t.TResources is not null";
+		String hql = "from TResources t where t.TResources is not null order by pid";
 		List<TResources> tList = resourcesDao.find(hql);
 		if (tList != null && tList.size() > 0) {
 			for (TResources t : tList) {

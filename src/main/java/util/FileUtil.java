@@ -3,8 +3,11 @@ package util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 文件操作类
@@ -17,8 +20,8 @@ public class FileUtil {
 	private static final Logger logger = Logger.getLogger(FileUtil.class);
 
 	private static final int BUFFER = 1024;
-	
-	private void FileUtil(){
+
+	private FileUtil() {
 	}
 
 	/**
@@ -180,4 +183,28 @@ public class FileUtil {
 		return true;
 	}
 
+	/**
+	 * 将对象写入JSON文件
+	 * 
+	 * @param object
+	 *            要写入的对象
+	 * @param filename
+	 *            要写入的文件名
+	 */
+	public static final void writeJsonToFile(Object object, String filename) {
+		try {
+			String json = JSON.toJSONString(object);
+			File file = new File(filename);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			byte[] b = json.getBytes();
+			int len = json.length();
+			OutputStream os = new FileOutputStream(file);
+			os.write(b, 0, len);
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

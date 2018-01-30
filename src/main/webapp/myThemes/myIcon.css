@@ -103,3 +103,30 @@
 .icon-myAdminDocs{
   background:url('icons/administrative_docs.png') no-repeat;
 }
+.icon-item{
+  background:url('icons/item.png') no-repeat;
+}
+.icon-levels{
+  background:url('icons/levels.png') no-repeat;
+}
+.icon-collapse{
+  background:url('icons/collapse.png') no-repeat;
+}
+.icon-expand{
+  background:url('icons/expand.png') no-repeat;
+}
+.icon-input{
+  background:url('icons/input.png') no-repeat;
+}
+.icon-restart{
+  background:url('icons/restart.png') no-repeat;
+}
+.icon-importE{
+  background:url('icons/Import_Excel.png') no-repeat;
+}
+.icon-exportE{
+  background:url('icons/Export_Excel.png') no-repeat;
+}
+.icon-category{
+  background:url('icons/category.png') no-repeat;
+}

@@ -78,6 +78,22 @@
 		<resource id="tjrgk" name="添加日管控" url="/dailyworkAction!add" description="添加日管控工作" pid="rgkgl" />
 		<resource id="bjrgk" name="编辑日管控" url="/dailyworkAction!edit" description="编辑日管控工作" pid="rgkgl" />
 		<resource id="scrgk" name="删除日管控" url="/dailyworkAction!del" description="删除日管控工作" pid="rgkgl" />
+		
+		<resource id="jxgl" name="绩效管理权限" url="" description="绩效管理权限组" pid="" />
+		<resource id="jjlmgl" name="计件工作项类目管理" url="/perfParamAction!getParamTg" description="计件工作项类目管理" pid="jxgl" />
+		<resource id="jjdcsz" name="计件档次设置" url="/perfParamAction!getLevel" description="计件档次设置权限" pid="jxgl" />
+		<resource id="gzllr" name="计件工作量录入" url="/perfNumAction!getPerfNumDg" description="计件工作量录入权限" pid="jxgl" />
+		<resource id="grjxlr" name="个人绩效录入" url="/perfAction!getGrjxDg" description="个人绩效录入权限" pid="jxgl" />
+		<resource id="grjjjxb" name="查看个人计件绩效表" url="/perfAction!getPerfDg" description="查看个人计件绩效表权限" pid="jxgl" />
+		
+		<resource id="kbms" name="知识库管理权限" url="" description="知识库管理权限组" pid="" />
+		<resource id="kbmsyhgl" name="知识库用户查看" url="/kbmsUserAction!datagrid" description="知识库用户查看权限" pid="kbms" />
+		<resource id="kbmstjyh" name="添加知识库用户" url="/kbmsUserAction!add" description="添加知识库用户权限" pid="kbms" />
+		<resource id="kbmsxgyh" name="修改知识库用户" url="/kbmsUserAction!edit" description="修改知识库用户权限" pid="kbms" />
+		<resource id="kbmsscyh" name="删除知识库用户" url="/kbmsUserAction!delete" description="删除知识库用户权限" pid="kbms" />
+		<resource id="kbmslmck" name="知识库类目查看" url="/kbmsCategoryAction!getTree" description="知识库类目查看权限" pid="kbms" />
+		<resource id="kbmsbjlm" name="新增或修改知识库类目" url="/kbmsCategoryAction!edit" description="知识库类目新增或修改权限" pid="kbms" />
+		<resource id="kbmssclm" name="删除知识库类目" url="/kbmsCategoryAction!delete" description="知识库类目删除权限" pid="kbms" />
 	</resources>
 
 	<roles name="角色">
@@ -122,6 +138,14 @@
 		
 		<menu id="xzjjb" text="行政交接班" url="" iconcls="icon-myAdminTools" pid="0" />
 		<menu id="bmjjb" text="部门行政交接班" url="/adminClass/jjbbList.jsp" iconcls="icon-myAdminDocs" pid="xzjjb" />
+		
+		<menu id="jxgl" text="绩效管理" url="" iconcls="icon-myAdminTools" pid="0" />
+		<menu id="jxpz" text="绩效参数配置" url="/performance/perfParamSetup.jsp" iconcls="icon-mySystem" pid="jxgl" />
+		<menu id="grjxb" text="个人计件绩效表" url="/performance/perfList.jsp" iconcls="icon-myAdminDocs" pid="jxgl" />
+		
+		<menu id="kbms" text="知识库管理" url="" iconcls="icon-myAdminTools" pid="0" />
+		<menu id="kbmsyhgl" text="知识库用户管理" url="/kbms/admin/yhgl.jsp" iconcls="icon-user" pid="kbms" />
+		<menu id="kbmslmgl" text="知识库类目管理" url="/kbms/category/categoryList.jsp" iconcls="icon-category" pid="kbms" />
 	</menus>
 
 	<categorys name="专业类别">
@@ -135,4 +159,18 @@
 		<ordertype id="dxtb" name="短信通报" />
 	</ordertypes>
 
+	<perfParams name="绩效参数">
+		<perfParam id="item1" itemname="类目1" percent="40" type="类目" />
+		<perfParam id="item2" itemname="类目2" percent="5" type="类目" />
+		<perfParam id="item3" itemname="类目3" percent="47" type="类目" />
+		<perfParam id="item4" itemname="类目4" percent="8" type="类目" />
+		<perfParam id="otheritem" itemname="其它类目" percent="0" type="类目" />
+		<perfParam id="level1" itemname="计件一档" percent="60" type="档次" />
+		<perfParam id="level2" itemname="计件二档" percent="30" type="档次" />
+		<perfParam id="level3" itemname="计件三档" percent="20" type="档次" />
+		<perfParam id="level4" itemname="计件四档" percent="10" type="档次" />
+		<perfParam id="levelSum" itemname="计件占总绩效百分比" percent="30" type="档次" />
+		<perfParam id="perfSum" itemname="计件绩效总额" percent="0" type="计算 " />
+		<perfParam id="perfAvg" itemname="计件人均值" percent="0" type="计算 " />
+	</perfParams>
 </data>

@@ -10,7 +10,6 @@ import model.SessionInfo;
 import pageModel.DataGrid;
 import pageModel.Json;
 import pageModel.OrderNotice;
-import pageModel.User;
 import service.OrderNoticeServiceI;
 
 @Namespace("/")

@@ -12,7 +12,6 @@ import com.opensymphony.xwork2.ModelDriven;
 import pageModel.Json;
 import pageModel.Links;
 import pageModel.LinksDataList;
-import pageModel.User;
 import service.LinksServiceI;
 
 @Namespace("/")

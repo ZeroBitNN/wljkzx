@@ -2,6 +2,7 @@ package action;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
@@ -24,7 +25,7 @@ public class BaseAction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 获得session
 	 * 
@@ -32,6 +33,17 @@ public class BaseAction {
 	 */
 	public HttpSession getSession() {
 		return ServletActionContext.getRequest().getSession();
+	}
+
+	public void writeString(String str) {
+		try {
+			ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+			ServletActionContext.getResponse().getWriter().write(str);
+			ServletActionContext.getResponse().getWriter().flush();
+			ServletActionContext.getResponse().getWriter().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

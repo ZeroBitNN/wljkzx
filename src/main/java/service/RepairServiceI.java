@@ -7,5 +7,6 @@ public interface RepairServiceI {
 	public void initMenu();
 	public void initRes();
 	public void repairUser();
+	public void initPerfParam();
 
 }

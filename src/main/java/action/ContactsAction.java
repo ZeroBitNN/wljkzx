@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import pageModel.Contacts;
-import pageModel.DataGrid;
 import pageModel.Json;
-import pageModel.User;
 import service.ContactsServiceI;
 
 @Namespace("/")
