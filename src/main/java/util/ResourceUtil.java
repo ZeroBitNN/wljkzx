@@ -48,10 +48,18 @@ public class ResourceUtil {
 	}
 	
 	/**
-	 * 获取得Lucene文档存入目录
+	 * 获取远程文档存入目录
 	 * @return
 	 */
 	public static final String getDocsDirectory(){
-		return bundle.getString("docFiles");
+		return bundle.getString("docsDir");
+	}
+	
+	/**
+	 * 获取远程FTP服务器地址前缀
+	 * @return
+	 */
+	public static final String ftpUrlPrefix(){
+		return bundle.getString("ftpUrlPrefix");
 	}
 }

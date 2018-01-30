@@ -108,8 +108,13 @@
 <div id="sessionInfoDiv" style="position: absolute; right: 10px; top: 5px;">
 	<%
 		if (sessionInfo != null) {
+			try {
 			out.print(util.StringUtil.formateString("<b>欢迎您，{0}</b>",
 					sessionInfo.getUser().getRole() + " " + sessionInfo.getUser().getUsername()));
+			} catch (Exception e) {
+				sessionInfo = null;
+				response.sendRedirect("${pageContext.request.contextPath}/index.jsp");
+			}
 		}
 	%>
 </div>

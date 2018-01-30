@@ -21,7 +21,7 @@ public class FileUtil {
 
 	private static final int BUFFER = 1024;
 
-	private void FileUtil() {
+	private FileUtil() {
 	}
 
 	/**

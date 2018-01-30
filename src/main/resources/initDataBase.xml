@@ -85,6 +85,15 @@
 		<resource id="gzllr" name="计件工作量录入" url="/perfNumAction!getPerfNumDg" description="计件工作量录入权限" pid="jxgl" />
 		<resource id="grjxlr" name="个人绩效录入" url="/perfAction!getGrjxDg" description="个人绩效录入权限" pid="jxgl" />
 		<resource id="grjjjxb" name="查看个人计件绩效表" url="/perfAction!getPerfDg" description="查看个人计件绩效表权限" pid="jxgl" />
+		
+		<resource id="kbms" name="知识库管理权限" url="" description="知识库管理权限组" pid="" />
+		<resource id="kbmsyhgl" name="知识库用户查看" url="/kbmsUserAction!datagrid" description="知识库用户查看权限" pid="kbms" />
+		<resource id="kbmstjyh" name="添加知识库用户" url="/kbmsUserAction!add" description="添加知识库用户权限" pid="kbms" />
+		<resource id="kbmsxgyh" name="修改知识库用户" url="/kbmsUserAction!edit" description="修改知识库用户权限" pid="kbms" />
+		<resource id="kbmsscyh" name="删除知识库用户" url="/kbmsUserAction!delete" description="删除知识库用户权限" pid="kbms" />
+		<resource id="kbmslmck" name="知识库类目查看" url="/kbmsCategoryAction!getTree" description="知识库类目查看权限" pid="kbms" />
+		<resource id="kbmsbjlm" name="新增或修改知识库类目" url="/kbmsCategoryAction!edit" description="知识库类目新增或修改权限" pid="kbms" />
+		<resource id="kbmssclm" name="删除知识库类目" url="/kbmsCategoryAction!delete" description="知识库类目删除权限" pid="kbms" />
 	</resources>
 
 	<roles name="角色">
@@ -133,6 +142,10 @@
 		<menu id="jxgl" text="绩效管理" url="" iconcls="icon-myAdminTools" pid="0" />
 		<menu id="jxpz" text="绩效参数配置" url="/performance/perfParamSetup.jsp" iconcls="icon-mySystem" pid="jxgl" />
 		<menu id="grjxb" text="个人计件绩效表" url="/performance/perfList.jsp" iconcls="icon-myAdminDocs" pid="jxgl" />
+		
+		<menu id="kbms" text="知识库管理" url="" iconcls="icon-myAdminTools" pid="0" />
+		<menu id="kbmsyhgl" text="知识库用户管理" url="/kbms/admin/yhgl.jsp" iconcls="icon-user" pid="kbms" />
+		<menu id="kbmslmgl" text="知识库类目管理" url="/kbms/category/categoryList.jsp" iconcls="icon-category" pid="kbms" />
 	</menus>
 
 	<categorys name="专业类别">
