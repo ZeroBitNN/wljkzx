@@ -21,9 +21,9 @@ public interface BaseDaoI<T> {
 	public T getForId(Class<T> c, Serializable id);
 
 	public List<T> find(String hql);
-	
+
 	public List<T> findForSql(String sql);
-	
+
 	public List<T> find(String hql, Map<String, Object> params);
 
 	public List<T> find(String hql, int page, int rows);
