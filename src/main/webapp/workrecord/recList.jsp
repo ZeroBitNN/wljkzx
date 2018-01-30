@@ -21,6 +21,7 @@
 			pagination : true,
 			nowrap : true,
 			singleSelect : true,
+			pageSize : 30,
 			sortName : 'createtime',
 			sortOrder : 'desc',
 			columns : [[
@@ -29,6 +30,19 @@
 					title : '编号',
 					width : 10,
 					checkbox : true
+				},
+				{
+					field : 'recordtype',
+					title : '工单类别',
+					width : 100,
+					align : 'left',
+					formatter : function(value, row, index) {
+						if (value == undefined) {
+							return '';
+						} else {
+							return '<span title="' + value + '">' + value + '</span>';
+						}
+					}
 				},
 				{
 					field : 'proposer',
@@ -420,7 +434,7 @@
 </script>
 
 <div class="easyui-layout" data-options="fit:true,border:false">
-	<div region="north" border="false" title="查询条件" style="height: 150px;" align="left">
+	<div region="north" border="false" title="查询条件" style="height: 147px;" align="left">
 		<form id="workrecord_recList_searchForm">
 			<table class="tableForm datagrid-toolbar" style="width: 100%;height: 100%;">
 				<tr>
@@ -432,19 +446,27 @@
 							<option value="未处理">未处理</option>
 							<option value="已处理">已处理</option>
 					</select></td>
+					<th>工单类别</th>
+					<td><select class="easyui-combobox" name="recordtype" data-options="editable:false">
+							<option value="">---请选择---</option>
+							<option value="日常故障/事务处理">日常故障/事务处理</option>
+							<option value="班组协作/事务工单&生产任务单">班组协作/事务工单&生产任务单</option>
+							<option value="大面积故障管控">大面积故障管控</option>
+							<option value="网络割接管控">网络割接管控</option>
+					</select></td>
 				</tr>
 				<tr>
 					<th>故障号码</th>
 					<td><input name="faultnumber" style="width:315px;" /></td>
 					<th>处理人</th>
-					<td><input id="workrecord_recList_handlerCombo" class="easyui-combobox" name="handler"
+					<td colspan="3"><input id="workrecord_recList_handlerCombo" class="easyui-combobox" name="handler"
 						data-options="editable:false"></td>
 				</tr>
 				<tr>
 					<th>故障描述</th>
 					<td><input name="describe" style="width:315px;" /></td>
 					<th>故障处理情况</th>
-					<td><input name="situation" style="width:315px;" /></td>
+					<td colspan="3"><input name="situation" style="width:315px;" /></td>
 				</tr>
 				<tr>
 					<th>记录时间</th>
@@ -452,7 +474,7 @@
 						style="width: 155px;" />至<input name="createtimeEnd" class="easyui-datetimebox"
 						editable="false" style="width: 155px;" /></td>
 					<th>修改时间</th>
-					<td><input name="modifytimeStart" class="easyui-datetimebox" editable="false"
+					<td colspan="3"><input name="modifytimeStart" class="easyui-datetimebox" editable="false"
 						style="width: 155px;" />至<input name="modifytimeEnd" class="easyui-datetimebox"
 						editable="false" style="width: 155px;" />&nbsp;&nbsp;<a href="javascript:void(0);"
 						class="easyui-linkbutton" onclick="searchWorkrecord();">查询</a>&nbsp;&nbsp;<a

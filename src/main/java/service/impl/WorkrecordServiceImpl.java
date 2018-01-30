@@ -93,6 +93,10 @@ public class WorkrecordServiceImpl implements WorkrecordServiceI {
 			hql += " and t.modifytime<=:modifytimeend";
 			params.put("modifytimeend", workrecord.getModifytimeEnd());
 		}
+		if (workrecord.getRecordtype()!=null && !workrecord.getRecordtype().equals("")){
+			hql += " and t.recordtype like :recordtype";
+			params.put("recordtype", "%%" + workrecord.getRecordtype().trim() + "%%");
+		}
 		// 查询记录总数
 		String totalHql = "select count(*) " + hql;
 		dg.setTotal(workrecordDao.count(totalHql, params));
