@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wljkzx</groupId>
 	<artifactId>wljkzx</artifactId>
-	<version>1.6.3</version>
+	<version>1.6.4</version>
 	<packaging>war</packaging>
 	<name>wljkzxOA</name>
 	<description />
@@ -319,6 +319,11 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.27</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-app</artifactId>
+			<version>1.13</version>
 		</dependency>
 	</dependencies>
 	<build>

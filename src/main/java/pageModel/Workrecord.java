@@ -21,6 +21,15 @@ public class Workrecord {
 	private Date createtimeEnd; // 创建时间结束
 	private Date modifytimeStart; // 修改时间开始
 	private Date modifytimeEnd; // 修改时间结束
+	private String recordtype;	//工单类别
+
+	public String getRecordtype() {
+		return recordtype;
+	}
+
+	public void setRecordtype(String recordtype) {
+		this.recordtype = recordtype;
+	}
 
 	public Date getCreatetimeStart() {
 		return createtimeStart;

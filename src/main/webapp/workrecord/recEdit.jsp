@@ -7,6 +7,25 @@
 				style="width:100%;height:52px" readonly="readonly">
 		</div>
 		<div style="margin-bottom:20px">
+			<input class="easyui-combobox" label="工单类别:" name="recordtype" labelPosition="top" style="width:100%;height:52px"
+				data-options="editable:false,
+              valueField : 'label',
+              textField : 'value',
+              data : [ {
+                label : '日常故障/事务处理',
+                value : '日常故障/事务处理'
+              }, {
+                label : '班组协作/事务工单&生产任务单',
+                value : '班组协作/事务工单&生产任务单'
+              }, {
+                label : '大面积故障管控',
+                value : '大面积故障管控'
+              }, {
+                label : '网络割接管控',
+                value : '网络割接管控'
+              } ]">
+		</div>
+		<div style="margin-bottom:20px">
 			<input class="easyui-textbox" label="申告人及其联系:" name="proposer" labelPosition="top" data-options="required:true"
 				style="width:100%;height:52px">
 		</div>

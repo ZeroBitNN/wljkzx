@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "T_WORKRECORD", schema = "")
 
-public class TWorkrecord implements java.io.Serializable {
+public class TWorkrecord implements Serializable {
 
 	// Fields
 
@@ -31,6 +32,7 @@ public class TWorkrecord implements java.io.Serializable {
 	private String proposer;
 	private String situation;
 	private String status;
+	private String recordtype;
 
 	// Constructors
 
@@ -45,7 +47,8 @@ public class TWorkrecord implements java.io.Serializable {
 
 	/** full constructor */
 	public TWorkrecord(String id, TAccount TAccountByInputer, TAccount TAccountByHandler, Date createtime,
-			String describe, String faultnumber, Date modifytime, String proposer, String situation, String status) {
+			String describe, String faultnumber, Date modifytime, String proposer, String situation, String status,
+			String recordtype) {
 		this.id = id;
 		this.TAccountByInputer = TAccountByInputer;
 		this.TAccountByHandler = TAccountByHandler;
@@ -56,12 +59,13 @@ public class TWorkrecord implements java.io.Serializable {
 		this.proposer = proposer;
 		this.situation = situation;
 		this.status = status;
+		this.recordtype = recordtype;
 	}
 
 	// Property accessors
 	@Id
 
-	@Column(name = "ID", nullable = false, length = 36)
+	@Column(name = "ID", unique = true, nullable = false, length = 36)
 
 	public String getId() {
 		return this.id;
@@ -163,6 +167,16 @@ public class TWorkrecord implements java.io.Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	@Column(name = "RECORDTYPE", length = 400)
+
+	public String getRecordtype() {
+		return this.recordtype;
+	}
+
+	public void setRecordtype(String recordtype) {
+		this.recordtype = recordtype;
 	}
 
 }
