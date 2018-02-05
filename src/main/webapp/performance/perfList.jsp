@@ -92,6 +92,7 @@
     handler:function(){
         var tempUrl = '${pageContext.request.contextPath}/perfAction!doNotNeedSecurity_exportIntro.action?perfdate='+$('#performance_perfList_combobox').combobox('getValue');
 		window.open(tempUrl, '_blank');
+		$('#performance_perfList_combobox').combobox('unselect');
 		$('#performance_perfList_exDia').dialog('close');
     }
   }]">
@@ -102,7 +103,7 @@
 		<tr>
 			<td><select id="performance_perfList_combobox" class="easyui-combobox" name="perfdate"
 				label="请选择日期:" labelPosition="top" style="width:100%"
-				data-options="valueField:'perfdate',textField:'perfdate',url:'${pageContext.request.contextPath}/perfAction!getPerfdate.action'">
+				data-options="valueField:'perfdate',textField:'perfdate',url:'${pageContext.request.contextPath}/perfAction!doNotNeedSecurity_getPerfdate.action'">
 			</select><br></td>
 		</tr>
 		<tr>

@@ -146,6 +146,15 @@
 		<menu id="kbms" text="知识库管理" url="" iconcls="icon-myAdminTools" pid="0" />
 		<menu id="kbmsyhgl" text="知识库用户管理" url="/kbms/admin/yhgl.jsp" iconcls="icon-user" pid="kbms" />
 		<menu id="kbmslmgl" text="知识库类目管理" url="/kbms/category/categoryList.jsp" iconcls="icon-category" pid="kbms" />
+		
+		<menu id="owog" text="部门一周一标杆" url="" iconcls="icon-good" pid="0" />
+		<menu id="jkowog" text="支撑班一周一标杆" url="/owog/jkbList.jsp" iconcls="icon-good" pid="owog" /> 
+		<menu id="sjowog" text="数据组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="jhowog" text="交换组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="csowog" text="传输组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="dlowog" text="动力组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="fxowog" text="分析班一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="gkowog" text="业务班一周一标杆" url="" iconcls="icon-good" pid="owog" />
 	</menus>
 
 	<categorys name="专业类别">

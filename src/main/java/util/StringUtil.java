@@ -1,5 +1,6 @@
 package util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -33,6 +34,30 @@ public class StringUtil {
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
 		return year + "年" + month + "月";
+	}
+
+	/**
+	 * 根据日期(Date)计算本周一和周日日期
+	 * 
+	 * @param date
+	 *            要计算的日期
+	 * @return 返回"YYYY年MM月dd日至MM月dd日"格式字符串
+	 */
+	public static String getWeekStartEnd(Date date) {
+		SimpleDateFormat simdf = new SimpleDateFormat("MM月dd日");
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int year = c.get(Calendar.YEAR);
+
+		// 计算周一日期
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		String weekFirst = simdf.format(c.getTime());
+
+		// 计算周日日期
+		c.set(Calendar.DATE, c.get(Calendar.DATE) + 6);
+		String weekLast = simdf.format(c.getTime());
+
+		return year + "年" + weekFirst + "至" + weekLast;
 	}
 
 }

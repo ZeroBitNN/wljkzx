@@ -131,7 +131,7 @@ public class PerfAction extends BaseAction implements ModelDriven<Perf> {
 		super.writeJson(j);
 	}
 
-	public void getPerfdate() {
+	public void doNotNeedSecurity_getPerfdate() {
 		JSONArray ja = new JSONArray();
 		List<String> pList = perfService.getPerfDate();
 		if (pList != null && pList.size() > 0) {
