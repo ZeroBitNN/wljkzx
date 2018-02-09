@@ -112,7 +112,7 @@
 
 	function jkbCalc() {
 		$.ajax({
-			url : '${pageContext.request.contextPath}/owogJkbAction!doNotNeedSecurity_calc.action',
+			url : '${pageContext.request.contextPath}/owogJkbAction!calc.action',
 			type : "POST",
 			dataType : 'json',
 			success : function(r) {
@@ -188,13 +188,14 @@
     text:'导入',
     handler:function(){
       $('#owog_jkbList_importForm').form('submit',{
-        url:'${pageContext.request.contextPath}/owogJkbAction!doNotNeedSecurity_importExcel.action',
+        url:'${pageContext.request.contextPath}/owogJkbAction!importExcel.action',
         success:function(data){
 	        try{
 	         var result = jQuery.parseJSON(data);
 	         if (result.success) {
 	           $('#owog_jkbList_importDia').dialog('close');
-	           $('#owog_jkbList_jkbDg').datagrid('load');
+	           $('#owog_jkbList_jkbDg').datagrid('reload');
+	           $('#owog_jkbList_combobox').combobox('reload');
 	         }
 	         $.messager.alert({
 	           title : '提示：',

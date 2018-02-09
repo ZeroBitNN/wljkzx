@@ -1,6 +1,7 @@
 package owogModel;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class OwogJkb {
 
@@ -31,6 +32,24 @@ public class OwogJkb {
 	private String name; // 姓名
 	private String rangetime; // 时间周期
 	private BigDecimal ranking; // 排名
+	private Date startdate;	// 周期开始时间
+	private Date enddate;	// 周期结束时间
+
+	public Date getStartdate() {
+		return startdate;
+	}
+
+	public void setStartdate(Date startdate) {
+		this.startdate = startdate;
+	}
+
+	public Date getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(Date enddate) {
+		this.enddate = enddate;
+	}
 
 	public String getId() {
 		return id;

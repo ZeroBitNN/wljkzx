@@ -5,11 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +54,7 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 	public void setOwogJkbDao(OwogJkbDaoI owogJkbDao) {
 		this.owogJkbDao = owogJkbDao;
 	}
-	
+
 	private BaseDaoI<String> baseDao;
 
 	public BaseDaoI<String> getBaseDao() {
@@ -66,14 +69,30 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 	@Override
 	public List<OwogJkb> getDatagrid(OwogJkb owogJkb) {
 		List<OwogJkb> list = new ArrayList<OwogJkb>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		String hql = "from TOwogJkb t where 1=1";
-		if (owogJkb.getRangetime() != null && !owogJkb.getRangetime().trim().equals("")) {
-			hql += " and t.rangetime like '%" + owogJkb.getRangetime() + "%'";
+
+		if (owogJkb.getStartdate() != null) {
+			// 有指定则按时间查询
+			hql += " and t.startdate>=:startdate";
+			params.put("startdate", owogJkb.getStartdate());
 		} else {
-			String weekStartEnd = StringUtil.getWeekStartEnd(new Date());
-			hql += " and t.rangetime like '%" + weekStartEnd + "%'";
+			// 没有指定时间则按当前时间查询
+			hql += " and t.startdate>=:startdate";
+			params.put("startdate", StringUtil.getMondayDate(new Date()));
 		}
-		List<TOwogJkb> tList = owogJkbDao.find(hql);
+		if (owogJkb.getEnddate() != null) {
+			// 有指定则按时间查询
+			hql += " and t.enddate<=:enddate";
+			params.put("enddate", owogJkb.getEnddate());
+		} else {
+			// 没有指定时间则按当前时间查询
+			hql += " and t.enddate<=:enddate";
+			params.put("enddate", StringUtil.getWeekendDate(new Date()));
+		}
+		hql += " order by t.ranking asc";
+
+		List<TOwogJkb> tList = owogJkbDao.find(hql, params);
 		if (tList != null && tList.size() > 0) {
 			for (TOwogJkb t : tList) {
 				OwogJkb o = new OwogJkb();
@@ -83,7 +102,9 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 		} else {
 			TOwogJkb tempT = new TOwogJkb();
 			tempT.setId(UUID.randomUUID().toString());
-			tempT.setRangetime(StringUtil.getWeekStartEnd(new Date()));
+			tempT.setStartdate(StringUtil.getMondayDate(new Date()));
+			tempT.setEnddate(StringUtil.getWeekendDate(new Date()));
+			tempT.setRangetime(StringUtil.getMonday(new Date()) + "至" + StringUtil.getWeekend(new Date()));
 			owogJkbDao.save(tempT);
 			OwogJkb tempO = new OwogJkb();
 			BeanUtils.copyProperties(tempT, tempO);
@@ -108,6 +129,7 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 		File[] files = multiPartRequest.getFiles(ResourceUtil.getUploadFieldName());// 上传的文件集合
 		String[] fileNames = multiPartRequest.getFileNames(ResourceUtil.getUploadFieldName());// 上传文件名称集合
 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		// 校验文件
 		if (files == null || files.length < 1) {
 			j.setMsg("您没有上传任何文件！");
@@ -188,10 +210,14 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 			for (int k = 2; k <= totalRowNum; k++) { // 从第3行开始读取数据
 				Row row = sheet.getRow(k);
 				TOwogJkb importT = new TOwogJkb();
-				Cell cell = row.getCell(0);
+				Cell startCell = row.getCell(0);
+				Cell endCell = row.getCell(1);
 				// 检查是否有该时间周期数据
-				String hql = "from TOwogJkb t where t.rangetime like '%" + cell.getStringCellValue() + "%'";
-				List<TOwogJkb> tList = owogJkbDao.find(hql);
+				Map<String, Object> params = new HashMap<String, Object>();
+				String hql = "from TOwogJkb t where t.startdate = :startdate and t.enddate = :enddate";
+				params.put("startdate", startCell.getDateCellValue());
+				params.put("enddate", endCell.getDateCellValue());
+				List<TOwogJkb> tList = owogJkbDao.find(hql, params);
 				if (tList != null && tList.size() > 0) {
 					// 如果有则清除
 					for (TOwogJkb t : tList) {
@@ -199,109 +225,112 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 					}
 				}
 				// 保存时间周期
-				importT.setRangetime(cell.getStringCellValue());
+				importT.setStartdate(startCell.getDateCellValue());
+				importT.setEnddate(endCell.getDateCellValue());
+				importT.setRangetime(
+						sdf.format(startCell.getDateCellValue()) + "至" + sdf.format(endCell.getDateCellValue()));
 				// 保存姓名
-				importT.setName(row.getCell(1).getStringCellValue());
+				importT.setName(row.getCell(2).getStringCellValue());
 				// 保存指标11
 				try {
-					importT.setZb11(new BigDecimal(row.getCell(2).getNumericCellValue()));
+					importT.setZb11(new BigDecimal(row.getCell(3).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb11(new BigDecimal(row.getCell(2).getStringCellValue()));
+					importT.setZb11(new BigDecimal(row.getCell(3).getStringCellValue()));
 				}
 				// 保存指标12
 				try {
-					importT.setZb12(new BigDecimal(row.getCell(3).getNumericCellValue()));
+					importT.setZb12(new BigDecimal(row.getCell(4).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb12(new BigDecimal(row.getCell(3).getStringCellValue()));
+					importT.setZb12(new BigDecimal(row.getCell(4).getStringCellValue()));
 				}
 				// 保存指标21
 				try {
-					importT.setZb21(new BigDecimal(row.getCell(4).getNumericCellValue()));
+					importT.setZb21(new BigDecimal(row.getCell(5).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb21(new BigDecimal(row.getCell(4).getStringCellValue()));
+					importT.setZb21(new BigDecimal(row.getCell(5).getStringCellValue()));
 				}
 				// 保存指标22
 				try {
-					importT.setZb22(new BigDecimal(row.getCell(5).getNumericCellValue()));
+					importT.setZb22(new BigDecimal(row.getCell(6).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb22(new BigDecimal(row.getCell(5).getStringCellValue()));
+					importT.setZb22(new BigDecimal(row.getCell(6).getStringCellValue()));
 				}
 				// 保存指标31
 				try {
-					importT.setZb31(new BigDecimal(row.getCell(6).getNumericCellValue()));
+					importT.setZb31(new BigDecimal(row.getCell(7).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb31(new BigDecimal(row.getCell(6).getStringCellValue()));
+					importT.setZb31(new BigDecimal(row.getCell(7).getStringCellValue()));
 				}
 				// 保存指标32
 				try {
-					importT.setZb32(new BigDecimal(row.getCell(7).getNumericCellValue()));
+					importT.setZb32(new BigDecimal(row.getCell(8).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb32(new BigDecimal(row.getCell(7).getStringCellValue()));
+					importT.setZb32(new BigDecimal(row.getCell(8).getStringCellValue()));
 				}
 				// 保存指标41
 				try {
-					importT.setZb41(new BigDecimal(row.getCell(8).getNumericCellValue()));
+					importT.setZb41(new BigDecimal(row.getCell(9).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb41(new BigDecimal(row.getCell(8).getStringCellValue()));
+					importT.setZb41(new BigDecimal(row.getCell(9).getStringCellValue()));
 				}
 				// 保存指标42
 				try {
-					importT.setZb42(new BigDecimal(row.getCell(9).getNumericCellValue()));
+					importT.setZb42(new BigDecimal(row.getCell(10).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setZb42(new BigDecimal(row.getCell(9).getStringCellValue()));
+					importT.setZb42(new BigDecimal(row.getCell(10).getStringCellValue()));
 				}
 				// 保存领导评分
 				try {
-					importT.setLdpf(new BigDecimal(row.getCell(10).getNumericCellValue()));
+					importT.setLdpf(new BigDecimal(row.getCell(11).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setLdpf(new BigDecimal(row.getCell(10).getStringCellValue()));
+					importT.setLdpf(new BigDecimal(row.getCell(11).getStringCellValue()));
 				}
 				// 保存加分1
 				try {
-					importT.setJf1(new BigDecimal(row.getCell(11).getNumericCellValue()));
+					importT.setJf1(new BigDecimal(row.getCell(12).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setJf1(new BigDecimal(row.getCell(11).getStringCellValue()));
+					importT.setJf1(new BigDecimal(row.getCell(12).getStringCellValue()));
 				}
 				// 保存加分2
 				try {
-					importT.setJf2(new BigDecimal(row.getCell(12).getNumericCellValue()));
+					importT.setJf2(new BigDecimal(row.getCell(13).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setJf2(new BigDecimal(row.getCell(12).getStringCellValue()));
+					importT.setJf2(new BigDecimal(row.getCell(13).getStringCellValue()));
 				}
 				// 保存加分3
 				try {
-					importT.setJf3(new BigDecimal(row.getCell(13).getNumericCellValue()));
+					importT.setJf3(new BigDecimal(row.getCell(14).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setJf3(new BigDecimal(row.getCell(13).getStringCellValue()));
+					importT.setJf3(new BigDecimal(row.getCell(14).getStringCellValue()));
 				}
 				// 保存加分4
 				try {
-					importT.setJf4(new BigDecimal(row.getCell(14).getNumericCellValue()));
+					importT.setJf4(new BigDecimal(row.getCell(15).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setJf4(new BigDecimal(row.getCell(14).getStringCellValue()));
+					importT.setJf4(new BigDecimal(row.getCell(15).getStringCellValue()));
 				}
 				// 保存加分5
 				try {
-					importT.setJf5(new BigDecimal(row.getCell(15).getNumericCellValue()));
+					importT.setJf5(new BigDecimal(row.getCell(16).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setJf5(new BigDecimal(row.getCell(15).getStringCellValue()));
+					importT.setJf5(new BigDecimal(row.getCell(16).getStringCellValue()));
 				}
 				// 保存加分6
 				try {
-					importT.setJf6(new BigDecimal(row.getCell(16).getNumericCellValue()));
+					importT.setJf6(new BigDecimal(row.getCell(17).getNumericCellValue()));
 				} catch (Exception e) {
-					importT.setJf6(new BigDecimal(row.getCell(16).getStringCellValue()));
+					importT.setJf6(new BigDecimal(row.getCell(17).getStringCellValue()));
 				}
 				// 保存一票否决1
-				importT.setYpfj1(row.getCell(17).getStringCellValue());
+				importT.setYpfj1(row.getCell(18).getStringCellValue());
 				// 保存一票否决2
-				importT.setYpfj2(row.getCell(18).getStringCellValue());
+				importT.setYpfj2(row.getCell(19).getStringCellValue());
 				// 保存一票否决3
-				importT.setYpfj3(row.getCell(19).getStringCellValue());
+				importT.setYpfj3(row.getCell(20).getStringCellValue());
 				// 保存一票否决4
-				importT.setYpfj4(row.getCell(20).getStringCellValue());
+				importT.setYpfj4(row.getCell(21).getStringCellValue());
 				// 保存一票否决5
-				importT.setYpfj5(row.getCell(21).getStringCellValue());
+				importT.setYpfj5(row.getCell(22).getStringCellValue());
 				importT.setId(UUID.randomUUID().toString());
 				owogJkbDao.save(importT);
 			}
@@ -359,8 +388,11 @@ public class OwogJkbServiceImpl implements OwogJkbServiceI {
 	@Override
 	public void calc() throws Exception {
 		// 获取本周指标分数
-		String hql = "from TOwogJkb t where t.rangetime like '%" + StringUtil.getWeekStartEnd(new Date()) + "%'";
-		List<TOwogJkb> tList = owogJkbDao.find(hql);
+		Map<String, Object> params = new HashMap<String, Object>();
+		String hql = "from TOwogJkb t where t.startdate>=:startdate and t.enddate<=:enddate";
+		params.put("startdate", StringUtil.getMondayDate(new Date()));
+		params.put("enddate", StringUtil.getWeekendDate(new Date()));
+		List<TOwogJkb> tList = owogJkbDao.find(hql, params);
 		if (tList != null && tList.size() > 0) {
 			List<TOwogJkb> rankList = new ArrayList<TOwogJkb>();
 			for (TOwogJkb t : tList) {

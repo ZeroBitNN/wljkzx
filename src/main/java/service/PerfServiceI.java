@@ -15,7 +15,7 @@ public interface PerfServiceI {
 
 	void saveGrjx(Perf perf);
 
-	DataGrid<Perf> getPerf();
+	DataGrid<Perf> getPerf(Perf perf);
 
 	Json importGrjx(HttpServletRequest request);
 

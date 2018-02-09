@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderServiceI {
 		}
 		// 排序
 		if (order.getSort() != null) {
-			hql += " order by " + order.getSort() + " " + order.getOrder();
+			hql += " order by " + order.getSort() + " " + order.getOrder() + ",t.createtime desc";
 		}
 
 		list = orderDao.find(hql, params, order.getPage(), order.getRows());
@@ -165,7 +165,7 @@ public class OrderServiceImpl implements OrderServiceI {
 			o.setTitle(t.getTitle());
 			o.setAuthor(t.getTAccountByAuthorid().getUsername());
 			o.setCreatetime(t.getCreatetime());
-			if (t.getTAccountByModifyid()!=null){
+			if (t.getTAccountByModifyid() != null) {
 				o.setEditor(t.getTAccountByModifyid().getUsername());
 			}
 			o.setModifytime(t.getModifytime());
@@ -229,7 +229,7 @@ public class OrderServiceImpl implements OrderServiceI {
 				o.setTitle(t.getTitle());
 				o.setAuthor(t.getTAccountByAuthorid().getUsername());
 				o.setCreatetime(t.getCreatetime());
-				if (t.getTAccountByModifyid()!=null){
+				if (t.getTAccountByModifyid() != null) {
 					o.setEditor(t.getTAccountByModifyid().getUsername());
 				}
 				o.setModifytime(t.getModifytime());

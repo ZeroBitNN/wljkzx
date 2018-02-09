@@ -75,7 +75,8 @@ public class OwogJkbAction extends BaseAction implements ModelDriven<OwogJkb> {
 
 		// 设置表头
 		Map<String, String> headMap = new LinkedHashMap<String, String>();
-		headMap.put("rangetime", "时间周期");
+		headMap.put("startdate", "周期开始日期");
+		headMap.put("enddate", "周期结束日期");
 		headMap.put("name", "姓名");
 		headMap.put("zb11", "指标1：班组计件类工单处理量【包括：IOM&ISAP（新旧）工单、综保工单、电子运维故障工单等】（占30分）-本周完成情况（占70%）");
 		headMap.put("zb12", "指标1：班组计件类工单处理量【包括：IOM&ISAP（新旧）工单、综保工单、电子运维故障工单等】（占30分）-环比提升情况（占30%）");
@@ -101,7 +102,8 @@ public class OwogJkbAction extends BaseAction implements ModelDriven<OwogJkb> {
 		// 设置数据集
 		JSONArray ja = new JSONArray();
 		Map<String, String> dataMap = new HashMap<String, String>();
-		dataMap.put("rangetime", "格式范例：" + StringUtil.getWeekStartEnd(new Date()));
+		dataMap.put("startdate", "格式范例：" + StringUtil.getMonday(new Date()));
+		dataMap.put("enddate", "格式范例：" + StringUtil.getWeekend(new Date()));
 		dataMap.put("name", "张三");
 		dataMap.put("zb11", "");
 		dataMap.put("zb12", "");
@@ -142,12 +144,12 @@ public class OwogJkbAction extends BaseAction implements ModelDriven<OwogJkb> {
 		super.writeJson(j);
 	}
 
-	public void doNotNeedSecurity_importExcel() {
+	public void importExcel() {
 		Json j = owogJkbService.importExcel(ServletActionContext.getRequest());
 		super.writeJson(j);
 	}
 
-	public void doNotNeedSecurity_calc() {
+	public void calc() {
 		Json j = new Json();
 		try {
 			owogJkbService.calc();

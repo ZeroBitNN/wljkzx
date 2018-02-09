@@ -1,10 +1,13 @@
 package model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * TOwogJkb entity. @author MyEclipse Persistence Tools
@@ -42,6 +45,8 @@ public class TOwogJkb implements java.io.Serializable {
 	private String name;
 	private String rangetime;
 	private BigDecimal ranking;
+	private Date startdate;
+	private Date enddate;
 
 	// Constructors
 
@@ -59,7 +64,7 @@ public class TOwogJkb implements java.io.Serializable {
 			BigDecimal zb32, BigDecimal zb41, BigDecimal zb42, BigDecimal ldpf, BigDecimal qzzbsum, BigDecimal jf1,
 			BigDecimal jf2, BigDecimal jf3, BigDecimal jf4, BigDecimal jf5, BigDecimal jf6, BigDecimal allsum,
 			String ypfj1, String ypfj2, String ypfj3, String ypfj4, String ypfj5, String name, String rangetime,
-			BigDecimal ranking) {
+			BigDecimal ranking, Date startdate, Date enddate) {
 		this.id = id;
 		this.zb11 = zb11;
 		this.zb12 = zb12;
@@ -86,6 +91,8 @@ public class TOwogJkb implements java.io.Serializable {
 		this.name = name;
 		this.rangetime = rangetime;
 		this.ranking = ranking;
+		this.startdate = startdate;
+		this.enddate = enddate;
 	}
 
 	// Property accessors
@@ -349,6 +356,28 @@ public class TOwogJkb implements java.io.Serializable {
 
 	public void setRanking(BigDecimal ranking) {
 		this.ranking = ranking;
+	}
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "STARTDATE", length = 7)
+
+	public Date getStartdate() {
+		return this.startdate;
+	}
+
+	public void setStartdate(Date startdate) {
+		this.startdate = startdate;
+	}
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "ENDDATE", length = 7)
+
+	public Date getEnddate() {
+		return this.enddate;
+	}
+
+	public void setEnddate(Date enddate) {
+		this.enddate = enddate;
 	}
 
 }

@@ -94,7 +94,7 @@ public class PerfAction extends BaseAction implements ModelDriven<Perf> {
 	public void getPerfDg() {
 		DataGrid<Perf> dg = null;
 		try {
-			dg = perfService.getPerf();
+			dg = perfService.getPerf(perf);
 		} catch (Exception e) {
 			dg = new DataGrid<Perf>();
 			dg.setTotal(-1L);

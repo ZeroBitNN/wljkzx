@@ -82,6 +82,18 @@
 					$('#p6').panel('refresh');
 				}
 			} ]
+		},{
+			id : 'p7',
+			title : '网操维上周标杆员工',
+			height : 490,
+			collapsible : true,
+			href : 'layout/portal/owog.jsp',
+			tools : [ {
+				iconCls : 'icon-reload',
+				handler : function() {
+					$('#p7').panel('refresh');
+				}
+			} ]
 		} ];
 
 		portal = $('#layout_portal_portal').portal({
@@ -95,7 +107,7 @@
 		});
 		var state = $.cookie('portal-state');
 		if (!state) {
-			state = 'p1,p2,p3:p6,p5,p4'; /*冒号代表列，逗号代表行*/
+			state = 'p7,p1,p2:p3,p6,p5,p4'; /*冒号代表列，逗号代表行*/
 		}
 		addPanels(state);
 		portal.portal('resize');

@@ -1,8 +1,12 @@
 package util;
 
+import static org.junit.Assert.*;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.junit.Test;
 
 public class StringUtil {
 	/**
@@ -41,10 +45,10 @@ public class StringUtil {
 	 * 
 	 * @param date
 	 *            要计算的日期
-	 * @return 返回"YYYY年MM月dd日至MM月dd日"格式字符串
+	 * @return 返回"YYYYMMddMMdd"格式字符串
 	 */
 	public static String getWeekStartEnd(Date date) {
-		SimpleDateFormat simdf = new SimpleDateFormat("MM月dd日");
+		SimpleDateFormat simdf = new SimpleDateFormat("MMdd");
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int year = c.get(Calendar.YEAR);
@@ -57,7 +61,65 @@ public class StringUtil {
 		c.set(Calendar.DATE, c.get(Calendar.DATE) + 6);
 		String weekLast = simdf.format(c.getTime());
 
-		return year + "年" + weekFirst + "至" + weekLast;
+		return year + weekFirst + weekLast;
 	}
 
+	public static String getMonday(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// 计算周一日期
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return sdf.format(c.getTime());
+	}
+
+	public static String getWeekend(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// 计算周一日期
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// 计算周末日期
+		c.set(Calendar.DATE, c.get(Calendar.DATE) + 6);
+		return sdf.format(c.getTime());
+	}
+
+	public static Date getMondayDate(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// 计算周一日期
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return c.getTime();
+	}
+
+	public static Date getWeekendDate(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// 计算周一日期
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// 计算周末日期
+		c.set(Calendar.DATE, c.get(Calendar.DATE) + 6);
+		return c.getTime();
+	}
+
+	public static Date getLastWeekend(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// 计算上周一日期
+		c.add(Calendar.DATE, -1 * 7);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// 计算周末日期
+		c.set(Calendar.DATE, c.get(Calendar.DATE) + 6);
+		return c.getTime();
+	}
+	
+	public static Date getLastMonday(Date date){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// 计算周一日期
+		c.add(Calendar.DATE, -1 * 7);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return c.getTime();
+	}
+	
 }

@@ -264,118 +264,144 @@ public class PerfServiceImpl implements PerfServiceI {
 	}
 
 	@Override
-	public DataGrid<Perf> getPerf() {
+	public DataGrid<Perf> getPerf(Perf perf) {
 		DataGrid<Perf> dg = new DataGrid<Perf>();
-		String hql = "from TPerf t where perfdate='" + StringUtil.dateToYMString(new Date()) + "'";
+		String hql;
+		int calcFlag = 0; // 计算
+		if (perf.getPerfdate() != null && !perf.getPerfdate().equals("")) {
+			hql = "from TPerf t where perfdate='" + perf.getPerfdate() + "' and isperf=1 order by jjjx desc";
+			if (!perf.getPerfdate().equals(StringUtil.dateToYMString(new Date()))) {
+				calcFlag = 1; // 不计算
+			}
+		} else {
+			hql = "from TPerf t where perfdate='" + StringUtil.dateToYMString(new Date()) + "'";
+		}
 
 		String totalHql = "select count(*) " + hql;
 		dg.setTotal(perfDao.count(totalHql));
 
 		List<TPerf> tList = perfDao.find(hql);
 		List<Perf> pList = new ArrayList<Perf>();
-		List<TPerf> rankList = new ArrayList<TPerf>();
-		if (tList != null && tList.size() > 0) {
-			for (int i = 0; i < tList.size(); i++) {
-				// 计算每个人每类工单数值以及按实际占比计算工单分值
-				TPerf t = calcItem(tList.get(i));
-				// 计算最终汇总
-				tList.get(i).setZzhz(new BigDecimal(t.getGdfz().doubleValue() + t.getOtheritem()));
-				tList.get(i).setJjjx(0.0);
-				tList.get(i).setKf(0.0);
+		if (calcFlag == 0) {
+			List<TPerf> rankList = new ArrayList<TPerf>();
+			if (tList != null && tList.size() > 0) {
+				for (int i = 0; i < tList.size(); i++) {
+					// 计算每个人每类工单数值以及按实际占比计算工单分值
+					TPerf t = calcItem(tList.get(i));
+					// 计算最终汇总
+					tList.get(i).setZzhz(new BigDecimal(t.getGdfz().doubleValue() + t.getOtheritem()));
+					tList.get(i).setJjjx(0.0);
+					tList.get(i).setKf(0.0);
 
-				// 取出需要排名的人(需要计件的人员)
-				if (tList.get(i).getIsperf().intValue() == 1) {
-					rankList.add(tList.get(i));
+					// 取出需要排名的人(需要计件的人员)
+					if (tList.get(i).getIsperf().intValue() == 1) {
+						rankList.add(tList.get(i));
+					}
+				}
+				// for (TPerf t : tList) {
+				// // 计算每个人每类工单数值以及按实际占比计算工单分值
+				// TPerf newT = calcItem(t);
+				// // 计算最终汇总
+				// newT.setZzhz(new BigDecimal(newT.getGdfz().doubleValue() +
+				// newT.getOtheritem()));
+				// newT.setJjjx(0.0);
+				// newT.setKf(0.0);
+				// perfDao.saveOrUpdate(newT);
+				// }
+			}
+
+			// String rankHql = "from TPerf t where perfdate='" +
+			// StringUtil.dateToYMString(new Date()) + "' and isperf=1";
+			// List<TPerf> rankList = perfDao.find(rankHql);
+
+			// 计算排名
+			if (rankList != null && rankList.size() > 0) {
+				Collections.sort(rankList, new Comparator<TPerf>() {
+					public int compare(TPerf p1, TPerf p2) {
+						return p2.getZzhz().intValue() - p1.getZzhz().intValue();
+					}
+				});
+
+				int rank = 0;
+				for (int i = 0; i < rankList.size(); i++) {
+					rankList.get(i).setRanking(Integer.toString(++rank));
 				}
 			}
-			// for (TPerf t : tList) {
-			// // 计算每个人每类工单数值以及按实际占比计算工单分值
-			// TPerf newT = calcItem(t);
-			// // 计算最终汇总
-			// newT.setZzhz(new BigDecimal(newT.getGdfz().doubleValue() +
-			// newT.getOtheritem()));
-			// newT.setJjjx(0.0);
-			// newT.setKf(0.0);
-			// perfDao.saveOrUpdate(newT);
-			// }
-		}
 
-		// String rankHql = "from TPerf t where perfdate='" +
-		// StringUtil.dateToYMString(new Date()) + "' and isperf=1";
-		// List<TPerf> rankList = perfDao.find(rankHql);
-
-		// 计算排名
-		if (rankList != null && rankList.size() > 0) {
-			Collections.sort(rankList, new Comparator<TPerf>() {
-				public int compare(TPerf p1, TPerf p2) {
-					return p2.getZzhz().intValue() - p1.getZzhz().intValue();
-				}
-			});
-
-			int rank = 0;
+			// 计算计件绩效和扣罚情况
+			Double perfAvg = perfParamDao.getForId(TPerfParam.class, "perfAvg").getValue();
+			Double level1 = perfParamDao.getForId(TPerfParam.class, "level1").getValue();
+			Double level2 = perfParamDao.getForId(TPerfParam.class, "level2").getValue();
+			Double level3 = perfParamDao.getForId(TPerfParam.class, "level3").getValue();
+			Double level4 = perfParamDao.getForId(TPerfParam.class, "level4").getValue();
 			for (int i = 0; i < rankList.size(); i++) {
-				rankList.get(i).setRanking(Integer.toString(++rank));
+				if (i == 0) {
+					rankList.get(i).setJjjx(perfAvg + level1);
+					rankList.get(i).setKf(level1);
+				}
+				if (i == 1) {
+					rankList.get(i).setJjjx(perfAvg + level2);
+					rankList.get(i).setKf(level2);
+				}
+				if (i == 2) {
+					rankList.get(i).setJjjx(perfAvg + level3);
+					rankList.get(i).setKf(level3);
+				}
+				if (i == 3) {
+					rankList.get(i).setJjjx(perfAvg + level4);
+					rankList.get(i).setKf(level4);
+				}
+				if (i == rankList.size() - 1) {
+					rankList.get(i).setJjjx(perfAvg - level1);
+					rankList.get(i).setKf(-(level1));
+				}
+				if (i == rankList.size() - 2) {
+					rankList.get(i).setJjjx(perfAvg - level2);
+					rankList.get(i).setKf(-(level2));
+				}
+				if (i == rankList.size() - 3) {
+					rankList.get(i).setJjjx(perfAvg - level3);
+					rankList.get(i).setKf(-(level3));
+				}
+				if (i == rankList.size() - 4) {
+					rankList.get(i).setJjjx(perfAvg - level4);
+					rankList.get(i).setKf(-(level4));
+				}
+				if (i > 3 && i < rankList.size() - 4) {
+					rankList.get(i).setJjjx(perfAvg);
+					rankList.get(i).setKf(0.0);
+				}
 			}
-		}
 
-		// 计算计件绩效和扣罚情况
-		Double perfAvg = perfParamDao.getForId(TPerfParam.class, "perfAvg").getValue();
-		Double level1 = perfParamDao.getForId(TPerfParam.class, "level1").getValue();
-		Double level2 = perfParamDao.getForId(TPerfParam.class, "level2").getValue();
-		Double level3 = perfParamDao.getForId(TPerfParam.class, "level3").getValue();
-		Double level4 = perfParamDao.getForId(TPerfParam.class, "level4").getValue();
-		for (int i = 0; i < rankList.size(); i++) {
-			if (i == 0) {
-				rankList.get(i).setJjjx(perfAvg + level1);
-				rankList.get(i).setKf(level1);
+			// 保存排名、计件绩效和扣罚情况
+			for (TPerf t : rankList) {
+				perfDao.save(t);
+				Perf p = new Perf();
+				BeanUtils.copyProperties(t, p);
+				p.setName(t.getTAccount().getUsername());
+				p.setRanking(Integer.parseInt(t.getRanking()));
+				if (t.getIsperf().intValue() == 1) {
+					p.setIsperf("是");
+				} else {
+					p.setIsperf("否");
+				}
+				pList.add(p);
 			}
-			if (i == 1) {
-				rankList.get(i).setJjjx(perfAvg + level2);
-				rankList.get(i).setKf(level2);
+		} else if (calcFlag == 1) {
+			if (tList != null && tList.size() > 0) {
+				for (TPerf t : tList) {
+					Perf p = new Perf();
+					BeanUtils.copyProperties(t, p);
+					p.setName(t.getTAccount().getUsername());
+					p.setRanking(Integer.parseInt(t.getRanking()));
+					if (t.getIsperf().intValue() == 1) {
+						p.setIsperf("是");
+					} else {
+						p.setIsperf("否");
+					}
+					pList.add(p);
+				}
 			}
-			if (i == 2) {
-				rankList.get(i).setJjjx(perfAvg + level3);
-				rankList.get(i).setKf(level3);
-			}
-			if (i == 3) {
-				rankList.get(i).setJjjx(perfAvg + level4);
-				rankList.get(i).setKf(level4);
-			}
-			if (i == rankList.size() - 1) {
-				rankList.get(i).setJjjx(perfAvg - level1);
-				rankList.get(i).setKf(-(level1));
-			}
-			if (i == rankList.size() - 2) {
-				rankList.get(i).setJjjx(perfAvg - level2);
-				rankList.get(i).setKf(-(level2));
-			}
-			if (i == rankList.size() - 3) {
-				rankList.get(i).setJjjx(perfAvg - level3);
-				rankList.get(i).setKf(-(level3));
-			}
-			if (i == rankList.size() - 4) {
-				rankList.get(i).setJjjx(perfAvg - level4);
-				rankList.get(i).setKf(-(level4));
-			}
-			if (i > 3 && i < rankList.size() - 4) {
-				rankList.get(i).setJjjx(perfAvg);
-				rankList.get(i).setKf(0.0);
-			}
-		}
-
-		// 保存排名、计件绩效和扣罚情况
-		for (TPerf t : rankList) {
-			perfDao.save(t);
-			Perf p = new Perf();
-			BeanUtils.copyProperties(t, p);
-			p.setName(t.getTAccount().getUsername());
-			p.setRanking(Integer.parseInt(t.getRanking()));
-			if (t.getIsperf().intValue() == 1) {
-				p.setIsperf("是");
-			} else {
-				p.setIsperf("否");
-			}
-			pList.add(p);
 		}
 
 		dg.setRows(pList);
