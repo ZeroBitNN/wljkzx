@@ -108,6 +108,14 @@
 					sortable : true
 				},
 				{
+					field : 'filename',
+					title : '历史照片文件',
+					width : 200,
+					formatter : function(value, row, index) {
+						return "<a href='" + "${pageContext.request.contextPath}/" + row.imgsrc + "' target='_blank'>" + value + "</a>";
+					}
+				},
+				{
 					field : 'uploader',
 					title : '照片上传人',
 					width : 80,
