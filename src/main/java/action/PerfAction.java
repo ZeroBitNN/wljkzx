@@ -151,6 +151,7 @@ public class PerfAction extends BaseAction implements ModelDriven<Perf> {
 		try {
 			request.setCharacterEncoding("utf-8");
 			String perfdate = new String(request.getParameter("perfdate").getBytes("iso8859-1"), "utf-8");
+			//String perfdate = request.getParameter("perfdate");
 			// 通过日期获取绩效信息(t_perf)
 			List<TPerf> perfList = perfService.getPerfForDate(perfdate);
 			// 通过绩效信息的名字和日期获取工单量(t_perf_num)

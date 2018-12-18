@@ -139,6 +139,7 @@
 		
 		<menu id="gzjl" text="日常工作记录" url="/workrecord/recList.jsp" iconcls="icon-myRecord" pid="0" />
 		<menu id="gzjltj" text="工作记录统计" url="/workrecord/recReport.jsp" iconcls="icon-mySum" pid="gzjl" />
+		<menu id="tbjltj" text="通报记录统计" url="/workrecord/tbReport.jsp" iconcls="icon-mySum" pid="gzjl" />
 		
 		<menu id="rgkjl" text="日管控工作记录" url="/dailywork/detailsList.jsp" iconcls="icon-myRecord" pid="0" />
 		
