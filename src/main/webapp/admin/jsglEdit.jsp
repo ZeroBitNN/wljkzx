@@ -17,7 +17,13 @@
 			<th>角色权限</th>
 			<td><input name="resourcesIds" class="easyui-combobox" multiple="true" multiline="true"
 				style="width:90%;height:65px;"
-				data-options="valueField:'id',textField:'name',groupField:'pid',editable:false,url:'${pageContext.request.contextPath}/resourcesAction!doNotNeedSecurity_getResources.action',required:true,queryParams:{'id':<%=request.getParameter("id") %>}" /></td>
+				data-options="valueField:'id',
+					textField:'name',
+					groupField:'pid',
+					editable:false,
+					url:'${pageContext.request.contextPath}/resourcesAction!doNotNeedSecurity_getResources.action',
+					required:true,
+					queryParams:{'id':<%=request.getParameter("id") %>}" /></td>
 		</tr>
 	</table>
 </form>

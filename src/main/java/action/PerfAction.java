@@ -94,7 +94,7 @@ public class PerfAction extends BaseAction implements ModelDriven<Perf> {
 	public void getPerfDg() {
 		DataGrid<Perf> dg = null;
 		try {
-			dg = perfService.getPerf();
+			dg = perfService.getPerf(perf);
 		} catch (Exception e) {
 			dg = new DataGrid<Perf>();
 			dg.setTotal(-1L);
@@ -131,7 +131,7 @@ public class PerfAction extends BaseAction implements ModelDriven<Perf> {
 		super.writeJson(j);
 	}
 
-	public void getPerfdate() {
+	public void doNotNeedSecurity_getPerfdate() {
 		JSONArray ja = new JSONArray();
 		List<String> pList = perfService.getPerfDate();
 		if (pList != null && pList.size() > 0) {
@@ -151,6 +151,7 @@ public class PerfAction extends BaseAction implements ModelDriven<Perf> {
 		try {
 			request.setCharacterEncoding("utf-8");
 			String perfdate = new String(request.getParameter("perfdate").getBytes("iso8859-1"), "utf-8");
+			//String perfdate = request.getParameter("perfdate");
 			// 通过日期获取绩效信息(t_perf)
 			List<TPerf> perfList = perfService.getPerfForDate(perfdate);
 			// 通过绩效信息的名字和日期获取工单量(t_perf_num)

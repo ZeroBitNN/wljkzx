@@ -59,7 +59,11 @@ public class ResourceUtil {
 	 * 获取远程FTP服务器地址前缀
 	 * @return
 	 */
-	public static final String ftpUrlPrefix(){
+	public static final String getFtpUrlPrefix(){
 		return bundle.getString("ftpUrlPrefix");
+	}
+	
+	public static final String getOwogImages(){
+		return bundle.getString("owogImages");
 	}
 }

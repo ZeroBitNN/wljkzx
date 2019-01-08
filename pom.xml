@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wljkzx</groupId>
 	<artifactId>wljkzx</artifactId>
-	<version>1.6.4</version>
+	<version>1.7.5</version>
 	<packaging>war</packaging>
 	<name>wljkzxOA</name>
 	<description />
@@ -324,6 +324,11 @@
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-app</artifactId>
 			<version>1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wltea.analyzer</groupId>
+			<artifactId>IKAnalyzer</artifactId>
+			<version>2012FF_u1</version>
 		</dependency>
 	</dependencies>
 	<build>

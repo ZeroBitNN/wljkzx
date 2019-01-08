@@ -50,7 +50,8 @@ public class ExcelUtil {
 	 * @param out
 	 *            输出流
 	 */
-	public static void exportExcelX(String title, Map<String, String> headMap, JSONArray jsonArray, String datePattern, int colWidth, OutputStream out) {
+	public static void exportExcelX(String title, Map<String, String> headMap, JSONArray jsonArray, String datePattern,
+			int colWidth, OutputStream out) {
 		if (datePattern == null)
 			datePattern = DEFAULT_DATE_PATTERN;
 		// 声明一个工作薄
@@ -75,6 +76,7 @@ public class ExcelUtil {
 		headerFont.setFontHeightInPoints((short) 12);
 		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(headerFont);
+		headerStyle.setWrapText(true);
 		// 单元格样式
 		CellStyle cellStyle = workbook.createCellStyle();
 		// cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -87,6 +89,7 @@ public class ExcelUtil {
 		Font cellFont = workbook.createFont();
 		cellFont.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
 		cellStyle.setFont(cellFont);
+		cellStyle.setWrapText(true);
 		// 生成一个(带标题)表格
 		SXSSFSheet sheet = (SXSSFSheet) workbook.createSheet();
 		// 设置列宽
@@ -114,12 +117,15 @@ public class ExcelUtil {
 				if (rowIndex != 0)
 					sheet = (SXSSFSheet) workbook.createSheet();// 如果数据超过了，则在第二页显示
 
-				SXSSFRow titleRow = (SXSSFRow) sheet.createRow(0);// 表头 rowIndex=0
+				SXSSFRow titleRow = (SXSSFRow) sheet.createRow(0);// 表头
+																	// rowIndex=0
 				titleRow.createCell(0).setCellValue(title);
 				titleRow.getCell(0).setCellStyle(titleStyle);
 				sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headMap.size() - 1));
 
-				SXSSFRow headerRow = (SXSSFRow) sheet.createRow(1); // 列头 rowIndex =1
+				SXSSFRow headerRow = (SXSSFRow) sheet.createRow(1); // 列头
+																	// rowIndex
+																	// =1
 				for (int i = 0; i < headers.length; i++) {
 					headerRow.createCell(i).setCellValue(headers[i]);
 					headerRow.getCell(i).setCellStyle(headerStyle);
@@ -162,7 +168,8 @@ public class ExcelUtil {
 	}
 
 	// Web 导出excel
-	public static void downloadExcelFile(String title, Map<String, String> headMap, JSONArray ja, HttpServletResponse response) {
+	public static void downloadExcelFile(String title, Map<String, String> headMap, JSONArray ja,
+			HttpServletResponse response) {
 		try {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			ExcelUtil.exportExcelX(title, headMap, ja, null, 0, os);
@@ -172,7 +179,8 @@ public class ExcelUtil {
 			response.reset();
 
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-			response.setHeader("Content-Disposition", "attachment;filename=" + new String((title + ".xlsx").getBytes(), "iso-8859-1"));
+			response.setHeader("Content-Disposition",
+					"attachment;filename=" + new String((title + ".xlsx").getBytes(), "iso-8859-1"));
 			response.setContentLength(content.length);
 			ServletOutputStream outputStream = response.getOutputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);

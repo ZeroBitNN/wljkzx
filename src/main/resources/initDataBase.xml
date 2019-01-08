@@ -94,6 +94,14 @@
 		<resource id="kbmslmck" name="知识库类目查看" url="/kbmsCategoryAction!getTree" description="知识库类目查看权限" pid="kbms" />
 		<resource id="kbmsbjlm" name="新增或修改知识库类目" url="/kbmsCategoryAction!edit" description="知识库类目新增或修改权限" pid="kbms" />
 		<resource id="kbmssclm" name="删除知识库类目" url="/kbmsCategoryAction!delete" description="知识库类目删除权限" pid="kbms" />
+		
+		<resource id="owog" name="周标杆权限组" url="" description="知识库管理权限组" pid="" />
+		<resource id="owogsc" name="周标杆人员图片上传权限" url="/owogImagesAction!upload" description="周标杆人员图片上传权限" pid="owog" />
+		<resource id="owogdel" name="周标杆人员图片删除权限" url="/owogImagesAction!delete" description="周标杆人员图片删除权限" pid="owog" />
+		<resource id="jkbck" name="支撑班人员指标查看" url="/owogJkbAction!datagrid" description="支撑班人员指标查看权限" pid="owog" />
+		<resource id="jkbxg" name="支撑班人员指标修改" url="/owogJkbAction!edit" description="支撑班人员指标修改权限" pid="owog" />
+		<resource id="jkbjs" name="支撑班人员指标总分计算" url="/owogJkbAction!calc" description="支撑班人员指标总分计算权限" pid="owog" />
+		<resource id="jkbdr" name="支撑班人员指标数据导入" url="/owogJkbAction!importExcel" description="支撑班人员指标数据导入权限" pid="owog" />
 	</resources>
 
 	<roles name="角色">
@@ -131,6 +139,7 @@
 		
 		<menu id="gzjl" text="日常工作记录" url="/workrecord/recList.jsp" iconcls="icon-myRecord" pid="0" />
 		<menu id="gzjltj" text="工作记录统计" url="/workrecord/recReport.jsp" iconcls="icon-mySum" pid="gzjl" />
+		<menu id="tbjltj" text="通报记录统计" url="/workrecord/tbReport.jsp" iconcls="icon-mySum" pid="gzjl" />
 		
 		<menu id="rgkjl" text="日管控工作记录" url="/dailywork/detailsList.jsp" iconcls="icon-myRecord" pid="0" />
 		
@@ -146,6 +155,16 @@
 		<menu id="kbms" text="知识库管理" url="" iconcls="icon-myAdminTools" pid="0" />
 		<menu id="kbmsyhgl" text="知识库用户管理" url="/kbms/admin/yhgl.jsp" iconcls="icon-user" pid="kbms" />
 		<menu id="kbmslmgl" text="知识库类目管理" url="/kbms/category/categoryList.jsp" iconcls="icon-category" pid="kbms" />
+		
+		<menu id="owog" text="部门一周一标杆" url="" iconcls="icon-good" pid="0" />
+		<menu id="jkowog" text="支撑班一周一标杆" url="/owog/jkbList.jsp" iconcls="icon-good" pid="owog" /> 
+		<menu id="sjowog" text="数据组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="jhowog" text="交换组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="csowog" text="传输组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="dlowog" text="动力组一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="fxowog" text="分析班一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="gkowog" text="业务班一周一标杆" url="" iconcls="icon-good" pid="owog" />
+		<menu id="zpgl" text="周标杆照片管理" url="/owog/imagesManage.jsp" iconcls="icon-photos" pid="owog" />
 	</menus>
 
 	<categorys name="专业类别">

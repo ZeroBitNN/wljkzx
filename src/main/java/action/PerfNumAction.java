@@ -91,7 +91,7 @@ public class PerfNumAction extends BaseAction implements ModelDriven<PerfNum> {
 		HttpServletResponse response = (HttpServletResponse) ActionContext.getContext()
 				.get(StrutsStatics.HTTP_RESPONSE);
 
-		// 获设置表头
+		// 设置表头
 		Map<String, String> headMap = new LinkedHashMap<String, String>();
 		headMap.put("name", "姓名");
 		List<TPerfParam> itemList = PerfParamService.getAllItems();

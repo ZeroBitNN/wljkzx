@@ -1,13 +1,23 @@
 package util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
+import org.apache.struts2.StrutsStatics;
 
 import com.alibaba.fastjson.JSON;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * 文件操作类
@@ -203,6 +213,35 @@ public class FileUtil {
 			OutputStream os = new FileOutputStream(file);
 			os.write(b, 0, len);
 			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static final void downloadExcelFromTemplate(String filePathName, HttpServletResponse response) {
+		try {
+			File templateFile = new File(filePathName);
+			InputStream is = new FileInputStream(templateFile);
+			response.reset();
+
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+			logger.info("下载模板："+templateFile.getName());
+			response.setHeader("Content-Disposition",
+					"attachment;filename=" + new String((templateFile.getName()).getBytes(), "iso-8859-1"));
+			response.setContentLength((int) templateFile.length());
+			ServletOutputStream outputStream = response.getOutputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+			byte[] buff = new byte[8192];
+			int bytesRead;
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+
+			}
+			bis.close();
+			bos.close();
+			outputStream.flush();
+			outputStream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
